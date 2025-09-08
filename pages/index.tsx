@@ -19,6 +19,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   const {
     gameState,
     infoMessage,
+    hintHighlights,
     handleCellClick,
     undo,
     getHint,
@@ -85,6 +86,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           regions={puzzleData.regions}
           prefills={puzzleData.prefills}
           violations={gameState.violations}
+          hintHighlights={hintHighlights}
           onCellClick={handleCellClick}
         />
         

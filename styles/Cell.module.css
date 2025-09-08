@@ -39,6 +39,22 @@
   animation: pulse-conflict 1.5s infinite;
 }
 
+.cell.hintHighlight {
+  box-shadow: 0 0 0 3px #ffc107, 0 0 15px rgba(255, 193, 7, 0.5);
+  animation: hint-pulse 2s infinite;
+  z-index: 10;
+  position: relative;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 3px #ffc107, 0 0 15px rgba(255, 193, 7, 0.5);
+  }
+  50% { 
+    box-shadow: 0 0 0 5px #ffc107, 0 0 25px rgba(255, 193, 7, 0.8);
+  }
+}
+
 .cell.winFlip {
   animation: flipTile 0.8s ease-in-out forwards;
 }

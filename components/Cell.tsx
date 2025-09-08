@@ -8,6 +8,7 @@ interface CellProps {
   region: number
   isPrefilled: boolean
   hasConflict: boolean
+  hasHintHighlight: boolean
   conflictType?: string
   onClick: (row: number, col: number) => void
   borderTop: boolean
@@ -23,6 +24,7 @@ const Cell: React.FC<CellProps> = ({
   region,
   isPrefilled,
   hasConflict,
+  hasHintHighlight,
   conflictType,
   onClick,
   borderTop,
@@ -47,6 +49,7 @@ const Cell: React.FC<CellProps> = ({
         ${styles.cell}
         ${styles[getRegionClassName()]}
         ${hasConflict ? styles.conflict : ''}
+        ${hasHintHighlight ? styles.hintHighlight : ''}
         ${hasConflict && conflictType ? styles[`conflict${conflictType.charAt(0).toUpperCase() + conflictType.slice(1)}`] : ''}
         ${isPrefilled ? styles.prefilled : ''}
         ${borderTop ? styles.borderTop : ''}

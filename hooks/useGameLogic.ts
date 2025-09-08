@@ -14,6 +14,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   const [puzzleData, setPuzzleData] = useState<PuzzleData>(initialPuzzleData)
   const [infoMessage, setInfoMessage] = useState({ text: '', type: 'default' })
+  const [hintHighlights, setHintHighlights] = useState<Set<string>>(new Set())
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const showInfoMessage = useCallback((text: string, type: string) => {
@@ -24,6 +25,18 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     setInfoMessage({ text: 'Use hints if you get stuck!', type: 'default' })
   }, [])
 
+  const clearHintHighlights = useCallback(() => {
+    setHintHighlights(new Set())
+    resetInfoMessage()
+  }, [resetInfoMessage])
+
+  const addHintHighlight = useCallback((cells: number[][]) => {
+    const highlights = new Set<string>()
+    cells.forEach(([row, col]) => {
+      highlights.add(`${row},${col}`)
+    })
+    setHintHighlights(highlights)
+  }, [])
   // Initialize board with prefills only when puzzleData changes
   useEffect(() => {
     const newBoard = Array(puzzleData.gridSize).fill().map(() => Array(puzzleData.gridSize).fill(''))
@@ -177,6 +190,9 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   }, [validateAndHighlight])
 
   const handleCellClick = useCallback((row: number, col: number) => {
+    // Clear any existing hint highlights when user makes a move
+    clearHintHighlights()
+    
     setGameState(prev => {
       if (prev.gameCompleted) return prev
       
@@ -413,30 +429,37 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   }, [gameState.board, puzzleData])
 
   const showWrongFootballHint = useCallback((hint: { row: number, col: number }) => {
+    addHintHighlight([[hint.row, hint.col]])
     showInfoMessage('This football is in the wrong position', 'conflict');
-  }, [showInfoMessage])
+  }, [showInfoMessage, addHintHighlight])
 
   const showRegionXHint = useCallback((hint: { region: number, emptyCells: number[][] }) => {
+    addHintHighlight(hint.emptyCells)
     showInfoMessage('Mark the highlighted cells with X', 'hint');
-  }, [showInfoMessage])
+  }, [showInfoMessage, addHintHighlight])
 
   const showRowXHint = useCallback((hint: { row: number, emptyCells: number[][] }) => {
+    addHintHighlight(hint.emptyCells)
     showInfoMessage('Mark the highlighted cells with X', 'hint');
-  }, [showInfoMessage])
+  }, [showInfoMessage, addHintHighlight])
 
   const showColumnXHint = useCallback((hint: { column: number, emptyCells: number[][] }) => {
+    addHintHighlight(hint.emptyCells)
     showInfoMessage('Mark the highlighted cells with X', 'hint');
-  }, [showInfoMessage])
+  }, [showInfoMessage, addHintHighlight])
 
   const showAdjacentXHint = useCallback((hint: { footballRow: number, footballCol: number, adjacentCells: number[][] }) => {
+    addHintHighlight(hint.adjacentCells)
     showInfoMessage('Mark the highlighted cells with X', 'conflict');
-  }, [showInfoMessage])
+  }, [showInfoMessage, addHintHighlight])
 
   const showValidFootballHint = useCallback((hint: { row: number, col: number }) => {
+    addHintHighlight([[hint.row, hint.col]])
     showInfoMessage('Try placing a football here - this looks valid', 'hint');
-  }, [showInfoMessage])
+  }, [showInfoMessage, addHintHighlight])
 
   const reset = useCallback(() => {
+    clearHintHighlights()
     const newBoard = Array(puzzleData.gridSize).fill().map(() => Array(puzzleData.gridSize).fill(''))
     puzzleData.prefills.forEach(([row, col]) => {
       if (row < puzzleData.gridSize && col < puzzleData.gridSize) {
@@ -454,7 +477,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       gameCompleted: false
     })
     setInfoMessage({ text: 'Use hints if you get stuck!', type: 'default' })
-  }, [puzzleData])
+  }, [puzzleData, clearHintHighlights])
 
   const shareResults = useCallback(() => {
     const endTime = Date.now()
@@ -490,14 +513,12 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     }
   }, [])
 
-  const clearHintHighlights = useCallback(() => {
-    // Clear hint highlights functionality would be implemented here
-  }, [])
 
   return {
     gameState,
     puzzleData,
     infoMessage,
+    hintHighlights,
     handleCellClick,
     undo,
     getHint,

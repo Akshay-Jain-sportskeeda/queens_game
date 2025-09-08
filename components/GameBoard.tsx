@@ -8,6 +8,7 @@ interface GameBoardProps {
   regions: number[][]
   prefills: number[][]
   violations: Set<string>
+  hintHighlights: Set<string>
   onCellClick: (row: number, col: number) => void
 }
 
@@ -16,6 +17,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   regions,
   prefills,
   violations,
+  hintHighlights,
   onCellClick
 }) => {
   const boardSize = board.length
@@ -38,6 +40,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
 
   const hasConflict = (row: number, col: number) => {
     return violations.has(`${row},${col}`)
+  }
+  
+  const hasHintHighlight = (row: number, col: number) => {
+    return hintHighlights.has(`${row},${col}`)
   }
 
   const getConflictType = (row: number, col: number) => {
@@ -79,6 +85,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
             region={regions[rowIndex][colIndex]}
             isPrefilled={isPrefilled(rowIndex, colIndex)}
             hasConflict={hasConflict(rowIndex, colIndex)}
+            hasHintHighlight={hasHintHighlight(rowIndex, colIndex)}
             conflictType={hasConflict(rowIndex, colIndex) ? getConflictType(rowIndex, colIndex) : undefined}
             onClick={onCellClick}
             borderTop={shouldShowBorder(rowIndex, colIndex, 'top')}
