@@ -16,6 +16,14 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   const [infoMessage, setInfoMessage] = useState({ text: '', type: 'default' })
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  const showInfoMessage = useCallback((text: string, type: string) => {
+    setInfoMessage({ text, type })
+  }, [])
+
+  const resetInfoMessage = useCallback(() => {
+    setInfoMessage({ text: 'Use hints if you get stuck!', type: 'default' })
+  }, [])
+
   // Initialize board with prefills only when puzzleData changes
   useEffect(() => {
     const newBoard = Array(puzzleData.gridSize).fill().map(() => Array(puzzleData.gridSize).fill(''))
@@ -291,7 +299,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     return null;
-  }, [gameState.board, puzzleData]);
+  }, [gameState.board, puzzleData])
 
   const getRegionXHint = useCallback(() => {
     const uniqueRegions = new Set(puzzleData.regions.flat());
@@ -316,7 +324,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     return null;
-  }, [gameState.board, puzzleData]);
+  }, [gameState.board, puzzleData])
 
   const getRowXHint = useCallback(() => {
     for (let targetRow = 0; targetRow < puzzleData.gridSize; targetRow++) {
@@ -336,7 +344,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     return null;
-  }, [gameState.board, puzzleData]);
+  }, [gameState.board, puzzleData])
 
   const getColumnXHint = useCallback(() => {
     for (let targetCol = 0; targetCol < puzzleData.gridSize; targetCol++) {
@@ -356,7 +364,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     return null;
-  }, [gameState.board, puzzleData]);
+  }, [gameState.board, puzzleData])
 
   const getAdjacentXHint = useCallback(() => {
     for (let row = 0; row < puzzleData.gridSize; row++) {
@@ -385,7 +393,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     return null;
-  }, [gameState.board, puzzleData]);
+  }, [gameState.board, puzzleData])
 
   const getValidFootballHint = useCallback(() => {
     for (let row = 0; row < puzzleData.gridSize; row++) {
@@ -399,31 +407,31 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     return null;
-  }, [gameState.board, puzzleData]);
+  }, [gameState.board, puzzleData])
 
   const showWrongFootballHint = useCallback((hint: { row: number, col: number }) => {
     showInfoMessage('This football is in the wrong position', 'conflict');
-  }, [showInfoMessage]);
+  }, [showInfoMessage])
 
   const showRegionXHint = useCallback((hint: { region: number, emptyCells: number[][] }) => {
     showInfoMessage('Mark the highlighted cells with X', 'hint');
-  }, [showInfoMessage]);
+  }, [showInfoMessage])
 
   const showRowXHint = useCallback((hint: { row: number, emptyCells: number[][] }) => {
     showInfoMessage('Mark the highlighted cells with X', 'hint');
-  }, [showInfoMessage]);
+  }, [showInfoMessage])
 
   const showColumnXHint = useCallback((hint: { column: number, emptyCells: number[][] }) => {
     showInfoMessage('Mark the highlighted cells with X', 'hint');
-  }, [showInfoMessage]);
+  }, [showInfoMessage])
 
   const showAdjacentXHint = useCallback((hint: { footballRow: number, footballCol: number, adjacentCells: number[][] }) => {
     showInfoMessage('Mark the highlighted cells with X', 'conflict');
-  }, [showInfoMessage]);
+  }, [showInfoMessage])
 
   const showValidFootballHint = useCallback((hint: { row: number, col: number }) => {
     showInfoMessage('Try placing a football here - this looks valid', 'hint');
-  }, [showInfoMessage]);
+  }, [showInfoMessage])
 
   const reset = useCallback(() => {
     const newBoard = Array(puzzleData.gridSize).fill().map(() => Array(puzzleData.gridSize).fill(''))
@@ -479,10 +487,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     }
   }, [])
 
-  const showInfoMessage = useCallback((text: string, type: string) => {
-    setInfoMessage({ text, type })
-  }, [])
-
   const clearHintHighlights = useCallback(() => {
     // Clear hint highlights functionality would be implemented here
   }, [])
@@ -501,4 +505,3 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     clearHintHighlights,
     resetInfoMessage
   }
-}
