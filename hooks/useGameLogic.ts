@@ -212,19 +212,19 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   const undo = useCallback(() => {
     setGameState(prev => {
       if (prev.history.length > 0) {
-        const newHistory = [...prev.history];
+        const newHistory = [...prev.history]
         const previousBoard = newHistory.pop()!;
         return {
           ...prev,
           board: previousBoard,
           history: newHistory,
           gameCompleted: false,
-          violations: new Set() // Clear violations when undoing
-        };
+          violations: new Set()
+        }
       }
-      return prev;
-    });
-    debouncedValidation();
+      return prev
+    })
+    debouncedValidation()
   }, [debouncedValidation]);
 
   const getHint = useCallback(() => {
