@@ -505,3 +505,4 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     clearHintHighlights,
     resetInfoMessage
   }
+}
