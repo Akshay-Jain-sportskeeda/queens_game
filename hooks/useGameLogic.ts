@@ -487,10 +487,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     // Clear hint highlights functionality would be implemented here
   }, [])
 
-  const showInfoMessage = useCallback((text: string, type: string) => {
-    setInfoMessage({ text, type })
-  }, [])
-
   return {
     gameState,
     puzzleData,
