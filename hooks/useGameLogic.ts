@@ -256,16 +256,23 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       };
     });
     
-    // New Progressive hint system
+    // Progressive hint system - X placement first, then suggestions
     
-    // Step 1: Place 'X' for color regions where football is placed
+    // Step 1: Check for wrongly placed footballs first
+    const wrongFootball = getWrongFootballHint();
+    if (wrongFootball) {
+      showWrongFootballHint(wrongFootball);
+      return;
+    }
+    
+    // Step 2: Place 'X' for color regions where football is placed
     const regionHint = getRegionXHint();
     if (regionHint) {
       showRegionXHint(regionHint);
       return;
     }
     
-    // Step 2: Place 'X' for rows/columns where football is placed
+    // Step 3: Place 'X' for rows/columns where football is placed
     const rowHint = getRowXHint();
     if (rowHint) {
       showRowXHint(rowHint);
@@ -278,21 +285,21 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       return;
     }
     
-    // Step 3: Place 'X' for adjacent cells where football is placed
+    // Step 4: Place 'X' for adjacent cells where football is placed
     const adjacentHint = getAdjacentXHint();
     if (adjacentHint) {
       showAdjacentXHint(adjacentHint);
       return;
     }
     
-    // Step 4: Suggest regions where no football is placed yet
+    // Step 5: Suggest regions where no football is placed yet
     const emptyRegionHint = getEmptyRegionHint();
     if (emptyRegionHint) {
       showEmptyRegionHint(emptyRegionHint);
       return;
     }
     
-    // Step 5: Suggest rows/columns where no football is placed yet
+    // Step 6: Suggest rows/columns where no football is placed yet
     const emptyRowHint = getEmptyRowHint();
     if (emptyRowHint) {
       showEmptyRowHint(emptyRowHint);
@@ -305,14 +312,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       return;
     }
     
-    // Step 6: Check for wrongly placed footballs
-    const wrongFootball = getWrongFootballHint();
-    if (wrongFootball) {
-      showWrongFootballHint(wrongFootball);
-      return;
-    }
-    
-    // Step 7: Check for wrongly placed X marks
+    // Step 7: Check for wrongly placed X marks  
     const wrongXHint = getWrongXHint();
     if (wrongXHint) {
       showWrongXHint(wrongXHint);
