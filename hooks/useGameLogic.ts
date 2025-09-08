@@ -487,8 +487,8 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     // Clear hint highlights functionality would be implemented here
   }, [])
 
-  const resetInfoMessage = useCallback(() => {
-    setInfoMessage({ text: 'Use hints if you get stuck!', type: 'default' })
+  const showInfoMessage = useCallback((text: string, type: string) => {
+    setInfoMessage({ text, type })
   }, [])
 
   return {
