@@ -184,6 +184,9 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       const isPrefilled = puzzleData.prefills.some(([r, c]) => r === row && c === col)
       if (isPrefilled) return prev
 
+      // Save current state for undo BEFORE making changes
+      const newHistory = [...prev.history.slice(-49), prev.board.map(r => [...r])]
+
       const newBoard = prev.board.map(r => [...r])
       const currentValue = newBoard[row][col]
       let newValue = ''
@@ -201,11 +204,11 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       return {
         ...prev,
         board: newBoard,
+        history: newHistory,
         moveCount: prev.moveCount + 1
       }
     })
 
-    saveState()
     debouncedValidation()
   }, [puzzleData.prefills, saveState, debouncedValidation])
 
