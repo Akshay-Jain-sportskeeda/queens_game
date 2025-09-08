@@ -1,0 +1,95 @@
+import React from 'react'
+import { CellProps } from '../types/game'
+import Cell from './Cell'
+import styles from '../styles/GameBoard.module.css'
+
+interface GameBoardProps {
+  board: string[][]
+  regions: number[][]
+  prefills: number[][]
+  violations: Set<string>
+  onCellClick: (row: number, col: number) => void
+}
+
+const GameBoard: React.FC<GameBoardProps> = ({
+  board,
+  regions,
+  prefills,
+  violations,
+  onCellClick
+}) => {
+  const boardSize = board.length
+
+  const getRegionMap = () => {
+    const regionMap: { [key: string]: number } = {}
+    for (let row = 0; row < boardSize; row++) {
+      for (let col = 0; col < boardSize; col++) {
+        regionMap[`${row},${col}`] = regions[row][col]
+      }
+    }
+    return regionMap
+  }
+
+  const regionMap = getRegionMap()
+
+  const isPrefilled = (row: number, col: number) => {
+    return prefills.some(([r, c]) => r === row && c === col)
+  }
+
+  const hasConflict = (row: number, col: number) => {
+    return violations.has(`${row},${col}`)
+  }
+
+  const getConflictType = (row: number, col: number) => {
+    // This would be implemented based on the specific conflict type
+    return 'general'
+  }
+
+  const shouldShowBorder = (row: number, col: number, direction: 'top' | 'right' | 'bottom' | 'left') => {
+    const currentRegion = regions[row][col]
+    
+    switch (direction) {
+      case 'top':
+        return row === 0 || regions[row - 1][col] !== currentRegion
+      case 'right':
+        return col === boardSize - 1 || regions[row][col + 1] !== currentRegion
+      case 'bottom':
+        return row === boardSize - 1 || regions[row + 1][col] !== currentRegion
+      case 'left':
+        return col === 0 || regions[row][col - 1] !== currentRegion
+      default:
+        return false
+    }
+  }
+
+  return (
+    <div 
+      className={styles.gameBoard}
+      style={{
+        gridTemplateColumns: `repeat(${boardSize}, 1fr)`
+      }}
+    >
+      {board.map((row, rowIndex) =>
+        row.map((cell, colIndex) => (
+          <Cell
+            key={`${rowIndex}-${colIndex}`}
+            row={rowIndex}
+            col={colIndex}
+            value={cell}
+            region={regions[rowIndex][colIndex]}
+            isPrefilled={isPrefilled(rowIndex, colIndex)}
+            hasConflict={hasConflict(rowIndex, colIndex)}
+            conflictType={hasConflict(rowIndex, colIndex) ? getConflictType(rowIndex, colIndex) : undefined}
+            onClick={onCellClick}
+            borderTop={shouldShowBorder(rowIndex, colIndex, 'top')}
+            borderRight={shouldShowBorder(rowIndex, colIndex, 'right')}
+            borderBottom={shouldShowBorder(rowIndex, colIndex, 'bottom')}
+            borderLeft={shouldShowBorder(rowIndex, colIndex, 'left')}
+          />
+        ))
+      )}
+    </div>
+  )
+}
+
+export default GameBoard
