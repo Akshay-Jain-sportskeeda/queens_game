@@ -18,6 +18,7 @@ interface HomeProps {
 export default function Home({ puzzleData, availableDates }: HomeProps) {
   const {
     gameState,
+    infoMessage,
     handleCellClick,
     undo,
     getHint,
@@ -94,8 +95,8 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         />
         
         <InfoBar
-          message="Click on cells to place X or 🏈. Use hints if you get stuck!"
-          type="default"
+          message={infoMessage.text || "Click on cells to place X or 🏈. Use hints if you get stuck!"}
+          type={infoMessage.type as 'default' | 'hint' | 'conflict' | 'success'}
         />
         
         <Instructions />
