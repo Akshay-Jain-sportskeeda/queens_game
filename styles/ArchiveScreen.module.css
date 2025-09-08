@@ -133,6 +133,20 @@
   color: #1f2937;
 }
 
+.dateDay {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.dateNumber {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
 @media (max-width: 480px) {
   .archiveContent {
     padding: 0;
@@ -158,5 +172,9 @@
   
   .dateText {
     font-size: 0.8rem;
+  }
+  
+  .dateDay {
+    font-size: 0.7rem;
   }
 }

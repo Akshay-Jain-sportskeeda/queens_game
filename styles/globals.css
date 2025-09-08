@@ -95,6 +95,23 @@ header p {
   75% { transform: translateX(5px); }
 }
 
+.hidden {
+  display: none;
+}
+
+.hint-message {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 600;
+  padding: 15px;
+  background: #fff3cd;
+  border: 2px solid #ffeaa7;
+  border-radius: 10px;
+  margin-top: 20px;
+  animation: fadeIn 0.3s ease-in;
+}
+
 @media (max-width: 480px) {
   .game-container {
     padding: 20px;

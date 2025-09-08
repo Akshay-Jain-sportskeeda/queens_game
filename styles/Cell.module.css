@@ -31,40 +31,44 @@
   border-left: 1px solid #000;
 }
 
+.cell.invalid {
+  animation: shake 0.5s ease-in-out;
+}
+
 .cell.conflict {
   animation: pulse-conflict 1.5s infinite;
 }
 
-.cell.win-flip {
+.cell.winFlip {
   animation: flipTile 0.8s ease-in-out forwards;
 }
 
 /* Conflict border classes for edge-only highlighting */
-.border-conflict-top {
+.borderConflictTop {
   border-top: 2px solid #f44336 !important;
 }
 
-.border-conflict-right {
+.borderConflictRight {
   border-right: 2px solid #f44336 !important;
 }
 
-.border-conflict-bottom {
+.borderConflictBottom {
   border-bottom: 2px solid #f44336 !important;
 }
 
-.border-conflict-left {
+.borderConflictLeft {
   border-left: 2px solid #f44336 !important;
 }
 
 /* Color regions based on the puzzle */
-.region-0 { background-color: #ffcccb; } /* Pastel Red */
-.region-1 { background-color: #c8e6c9; } /* Pastel Green */
-.region-2 { background-color: #fff9c4; } /* Pastel Yellow */
-.region-3 { background-color: #bbdefb; } /* Pastel Blue */
-.region-4 { background-color: #ffcc80; } /* Pastel Orange */
-.region-5 { background-color: #f8bbd9; } /* Pastel Pink */
-.region-6 { background-color: #d7ccc8; } /* Pastel Brown */
-.region-7 { background-color: #e1bee7; } /* Pastel Purple */
+.region0 { background-color: #ffcccb; } /* Pastel Red */
+.region1 { background-color: #c8e6c9; } /* Pastel Green */
+.region2 { background-color: #fff9c4; } /* Pastel Yellow */
+.region3 { background-color: #bbdefb; } /* Pastel Blue */
+.region4 { background-color: #ffcc80; } /* Pastel Orange */
+.region5 { background-color: #f8bbd9; } /* Pastel Pink */
+.region6 { background-color: #d7ccc8; } /* Pastel Brown */
+.region7 { background-color: #e1bee7; } /* Pastel Purple */
 
 @media (max-width: 480px) {
   .cell {

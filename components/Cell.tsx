@@ -37,15 +37,18 @@ const Cell: React.FC<CellProps> = ({
   const getRegionClass = () => `region-${region}`
   const getConflictClass = () => hasConflict ? `conflict-${conflictType || 'general'}` : ''
   const getPrefilledClass = () => isPrefilled ? 'prefilled' : ''
+  
+  // Convert region number to CSS class name
+  const getRegionClassName = () => `region${region}`
 
   return (
     <div
       className={`
         ${styles.cell}
-        ${styles[getRegionClass()]}
+        ${styles[getRegionClassName()]}
         ${hasConflict ? styles.conflict : ''}
-        ${styles[getConflictClass()]}
-        ${styles[getPrefilledClass()]}
+        ${hasConflict && conflictType ? styles[`conflict${conflictType.charAt(0).toUpperCase() + conflictType.slice(1)}`] : ''}
+        ${isPrefilled ? styles.prefilled : ''}
         ${borderTop ? styles.borderTop : ''}
         ${borderRight ? styles.borderRight : ''}
         ${borderBottom ? styles.borderBottom : ''}
