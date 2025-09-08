@@ -17,6 +17,14 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   const [hintHighlights, setHintHighlights] = useState<Set<string>>(new Set())
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Debug function to log board state
+  const logBoardState = useCallback((context: string, board: string[][]) => {
+    console.log(`=== BOARD STATE: ${context} ===`);
+    board.forEach((row, i) => {
+      console.log(`Row ${i}:`, row);
+    });
+  }, []);
+
   const showInfoMessage = useCallback((text: string, type: string) => {
     setInfoMessage({ text, type })
   }, [])
@@ -209,6 +217,10 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     // Clear any existing hint highlights when user makes a move
     clearHintHighlights()
     
+    console.log('=== CELL CLICK DEBUG ===');
+    console.log('Before cell click - current board state:');
+    logBoardState('BEFORE CELL CLICK', gameState.board);
+    
     setGameState(prev => {
       if (prev.gameCompleted) return prev
       
@@ -232,6 +244,9 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
 
       newBoard[row][col] = newValue
+
+      console.log('After cell click - new board state:');
+      logBoardState('AFTER CELL CLICK', newBoard);
 
       return {
         ...prev,
@@ -264,6 +279,8 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   const getHint = useCallback(() => {
     console.log('=== HINT SYSTEM DEBUG ===');
+    console.log('Current gameState.board at hint start:');
+    logBoardState('HINT START', gameState.board);
     console.log('Current board state:', gameState.board);
     console.log('Puzzle prefills:', puzzleData.prefills);
     console.log('Puzzle solution:', puzzleData.queens);
@@ -381,7 +398,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     
     console.log('No hints available - puzzle might be complete or no obvious moves');
     showInfoMessage('Great job! No obvious hints available', 'success');
-  }, [puzzleData]);
+  }, [puzzleData, gameState.board, logBoardState]);
 
   // Helper function to check if a football is valid (prefilled or correctly placed by user)
   const isValidFootball = useCallback((row: number, col: number) => {
