@@ -525,8 +525,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     reset,
     shareResults,
     loadPuzzleForDate,
-    showInfoMessage,
-    clearHintHighlights,
-    resetInfoMessage
+    showInfoMessage
   }
 }
