@@ -91,7 +91,6 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           onUndo={undo}
           onHint={getHint}
           onReset={reset}
-          onArchive={handleArchiveToggle}
         />
         
         <InfoBar

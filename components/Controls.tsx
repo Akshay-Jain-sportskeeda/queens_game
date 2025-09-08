@@ -5,14 +5,12 @@ interface ControlsProps {
   onUndo: () => void
   onHint: () => void
   onReset: () => void
-  onArchive: () => void
 }
 
 const Controls: React.FC<ControlsProps> = ({
   onUndo,
   onHint,
-  onReset,
-  onArchive
+  onReset
 }) => {
   return (
     <div className={styles.controls}>
@@ -24,9 +22,6 @@ const Controls: React.FC<ControlsProps> = ({
       </button>
       <button className={styles.btn} onClick={onReset}>
         Reset
-      </button>
-      <button className={styles.btn} onClick={onArchive}>
-        Archive
       </button>
     </div>
   )
