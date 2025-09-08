@@ -256,44 +256,70 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       };
     });
     
-    // Progressive hint system
+    // New Progressive hint system
     
-    // Step 1: Check for wrongly placed footballs FIRST
-    const wrongFootball = getWrongFootballHint();
-    if (wrongFootball) {
-      showWrongFootballHint(wrongFootball);
-      return;
-    }
-    
-    // Step 2: Check for regions with footballs that need X marks
+    // Step 1: Place 'X' for color regions where football is placed
     const regionHint = getRegionXHint();
     if (regionHint) {
       showRegionXHint(regionHint);
       return;
     }
     
-    // Step 3: Check for rows with footballs that need X marks
+    // Step 2: Place 'X' for rows/columns where football is placed
     const rowHint = getRowXHint();
     if (rowHint) {
       showRowXHint(rowHint);
       return;
     }
     
-    // Step 4: Check for columns with footballs that need X marks
     const columnHint = getColumnXHint();
     if (columnHint) {
       showColumnXHint(columnHint);
       return;
     }
     
-    // Step 5: Check for cells adjacent to footballs that need X marks
+    // Step 3: Place 'X' for adjacent cells where football is placed
     const adjacentHint = getAdjacentXHint();
     if (adjacentHint) {
       showAdjacentXHint(adjacentHint);
       return;
     }
     
-    // Step 6: Place a valid football as hint
+    // Step 4: Suggest regions where no football is placed yet
+    const emptyRegionHint = getEmptyRegionHint();
+    if (emptyRegionHint) {
+      showEmptyRegionHint(emptyRegionHint);
+      return;
+    }
+    
+    // Step 5: Suggest rows/columns where no football is placed yet
+    const emptyRowHint = getEmptyRowHint();
+    if (emptyRowHint) {
+      showEmptyRowHint(emptyRowHint);
+      return;
+    }
+    
+    const emptyColumnHint = getEmptyColumnHint();
+    if (emptyColumnHint) {
+      showEmptyColumnHint(emptyColumnHint);
+      return;
+    }
+    
+    // Step 6: Check for wrongly placed footballs
+    const wrongFootball = getWrongFootballHint();
+    if (wrongFootball) {
+      showWrongFootballHint(wrongFootball);
+      return;
+    }
+    
+    // Step 7: Check for wrongly placed X marks
+    const wrongXHint = getWrongXHint();
+    if (wrongXHint) {
+      showWrongXHint(wrongXHint);
+      return;
+    }
+    
+    // Step 8: Suggest correct football placement from solution
     const validPlacement = getValidFootballHint();
     if (validPlacement) {
       showValidFootballHint(validPlacement);
@@ -304,33 +330,43 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     showInfoMessage('Great job! No obvious hints available', 'success');
   }, [puzzleData]);
 
+  // Helper function to check if a football is valid (prefilled or correctly placed by user)
+  const isValidFootball = useCallback((row: number, col: number) => {
+    // Check if it's prefilled
+    const isPrefilled = puzzleData.prefills.some(([r, c]) => r === row && c === col);
+    if (isPrefilled) return true;
+    
+    // Check if it matches the solution
+    const isInSolution = puzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col);
+    return isInSolution;
+  }, [puzzleData.prefills, puzzleData.queens]);
+
   // Helper functions for hint system
   const getWrongFootballHint = useCallback(() => {
     for (let row = 0; row < puzzleData.gridSize; row++) {
       for (let col = 0; col < puzzleData.gridSize; col++) {
         if (gameState.board[row][col] === '🏈') {
-          // Check if this football is NOT in the correct solution position
-          const isCorrectPosition = puzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col);
-          if (!isCorrectPosition) {
+          // Check if this football is NOT valid (not prefilled and not in solution)
+          if (!isValidFootball(row, col)) {
             return { row, col };
           }
         }
       }
     }
     return null;
-  }, [gameState.board, puzzleData])
+  }, [gameState.board, puzzleData, isValidFootball]);
 
   const getRegionXHint = useCallback(() => {
     const uniqueRegions = new Set(puzzleData.regions.flat());
     for (let targetRegion of uniqueRegions) {
-      let hasFootball = false;
+      let hasValidFootball = false;
       let emptyCells: number[][] = [];
       
       for (let row = 0; row < puzzleData.gridSize; row++) {
         for (let col = 0; col < puzzleData.gridSize; col++) {
           if (puzzleData.regions[row][col] === targetRegion) {
-            if (gameState.board[row][col] === '🏈') {
-              hasFootball = true;
+            if (gameState.board[row][col] === '🏈' && isValidFootball(row, col)) {
+              hasValidFootball = true;
             } else if (gameState.board[row][col] === '') {
               emptyCells.push([row, col]);
             }
@@ -338,57 +374,57 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         }
       }
       
-      if (hasFootball && emptyCells.length > 0) {
+      if (hasValidFootball && emptyCells.length > 0) {
         return { region: targetRegion, emptyCells };
       }
     }
     return null;
-  }, [gameState.board, puzzleData])
+  }, [gameState.board, puzzleData, isValidFootball]);
 
   const getRowXHint = useCallback(() => {
     for (let targetRow = 0; targetRow < puzzleData.gridSize; targetRow++) {
-      let hasFootball = false;
+      let hasValidFootball = false;
       let emptyCells: number[][] = [];
       
       for (let col = 0; col < puzzleData.gridSize; col++) {
-        if (gameState.board[targetRow][col] === '🏈') {
-          hasFootball = true;
+        if (gameState.board[targetRow][col] === '🏈' && isValidFootball(targetRow, col)) {
+          hasValidFootball = true;
         } else if (gameState.board[targetRow][col] === '') {
           emptyCells.push([targetRow, col]);
         }
       }
       
-      if (hasFootball && emptyCells.length > 0) {
+      if (hasValidFootball && emptyCells.length > 0) {
         return { row: targetRow, emptyCells };
       }
     }
     return null;
-  }, [gameState.board, puzzleData])
+  }, [gameState.board, puzzleData, isValidFootball]);
 
   const getColumnXHint = useCallback(() => {
     for (let targetCol = 0; targetCol < puzzleData.gridSize; targetCol++) {
-      let hasFootball = false;
+      let hasValidFootball = false;
       let emptyCells: number[][] = [];
       
       for (let row = 0; row < puzzleData.gridSize; row++) {
-        if (gameState.board[row][targetCol] === '🏈') {
-          hasFootball = true;
+        if (gameState.board[row][targetCol] === '🏈' && isValidFootball(row, targetCol)) {
+          hasValidFootball = true;
         } else if (gameState.board[row][targetCol] === '') {
           emptyCells.push([row, targetCol]);
         }
       }
       
-      if (hasFootball && emptyCells.length > 0) {
+      if (hasValidFootball && emptyCells.length > 0) {
         return { column: targetCol, emptyCells };
       }
     }
     return null;
-  }, [gameState.board, puzzleData])
+  }, [gameState.board, puzzleData, isValidFootball]);
 
   const getAdjacentXHint = useCallback(() => {
     for (let row = 0; row < puzzleData.gridSize; row++) {
       for (let col = 0; col < puzzleData.gridSize; col++) {
-        if (gameState.board[row][col] === '🏈') {
+        if (gameState.board[row][col] === '🏈' && isValidFootball(row, col)) {
           const adjacentCells: number[][] = [];
           for (let dr = -1; dr <= 1; dr++) {
             for (let dc = -1; dc <= 1; dc++) {
@@ -412,7 +448,87 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     return null;
-  }, [gameState.board, puzzleData])
+  }, [gameState.board, puzzleData, isValidFootball]);
+
+  const getEmptyRegionHint = useCallback(() => {
+    const uniqueRegions = new Set(puzzleData.regions.flat());
+    for (let targetRegion of uniqueRegions) {
+      let hasValidFootball = false;
+      let regionCells: number[][] = [];
+      
+      for (let row = 0; row < puzzleData.gridSize; row++) {
+        for (let col = 0; col < puzzleData.gridSize; col++) {
+          if (puzzleData.regions[row][col] === targetRegion) {
+            regionCells.push([row, col]);
+            if (gameState.board[row][col] === '🏈' && isValidFootball(row, col)) {
+              hasValidFootball = true;
+            }
+          }
+        }
+      }
+      
+      if (!hasValidFootball) {
+        return { region: targetRegion, regionCells };
+      }
+    }
+    return null;
+  }, [gameState.board, puzzleData, isValidFootball]);
+
+  const getEmptyRowHint = useCallback(() => {
+    for (let targetRow = 0; targetRow < puzzleData.gridSize; targetRow++) {
+      let hasValidFootball = false;
+      let rowCells: number[][] = [];
+      
+      for (let col = 0; col < puzzleData.gridSize; col++) {
+        rowCells.push([targetRow, col]);
+        if (gameState.board[targetRow][col] === '🏈' && isValidFootball(targetRow, col)) {
+          hasValidFootball = true;
+        }
+      }
+      
+      if (!hasValidFootball) {
+        return { row: targetRow, rowCells };
+      }
+    }
+    return null;
+  }, [gameState.board, puzzleData, isValidFootball]);
+
+  const getEmptyColumnHint = useCallback(() => {
+    for (let targetCol = 0; targetCol < puzzleData.gridSize; targetCol++) {
+      let hasValidFootball = false;
+      let columnCells: number[][] = [];
+      
+      for (let row = 0; row < puzzleData.gridSize; row++) {
+        columnCells.push([row, targetCol]);
+        if (gameState.board[row][targetCol] === '🏈' && isValidFootball(row, targetCol)) {
+          hasValidFootball = true;
+        }
+      }
+      
+      if (!hasValidFootball) {
+        return { column: targetCol, columnCells };
+      }
+    }
+    return null;
+  }, [gameState.board, puzzleData, isValidFootball]);
+
+  const getWrongXHint = useCallback(() => {
+    const wrongXCells: number[][] = [];
+    
+    for (let row = 0; row < puzzleData.gridSize; row++) {
+      for (let col = 0; col < puzzleData.gridSize; col++) {
+        if (gameState.board[row][col] === 'X') {
+          // Check if this X is placed where a football should be according to solution
+          const shouldHaveFootball = puzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col);
+          if (shouldHaveFootball) {
+            wrongXCells.push([row, col]);
+          }
+        }
+      }
+    }
+    
+    return wrongXCells.length > 0 ? { wrongXCells } : null;
+  }, [gameState.board, puzzleData]);
 
   const getValidFootballHint = useCallback(() => {
     for (let row = 0; row < puzzleData.gridSize; row++) {
@@ -435,27 +551,47 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   const showRegionXHint = useCallback((hint: { region: number, emptyCells: number[][] }) => {
     addHintHighlight(hint.emptyCells)
-    showInfoMessage('Mark the highlighted cells with X', 'hint');
+    showInfoMessage(`This region already has a football. Mark the highlighted cells with X`, 'hint');
   }, [showInfoMessage, addHintHighlight])
 
   const showRowXHint = useCallback((hint: { row: number, emptyCells: number[][] }) => {
     addHintHighlight(hint.emptyCells)
-    showInfoMessage('Mark the highlighted cells with X', 'hint');
+    showInfoMessage(`Row ${hint.row + 1} already has a football. Mark the highlighted cells with X`, 'hint');
   }, [showInfoMessage, addHintHighlight])
 
   const showColumnXHint = useCallback((hint: { column: number, emptyCells: number[][] }) => {
     addHintHighlight(hint.emptyCells)
-    showInfoMessage('Mark the highlighted cells with X', 'hint');
+    showInfoMessage(`Column ${hint.column + 1} already has a football. Mark the highlighted cells with X`, 'hint');
   }, [showInfoMessage, addHintHighlight])
 
   const showAdjacentXHint = useCallback((hint: { footballRow: number, footballCol: number, adjacentCells: number[][] }) => {
     addHintHighlight(hint.adjacentCells)
-    showInfoMessage('Mark the highlighted cells with X', 'conflict');
+    showInfoMessage('Footballs cannot touch each other. Mark the highlighted cells with X', 'conflict');
+  }, [showInfoMessage, addHintHighlight])
+
+  const showEmptyRegionHint = useCallback((hint: { region: number, regionCells: number[][] }) => {
+    addHintHighlight(hint.regionCells)
+    showInfoMessage('This region needs a football. Look for a valid placement in the highlighted area', 'hint');
+  }, [showInfoMessage, addHintHighlight])
+
+  const showEmptyRowHint = useCallback((hint: { row: number, rowCells: number[][] }) => {
+    addHintHighlight(hint.rowCells)
+    showInfoMessage(`Row ${hint.row + 1} needs a football. Look for a valid placement in the highlighted row`, 'hint');
+  }, [showInfoMessage, addHintHighlight])
+
+  const showEmptyColumnHint = useCallback((hint: { column: number, columnCells: number[][] }) => {
+    addHintHighlight(hint.columnCells)
+    showInfoMessage(`Column ${hint.column + 1} needs a football. Look for a valid placement in the highlighted column`, 'hint');
+  }, [showInfoMessage, addHintHighlight])
+
+  const showWrongXHint = useCallback((hint: { wrongXCells: number[][] }) => {
+    addHintHighlight(hint.wrongXCells)
+    showInfoMessage('These X marks are incorrect. Remove them - these cells should have footballs', 'conflict');
   }, [showInfoMessage, addHintHighlight])
 
   const showValidFootballHint = useCallback((hint: { row: number, col: number }) => {
     addHintHighlight([[hint.row, hint.col]])
-    showInfoMessage('Try placing a football here - this looks valid', 'hint');
+    showInfoMessage('Try placing a football in the highlighted cell', 'hint');
   }, [showInfoMessage, addHintHighlight])
 
   const reset = useCallback(() => {
