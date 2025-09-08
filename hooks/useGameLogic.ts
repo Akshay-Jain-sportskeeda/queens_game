@@ -332,6 +332,9 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   // Helper function to check if a football is valid (prefilled or correctly placed by user)
   const isValidFootball = useCallback((row: number, col: number) => {
+    // First check if there's actually a football in this cell
+    if (gameState.board[row][col] !== '🏈') return false;
+    
     // Check if it's prefilled
     const isPrefilled = puzzleData.prefills.some(([r, c]) => r === row && c === col);
     if (isPrefilled) return true;
@@ -365,7 +368,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       for (let row = 0; row < puzzleData.gridSize; row++) {
         for (let col = 0; col < puzzleData.gridSize; col++) {
           if (puzzleData.regions[row][col] === targetRegion) {
-            if (gameState.board[row][col] === '🏈' && isValidFootball(row, col)) {
+            if (isValidFootball(row, col)) {
               hasValidFootball = true;
             } else if (gameState.board[row][col] === '') {
               emptyCells.push([row, col]);
@@ -387,7 +390,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       let emptyCells: number[][] = [];
       
       for (let col = 0; col < puzzleData.gridSize; col++) {
-        if (gameState.board[targetRow][col] === '🏈' && isValidFootball(targetRow, col)) {
+        if (isValidFootball(targetRow, col)) {
           hasValidFootball = true;
         } else if (gameState.board[targetRow][col] === '') {
           emptyCells.push([targetRow, col]);
@@ -407,7 +410,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       let emptyCells: number[][] = [];
       
       for (let row = 0; row < puzzleData.gridSize; row++) {
-        if (gameState.board[row][targetCol] === '🏈' && isValidFootball(row, targetCol)) {
+        if (isValidFootball(row, targetCol)) {
           hasValidFootball = true;
         } else if (gameState.board[row][targetCol] === '') {
           emptyCells.push([row, targetCol]);
@@ -424,7 +427,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   const getAdjacentXHint = useCallback(() => {
     for (let row = 0; row < puzzleData.gridSize; row++) {
       for (let col = 0; col < puzzleData.gridSize; col++) {
-        if (gameState.board[row][col] === '🏈' && isValidFootball(row, col)) {
+        if (isValidFootball(row, col)) {
           const adjacentCells: number[][] = [];
           for (let dr = -1; dr <= 1; dr++) {
             for (let dc = -1; dc <= 1; dc++) {
@@ -460,7 +463,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         for (let col = 0; col < puzzleData.gridSize; col++) {
           if (puzzleData.regions[row][col] === targetRegion) {
             regionCells.push([row, col]);
-            if (gameState.board[row][col] === '🏈' && isValidFootball(row, col)) {
+            if (isValidFootball(row, col)) {
               hasValidFootball = true;
             }
           }
@@ -481,7 +484,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       
       for (let col = 0; col < puzzleData.gridSize; col++) {
         rowCells.push([targetRow, col]);
-        if (gameState.board[targetRow][col] === '🏈' && isValidFootball(targetRow, col)) {
+        if (isValidFootball(targetRow, col)) {
           hasValidFootball = true;
         }
       }
@@ -500,7 +503,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       
       for (let row = 0; row < puzzleData.gridSize; row++) {
         columnCells.push([row, targetCol]);
-        if (gameState.board[row][targetCol] === '🏈' && isValidFootball(row, targetCol)) {
+        if (isValidFootball(row, targetCol)) {
           hasValidFootball = true;
         }
       }
