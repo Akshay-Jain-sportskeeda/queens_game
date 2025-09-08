@@ -247,6 +247,11 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   }, [debouncedValidation]);
 
   const getHint = useCallback(() => {
+    console.log('=== HINT SYSTEM DEBUG ===');
+    console.log('Current board state:', gameState.board);
+    console.log('Puzzle prefills:', puzzleData.prefills);
+    console.log('Puzzle solution:', puzzleData.queens);
+    
     setGameState(prev => {
       if (prev.gameCompleted) return prev;
       
@@ -257,90 +262,130 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     });
     
     // Progressive hint system - X placement first, then suggestions
+    console.log('Step 1: Checking for wrong footballs...');
     
-    // Step 1: Check for wrongly placed footballs first
     const wrongFootball = getWrongFootballHint();
     if (wrongFootball) {
+      console.log('Found wrong football:', wrongFootball);
       showWrongFootballHint(wrongFootball);
       return;
+    } else {
+      console.log('No wrong footballs found');
     }
     
-    // Step 2: Place 'X' for color regions where football is placed
+    console.log('Step 2: Checking for region X hints...');
     const regionHint = getRegionXHint();
     if (regionHint) {
+      console.log('Found region X hint:', regionHint);
       showRegionXHint(regionHint);
       return;
+    } else {
+      console.log('No region X hints found');
     }
     
-    // Step 3: Place 'X' for rows/columns where football is placed
+    console.log('Step 3: Checking for row X hints...');
     const rowHint = getRowXHint();
     if (rowHint) {
+      console.log('Found row X hint:', rowHint);
       showRowXHint(rowHint);
       return;
+    } else {
+      console.log('No row X hints found');
     }
     
+    console.log('Step 4: Checking for column X hints...');
     const columnHint = getColumnXHint();
     if (columnHint) {
+      console.log('Found column X hint:', columnHint);
       showColumnXHint(columnHint);
       return;
+    } else {
+      console.log('No column X hints found');
     }
     
-    // Step 4: Place 'X' for adjacent cells where football is placed
+    console.log('Step 5: Checking for adjacent X hints...');
     const adjacentHint = getAdjacentXHint();
     if (adjacentHint) {
+      console.log('Found adjacent X hint:', adjacentHint);
       showAdjacentXHint(adjacentHint);
       return;
+    } else {
+      console.log('No adjacent X hints found');
     }
     
-    // Step 5: Suggest regions where no football is placed yet
+    console.log('Step 6: Checking for empty region hints...');
     const emptyRegionHint = getEmptyRegionHint();
     if (emptyRegionHint) {
+      console.log('Found empty region hint:', emptyRegionHint);
       showEmptyRegionHint(emptyRegionHint);
       return;
+    } else {
+      console.log('No empty region hints found');
     }
     
-    // Step 6: Suggest rows/columns where no football is placed yet
+    console.log('Step 7: Checking for empty row hints...');
     const emptyRowHint = getEmptyRowHint();
     if (emptyRowHint) {
+      console.log('Found empty row hint:', emptyRowHint);
       showEmptyRowHint(emptyRowHint);
       return;
+    } else {
+      console.log('No empty row hints found');
     }
     
+    console.log('Step 8: Checking for empty column hints...');
     const emptyColumnHint = getEmptyColumnHint();
     if (emptyColumnHint) {
+      console.log('Found empty column hint:', emptyColumnHint);
       showEmptyColumnHint(emptyColumnHint);
       return;
+    } else {
+      console.log('No empty column hints found');
     }
     
-    // Step 7: Check for wrongly placed X marks  
+    console.log('Step 9: Checking for wrong X hints...');
     const wrongXHint = getWrongXHint();
     if (wrongXHint) {
+      console.log('Found wrong X hint:', wrongXHint);
       showWrongXHint(wrongXHint);
       return;
+    } else {
+      console.log('No wrong X hints found');
     }
     
-    // Step 8: Suggest correct football placement from solution
+    console.log('Step 10: Checking for valid football placement hints...');
     const validPlacement = getValidFootballHint();
     if (validPlacement) {
+      console.log('Found valid placement hint:', validPlacement);
       showValidFootballHint(validPlacement);
       return;
+    } else {
+      console.log('No valid placement hints found');
     }
     
-    // No hints available
+    console.log('No hints available - puzzle might be complete or no obvious moves');
     showInfoMessage('Great job! No obvious hints available', 'success');
   }, [puzzleData]);
 
   // Helper function to check if a football is valid (prefilled or correctly placed by user)
   const isValidFootball = useCallback((row: number, col: number) => {
+    console.log(`Checking isValidFootball(${row}, ${col})`);
     // First check if there's actually a football in this cell
-    if (gameState.board[row][col] !== '🏈') return false;
+    if (gameState.board[row][col] !== '🏈') {
+      console.log(`  No football in cell (${row}, ${col}), value: "${gameState.board[row][col]}"`);
+      return false;
+    }
     
     // Check if it's prefilled
     const isPrefilled = puzzleData.prefills.some(([r, c]) => r === row && c === col);
-    if (isPrefilled) return true;
+    if (isPrefilled) {
+      console.log(`  Football at (${row}, ${col}) is prefilled`);
+      return true;
+    }
     
     // Check if it matches the solution
     const isInSolution = puzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col);
+    console.log(`  Football at (${row}, ${col}) matches solution: ${isInSolution}`);
     return isInSolution;
   }, [puzzleData.prefills, puzzleData.queens]);
 
@@ -360,8 +405,12 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   }, [gameState.board, puzzleData, isValidFootball]);
 
   const getRegionXHint = useCallback(() => {
+    console.log('  Analyzing regions for X hints...');
     const uniqueRegions = new Set(puzzleData.regions.flat());
+    console.log('  Unique regions:', Array.from(uniqueRegions));
+    
     for (let targetRegion of uniqueRegions) {
+      console.log(`  Checking region ${targetRegion}:`);
       let hasValidFootball = false;
       let emptyCells: number[][] = [];
       
@@ -369,18 +418,23 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         for (let col = 0; col < puzzleData.gridSize; col++) {
           if (puzzleData.regions[row][col] === targetRegion) {
             if (isValidFootball(row, col)) {
+              console.log(`    Region ${targetRegion} has valid football at (${row}, ${col})`);
               hasValidFootball = true;
             } else if (gameState.board[row][col] === '') {
+              console.log(`    Region ${targetRegion} has empty cell at (${row}, ${col})`);
               emptyCells.push([row, col]);
             }
           }
         }
       }
       
+      console.log(`    Region ${targetRegion}: hasValidFootball=${hasValidFootball}, emptyCells=${emptyCells.length}`);
       if (hasValidFootball && emptyCells.length > 0) {
+        console.log(`    Returning region X hint for region ${targetRegion}`);
         return { region: targetRegion, emptyCells };
       }
     }
+    console.log('  No region X hints found');
     return null;
   }, [gameState.board, puzzleData, isValidFootball]);
 
