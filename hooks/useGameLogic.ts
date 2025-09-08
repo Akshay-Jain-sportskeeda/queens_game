@@ -391,17 +391,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     if (validPlacement) {
       console.log('Found valid placement hint:', validPlacement);
       showValidFootballHint(validPlacement);
-      return;
-    } else {
-      console.log('No valid placement hints found');
-    }
-    
-    console.log('No hints available - puzzle might be complete or no obvious moves');
-    showInfoMessage('Great job! No obvious hints available', 'success');
-  }, [puzzleData, gameState.board, logBoardState]);
-
-  // Helper function to check if a football is valid (prefilled or correctly placed by user)
-  const isValidFootball = useCallback((row: number, col: number) => {
     console.log(`Checking isValidFootball(${row}, ${col})`);
     // First check if there's actually a football in this cell
     if (gameState.board[row][col] !== '🏈') {
@@ -409,18 +398,11 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       return false;
     }
     
-    // Check if it's prefilled
-    const isPrefilled = puzzleData.prefills.some(([r, c]) => r === row && c === col);
-    if (isPrefilled) {
-      console.log(`  Football at (${row}, ${col}) is prefilled`);
-      return true;
-    }
-    
     // Check if it matches the solution
     const isInSolution = puzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col);
     console.log(`  Football at (${row}, ${col}) matches solution: ${isInSolution}`);
     return isInSolution;
-  }, [puzzleData.prefills, puzzleData.queens]);
+  }, [gameState.board, puzzleData.prefills, puzzleData.queens]);
 
   // Helper functions for hint system
   const getWrongFootballHint = useCallback(() => {
