@@ -37,6 +37,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     })
     setHintHighlights(highlights)
   }, [])
+
   // Initialize board with prefills only when puzzleData changes
   useEffect(() => {
     console.log('=== BOARD INITIALIZATION ===');
@@ -45,14 +46,21 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     console.log('Prefills:', puzzleData.prefills);
     
     const newBoard = Array(puzzleData.gridSize).fill().map(() => Array(puzzleData.gridSize).fill(''))
+    console.log('Empty board created:', newBoard);
+    
     puzzleData.prefills.forEach(([row, col]) => {
       if (row < puzzleData.gridSize && col < puzzleData.gridSize) {
         console.log(`Placing prefilled football at (${row}, ${col})`);
         newBoard[row][col] = '🏈'
+        console.log(`Board after placing at (${row}, ${col}):`, newBoard[row][col]);
       }
     })
     
     console.log('Initialized board:', newBoard);
+    console.log('Board state after prefills:');
+    newBoard.forEach((row, i) => {
+      console.log(`Row ${i}:`, row);
+    });
     
     setGameState(prev => ({
       ...prev,
@@ -64,7 +72,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       startTime: Date.now(),
       gameCompleted: false
     }))
-  }, [puzzleData.date, puzzleData.gridSize, puzzleData.prefills])
+  }, [puzzleData])
 
   const saveState = useCallback(() => {
     setGameState(prev => ({
