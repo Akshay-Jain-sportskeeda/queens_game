@@ -25,6 +25,7 @@ export interface CellProps {
   isPrefilled: boolean;
   hasConflict: boolean;
   isWinAnimated: boolean;
+  animationDelay?: number;
   hasHintHighlight: boolean;
   hintBorderTop?: boolean;
   hintBorderRight?: boolean;

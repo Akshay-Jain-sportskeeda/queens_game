@@ -37,7 +37,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   // Check for win condition
   useEffect(() => {
     if (gameState.gameCompleted && !showWinScreen) {
-      // Wait for animation to complete before showing win screen
+      // Wait for all animations to complete before showing win screen
       setTimeout(() => {
         const endTime = Date.now()
         const totalTime = Math.floor((endTime - gameState.startTime) / 1000)
@@ -51,7 +51,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           time: timeString
         })
         setShowWinScreen(true)
-      }, 1000) // Wait 1 second for animation to play
+      }, 3600) // Wait for all row animations (2.6s) + 1s delay = 3.6s
     }
   }, [gameState.gameCompleted, gameState.startTime, gameState.moveCount, gameState.hintCount, showWinScreen])
 

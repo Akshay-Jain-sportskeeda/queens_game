@@ -233,7 +233,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     if (gameState.gameCompleted) {
       console.log('Game completed! Triggering win animation...')
       
-      // Trigger the animation
+      // Trigger the row-wise animation
       setGameState(prev => ({
         ...prev,
         isWinAnimationActive: true
@@ -242,14 +242,14 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       // Show success message
       showInfoMessage('🎉 Congratulations! You solved the puzzle! 🎉', 'success')
       
-      // Reset animation state after animation completes (0.8s as defined in CSS)
+      // Calculate total animation time: 4 rows × 2 at a time × 0.8s + 1s delay = 2.6s
       animationTimeoutRef.current = setTimeout(() => {
         console.log('Animation completed, resetting animation state')
         setGameState(prev => ({
           ...prev,
           isWinAnimationActive: false
         }))
-      }, 800)
+      }, 2600) // Total time for all animations plus delay
     }
   }, [gameState.gameCompleted, showInfoMessage])
 

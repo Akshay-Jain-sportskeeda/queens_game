@@ -10,6 +10,7 @@ const Cell: React.FC<CellProps> = ({
   isPrefilled,
   hasConflict,
   hasHintHighlight,
+  animationDelay = 0,
   hintBorderTop,
   hintBorderRight,
   hintBorderBottom,
@@ -24,7 +25,7 @@ const Cell: React.FC<CellProps> = ({
 }) => {
   // Debug log for animation state
   if (isWinAnimated) {
-    console.log(`Cell (${row}, ${col}) received isWinAnimated: ${isWinAnimated}`)
+    console.log(`Cell (${row}, ${col}) received isWinAnimated: ${isWinAnimated}, delay: ${animationDelay}ms`)
   }
 
   const handleClick = () => {
@@ -67,7 +68,8 @@ const Cell: React.FC<CellProps> = ({
       onClick={handleClick}
       style={{
         color: value === 'X' ? '#888' : '',
-        fontWeight: isPrefilled ? 'bold' : 'normal'
+        fontWeight: isPrefilled ? 'bold' : 'normal',
+        animationDelay: isWinAnimated ? `${animationDelay}ms` : undefined
       }}
     >
       {value}

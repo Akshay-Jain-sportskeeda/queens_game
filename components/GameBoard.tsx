@@ -24,6 +24,14 @@ const GameBoard: React.FC<GameBoardProps> = ({
 }) => {
   const boardSize = board.length
 
+  // Calculate animation delay for each cell based on row
+  const getAnimationDelay = (rowIndex: number) => {
+    if (!isWinAnimationActive) return 0
+    
+    // Animate 2 rows at a time with 0.8s delay between groups
+    const groupIndex = Math.floor(rowIndex / 2)
+    return groupIndex * 800 // 800ms delay between each group of 2 rows
+  }
   const getRegionMap = () => {
     const regionMap: { [key: string]: number } = {}
     for (let row = 0; row < boardSize; row++) {
@@ -113,6 +121,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
             hasConflict={hasConflict(rowIndex, colIndex)}
             hasHintHighlight={hasHintHighlight(rowIndex, colIndex)}
             isWinAnimated={isWinAnimationActive}
+            animationDelay={getAnimationDelay(rowIndex)}
             hintBorderTop={hintBorders.top}
             hintBorderRight={hintBorders.right}
             hintBorderBottom={hintBorders.bottom}
