@@ -93,7 +93,10 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   }, [showRules])
 
   const handleAuthToggle = () => {
+    console.log('Sign in button clicked!')
+    console.log('Current showAuth state:', showAuth)
     setShowAuth(true)
+    console.log('setShowAuth(true) called')
   }
 
   return (
@@ -146,6 +149,8 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
             ) : (
               <button 
                 onClick={handleAuthToggle}
+                onMouseDown={() => console.log('Button mouse down')}
+                onMouseUp={() => console.log('Button mouse up')}
                 style={{
                   background: '#667eea',
                   border: 'none',
@@ -254,7 +259,10 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         />
         
         {showAuth && (
+          <>
+          {console.log('Rendering Auth component, showAuth:', showAuth)}
           <Auth onClose={() => setShowAuth(false)} />
+          </>
         )}
       </div>
 

@@ -7,6 +7,8 @@ interface AuthProps {
 }
 
 const Auth: React.FC<AuthProps> = ({ onClose }) => {
+  console.log('Auth component rendered, props:', { onClose })
+  
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -125,6 +127,8 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
   };
 
   return (
+    <>
+    {console.log('Auth component returning JSX')}
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4">
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
@@ -261,6 +265,7 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
