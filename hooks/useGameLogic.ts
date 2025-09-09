@@ -322,6 +322,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
           history: newHistory,
           gameCompleted: false,
           violations: new Set(),
+          conflictTypes: new Map(),
           isWinAnimationActive: false
         }
       }
