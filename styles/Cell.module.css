@@ -40,7 +40,6 @@
 }
 
 .cell.hintHighlight {
-  background: rgba(255, 193, 7, 0.2) !important;
   position: relative;
   z-index: 5;
 }
