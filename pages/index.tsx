@@ -93,8 +93,8 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   }, [showRules])
 
   const handleAuthToggle = useCallback(() => {
-    setShowAuth(!showAuth)
-  }, [showAuth])
+    setShowAuth(true)
+  }, [])
 
   return (
     <>
@@ -145,7 +145,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
               </div>
             ) : (
               <button 
-                onClick={() => setShowAuth(true)}
+                onClick={handleAuthToggle}
                 style={{
                   background: '#667eea',
                   border: 'none',
