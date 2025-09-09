@@ -239,6 +239,14 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         }))
       }, 800)
     }
+    
+    // Cleanup function
+    return () => {
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current)
+      }
+    }
+  }, [gameState.gameCompleted, gameState.isWinAnimationActive, showInfoMessage])
 
   const handleCellClick = useCallback((row: number, col: number) => {
     // Clear any existing hint highlights when user makes a move
