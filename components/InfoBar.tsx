@@ -11,8 +11,6 @@ const InfoBar: React.FC<InfoBarProps> = ({ message, type }) => {
     switch (type) {
       case 'hint':
         return '💡'
-      case 'conflict':
-        return '⚠️'
       case 'success':
         return '🎉'
       default:
@@ -23,7 +21,7 @@ const InfoBar: React.FC<InfoBarProps> = ({ message, type }) => {
   return (
     <div className={`${styles.infoBar} ${styles[type]}`}>
       <div className={styles.infoContent}>
-        <span className={styles.infoIcon}>{getIcon()}</span>
+        {getIcon() && <span className={styles.infoIcon}>{getIcon()}</span>}
         <span className={styles.infoText}>{message}</span>
       </div>
     </div>
