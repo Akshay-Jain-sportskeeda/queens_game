@@ -309,7 +309,17 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     });
     
     // Progressive hint system - X placement first, then suggestions
-    console.log('Step 1: Checking for region X hints...');
+    console.log('Step 1: Checking for wrong footballs...');
+    const wrongFootball = getWrongFootballHint();
+    if (wrongFootball) {
+      console.log('Found wrong football:', wrongFootball);
+      showWrongFootballHint(wrongFootball);
+      return;
+    } else {
+      console.log('No wrong footballs found');
+    }
+    
+    console.log('Step 2: Checking for region X hints...');
     const regionHint = getRegionXHint();
     if (regionHint) {
       console.log('Found region X hint:', regionHint);
@@ -319,7 +329,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       console.log('No region X hints found');
     }
     
-    console.log('Step 2: Checking for row X hints...');
+    console.log('Step 3: Checking for row X hints...');
     const rowHint = getRowXHint();
     if (rowHint) {
       console.log('Found row X hint:', rowHint);
@@ -329,7 +339,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       console.log('No row X hints found');
     }
     
-    console.log('Step 3: Checking for column X hints...');
+    console.log('Step 4: Checking for column X hints...');
     const columnHint = getColumnXHint();
     if (columnHint) {
       console.log('Found column X hint:', columnHint);
@@ -339,7 +349,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       console.log('No column X hints found');
     }
     
-    console.log('Step 4: Checking for adjacent X hints...');
+    console.log('Step 5: Checking for adjacent X hints...');
     const adjacentHint = getAdjacentXHint();
     if (adjacentHint) {
       console.log('Found adjacent X hint:', adjacentHint);
@@ -349,7 +359,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       console.log('No adjacent X hints found');
     }
     
-    console.log('Step 5: Checking for empty region hints...');
+    console.log('Step 6: Checking for empty region hints...');
     const emptyRegionHint = getEmptyRegionHint();
     if (emptyRegionHint) {
       console.log('Found empty region hint:', emptyRegionHint);
@@ -359,7 +369,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       console.log('No empty region hints found');
     }
     
-    console.log('Step 6: Checking for empty row hints...');
+    console.log('Step 7: Checking for empty row hints...');
     const emptyRowHint = getEmptyRowHint();
     if (emptyRowHint) {
       console.log('Found empty row hint:', emptyRowHint);
@@ -369,7 +379,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       console.log('No empty row hints found');
     }
     
-    console.log('Step 7: Checking for empty column hints...');
+    console.log('Step 8: Checking for empty column hints...');
     const emptyColumnHint = getEmptyColumnHint();
     if (emptyColumnHint) {
       console.log('Found empty column hint:', emptyColumnHint);
@@ -377,17 +387,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       return;
     } else {
       console.log('No empty column hints found');
-    }
-    
-    console.log('Step 8: Checking for wrong footballs...');
-    
-    const wrongFootball = getWrongFootballHint();
-    if (wrongFootball) {
-      console.log('Found wrong football:', wrongFootball);
-      showWrongFootballHint(wrongFootball);
-      return;
-    } else {
-      console.log('No wrong footballs found');
     }
     
     console.log('Step 9: Checking for wrong X hints...');
