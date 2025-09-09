@@ -12,7 +12,7 @@ import ArchiveScreen from '../components/ArchiveScreen'
 import RulesPopup from '../components/RulesPopup'
 import PFSNHeader from '../components/PFSNHeader'
 import PFSNFooter from '../components/PFSNFooter'
-import AuthModal from '../components/AuthModal'
+import Auth from '../components/Auth'
 import { useGameLogic } from '../hooks/useGameLogic'
 
 interface HomeProps {
@@ -21,7 +21,7 @@ interface HomeProps {
 }
 
 export default function Home({ puzzleData, availableDates }: HomeProps) {
-  const { user, loading } = useAuth()
+  const { user } = useAuth()
   const {
     gameState,
     puzzleData: currentPuzzleData,
@@ -115,13 +115,9 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
       <div className="game-container">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', maxWidth: '400px', margin: '0 auto 15px auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {loading ? (
+            {user ? (
               <span style={{ fontSize: '0.85rem', color: '#666' }}>
-                Loading...
-              </span>
-            ) : user ? (
-              <span style={{ fontSize: '0.85rem', color: '#666' }}>
-                Welcome, {user.displayName || user.email?.split('@')[0]}
+                Welcome, {user.email?.split('@')[0]}
               </span>
             ) : (
               <button 
@@ -234,7 +230,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         />
         
         {showAuth && (
-          <AuthModal onClose={handleAuthToggle} />
+          <Auth onClose={handleAuthToggle} />
         )}
       </div>
 
