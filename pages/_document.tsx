@@ -23,6 +23,9 @@ export default function Document() {
         <meta property="twitter:description" content="A challenging logic puzzle game where you place exactly one football in each row, column, and color region. Play daily puzzles with hints and archive access." />
         <meta property="twitter:image" content="https://nfl-field-puzzle.vercel.app/og-image.png" />
 
+        {/* Font Awesome for social icons */}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
         {/* Structured Data */}
         <script
           type="application/ld+json"

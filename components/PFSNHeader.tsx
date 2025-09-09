@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from '../styles/PFSNHeader.module.css';
 
 interface HeaderProps {
   currentPage?: 'CBB' | 'CFB' | 'Fantasy' | 'MLB' | 'NASCAR' | 'NBA' | 'NFL' | 'NHL' | 'Tennis' | 'WNBA' | 'WWE';
@@ -51,39 +52,39 @@ const PFSNHeader: React.FC<HeaderProps> = ({
   return (
     <>
       {/* Top Navigation Bar */}
-      <div className="pfsn-header-wrap">
-        <div className="pfsn-header-container">
+      <div className={styles.pfsnHeaderWrap}>
+        <div className={styles.pfsnHeaderContainer}>
           <button 
-            className="mobile-menu-toggle"
+            className={styles.mobileMenuToggle}
             onClick={handleMenuToggle}
             aria-label="Toggle menu"
           >
-            <span className="hamburger-line"></span>
-            <span className="hamburger-line"></span>
-            <span className="hamburger-line"></span>
+            <span className={styles.hamburgerLine}></span>
+            <span className={styles.hamburgerLine}></span>
+            <span className={styles.hamburgerLine}></span>
           </button>
           
-          <div className="pfsn-logo-section">
+          <div className={styles.pfsnLogoSection}>
             <a href="https://www.profootballnetwork.com" target="_blank" rel="noopener noreferrer">
               <img 
                 src={logoUrl}
                 alt={logoAlt}
-                className="pfsn-logo"
+                className={styles.pfsnLogo}
                 width="300"
                 height="124"
               />
             </a>
-            <span className="mobile-game-title md:hidden">NFL Duo</span>
+            <span className={styles.mobileGameTitle}>NFL Field Puzzle</span>
           </div>
           
-          <div className="pfsn-tagline">
+          <div className={styles.pfsnTagline}>
             {/* Empty for spacing */}
           </div>
           
-          <nav className={`pfsn-main-nav ${mobileMenuOpen ? 'mobile-open' : ''}`}>
-            <ul className="nav-menu">
+          <nav className={`${styles.pfsnMainNav} ${mobileMenuOpen ? styles.mobileOpen : ''}`}>
+            <ul className={styles.navMenu}>
               {navItems.map((item) => (
-                <li key={item.label} className={currentPage === item.label ? 'current-page' : ''}>
+                <li key={item.label} className={currentPage === item.label ? styles.currentPage : ''}>
                   <a 
                     href={item.href} 
                     target="_blank" 
@@ -101,7 +102,7 @@ const PFSNHeader: React.FC<HeaderProps> = ({
       </div>
 
       {/* Mobile Menu Overlay */}
-      <div className={`mobile-menu-overlay ${mobileMenuOpen ? 'active' : ''}`} onClick={handleMenuClose}></div>
+      <div className={`${styles.mobileMenuOverlay} ${mobileMenuOpen ? styles.active : ''}`} onClick={handleMenuClose}></div>
     </>
   );
 };
