@@ -62,7 +62,7 @@
 .winBannerContainer {
   position: relative;
   margin: -30px -25px 20px -25px;
-  padding: 35px 25px 20px 25px;
+  padding: 45px 25px 20px 25px;
   background: linear-gradient(to right, #1f2937, #000000);
   border-radius: 20px 20px 0 0;
 }
