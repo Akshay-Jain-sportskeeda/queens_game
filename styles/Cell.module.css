@@ -55,6 +55,34 @@
   }
 }
 
+@keyframes flipTile {
+  0% {
+    transform: rotateY(0deg) scale(1);
+  }
+  25% {
+    transform: rotateY(90deg) scale(1.1);
+  }
+  50% {
+    transform: rotateY(180deg) scale(1.2);
+    background: linear-gradient(135deg, #228B22, #32CD32);
+    box-shadow: 0 0 20px rgba(34, 139, 34, 0.6);
+  }
+  75% {
+    transform: rotateY(270deg) scale(1.1);
+  }
+  100% {
+    transform: rotateY(360deg) scale(1);
+    background: linear-gradient(135deg, #228B22, #32CD32);
+    box-shadow: 0 0 15px rgba(34, 139, 34, 0.4);
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  }
+}
+
+.winFlip {
+  animation: flipTile 0.8s ease-in-out forwards;
+}
 .cell.winFlip {
   animation: flipTile 0.8s ease-in-out forwards;
 }
