@@ -29,6 +29,11 @@
   font-weight: 500;
 }
 
+/* Style cross emoji in info text */
+.infoText .cross-emoji {
+  color: #444;
+  font-size: 0.8rem;
+}
 .infoBar.hint {
   background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
   border-color: #ffeaa7;

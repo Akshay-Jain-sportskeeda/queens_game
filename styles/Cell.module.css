@@ -10,6 +10,12 @@
   position: relative;
 }
 
+/* Style for cross emoji specifically */
+.cell[data-symbol="❌"] {
+  color: #444;
+  font-size: 0.8rem;
+}
+
 .cell.prefilled {
   font-weight: bold;
 }
