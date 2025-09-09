@@ -106,7 +106,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         </header>
         
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', maxWidth: '400px', margin: '0 auto 25px auto' }}>
-          <p style={{ margin: 0, flex: 1, textAlign: 'left', fontSize: '1rem', color: '#666' }}>Place exactly one football in each row, column, and color region</p>
+          <p style={{ margin: 0, flex: 1, textAlign: 'left', fontSize: '1rem', color: '#666' }}>Place exactly 1 🏈 in each row, column & region</p>
           <button 
             onClick={handleRulesToggle}
             style={{
