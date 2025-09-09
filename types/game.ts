@@ -48,4 +48,6 @@ export interface WinStats {
   moves: number;
   hints: number;
   time: string;
+  displayTime: string;
+  calculation: string;
 }

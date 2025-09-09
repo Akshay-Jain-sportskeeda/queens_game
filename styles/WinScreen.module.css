@@ -74,46 +74,80 @@
 }
 
 .statsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin-bottom: 25px;
 }
 
 .statItem {
-  padding: 12px 8px;
+  padding: 16px 20px;
   border-radius: 10px;
-  border: 2px solid rgba(255,255,255,0.3);
+  border: 1px solid #e5e7eb;
   min-width: 0;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .statItem:nth-child(1) {
-  background: linear-gradient(135deg, #ffcccb, #ffb3ba);
+  background: #f0f9ff;
 }
 
 .statItem:nth-child(2) {
-  background: linear-gradient(135deg, #c8e6c9, #a8d8a8);
+  background: #fefce8;
 }
 
 .statItem:nth-child(3) {
-  background: linear-gradient(135deg, #fff9c4, #fff3a0);
-  grid-column: 1 / -1;
+  background: #f0fdf4;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .statValue {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
-  color: #333;
-  display: block;
+}
+
+.statItem:nth-child(1) .statValue {
+  color: #2563eb;
+}
+
+.statItem:nth-child(2) .statValue {
+  color: #d97706;
+}
+
+.statItem:nth-child(3) .statValue {
+  color: #16a34a;
 }
 
 .statLabel {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 5px;
+  font-size: 1rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.timeBreakdown {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.penaltyText {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.calculationText {
+  font-size: 0.875rem;
+  color: #6b7280;
 }
 
 .winActions {

@@ -22,21 +22,27 @@ const WinScreen: React.FC<WinScreenProps> = ({
       <div className={styles.winContent}>
         <div className={styles.winBannerContainer}>
           <div className={styles.winBanner}>🎉 Congratulations!</div>
-          <div className={styles.winSubtitle}>You solved today's NFL Field Puzzle!</div>
+          <div className={styles.winSubtitle}>Your Performance</div>
         </div>
         
         <div className={styles.statsGrid}>
           <div className={styles.statItem}>
-            <span className={styles.statValue}>{stats.moves}</span>
             <div className={styles.statLabel}>Moves</div>
+            <span className={styles.statValue}>{stats.moves}</span>
           </div>
           <div className={styles.statItem}>
+            <div className={styles.statLabel}>Hints Used</div>
             <span className={styles.statValue}>{stats.hints}</span>
-            <div className={styles.statLabel}>Hints</div>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statValue}>{stats.time}</span>
-            <div className={styles.statLabel}>Time</div>
+            <div className={styles.statRow}>
+              <div className={styles.statLabel}>Time</div>
+              <span className={styles.statValue}>{stats.displayTime}</span>
+            </div>
+            <div className={styles.timeBreakdown}>
+              <div className={styles.penaltyText}>+15s per hint</div>
+              <div className={styles.calculationText}>{stats.calculation}</div>
+            </div>
           </div>
         </div>
         

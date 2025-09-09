@@ -46,12 +46,20 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         const totalTime = baseTime + hintPenalty
         const minutes = Math.floor(totalTime / 60)
         const seconds = totalTime % 60
-        const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}${gameState.hintCount > 0 ? ` (+${hintPenalty}s)` : ''}`
+        const displayTime = `${minutes}m ${seconds}s`
+        
+        const baseMinutes = Math.floor(baseTime / 60)
+        const baseSeconds = baseTime % 60
+        const calculation = gameState.hintCount > 0 
+          ? `${baseMinutes}m ${baseSeconds}s + ${gameState.hintCount}×15s`
+          : `${baseMinutes}m ${baseSeconds}s`
         
         setWinStats({
           moves: gameState.moveCount,
           hints: gameState.hintCount,
-          time: timeString
+          time: displayTime,
+          displayTime: displayTime,
+          calculation: calculation
         })
         setShowWinScreen(true)
       }, 2500) // Wait for all row animations (2s) + 0.5s delay = 2.5s
