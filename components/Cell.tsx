@@ -38,7 +38,8 @@ const Cell: React.FC<CellProps> = ({
   borderTop,
   borderRight,
   borderBottom,
-  borderLeft
+  borderLeft,
+  isWinAnimated
 }) => {
   const handleClick = () => {
     onClick(row, col)
