@@ -9,6 +9,10 @@ interface CellProps {
   isPrefilled: boolean
   hasConflict: boolean
   hasHintHighlight: boolean
+  hintBorderTop?: boolean
+  hintBorderRight?: boolean
+  hintBorderBottom?: boolean
+  hintBorderLeft?: boolean
   conflictType?: string
   onClick: (row: number, col: number) => void
   borderTop: boolean
@@ -25,6 +29,10 @@ const Cell: React.FC<CellProps> = ({
   isPrefilled,
   hasConflict,
   hasHintHighlight,
+  hintBorderTop,
+  hintBorderRight,
+  hintBorderBottom,
+  hintBorderLeft,
   conflictType,
   onClick,
   borderTop,
@@ -56,6 +64,10 @@ const Cell: React.FC<CellProps> = ({
         ${borderRight ? styles.borderRight : ''}
         ${borderBottom ? styles.borderBottom : ''}
         ${borderLeft ? styles.borderLeft : ''}
+        ${hintBorderTop ? styles.hintBorderTop : ''}
+        ${hintBorderRight ? styles.hintBorderRight : ''}
+        ${hintBorderBottom ? styles.hintBorderBottom : ''}
+        ${hintBorderLeft ? styles.hintBorderLeft : ''}
       `}
       data-row={row}
       data-col={col}

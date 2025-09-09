@@ -40,19 +40,23 @@
 }
 
 .cell.hintHighlight {
-  box-shadow: 0 0 0 3px #ffc107, 0 0 15px rgba(255, 193, 7, 0.5);
-  animation: hint-pulse 2s infinite;
-  z-index: 10;
-  position: relative;
+  background-color: rgba(255, 193, 7, 0.2) !important;
 }
 
-@keyframes hint-pulse {
-  0%, 100% { 
-    box-shadow: 0 0 0 3px #ffc107, 0 0 15px rgba(255, 193, 7, 0.5);
-  }
-  50% { 
-    box-shadow: 0 0 0 5px #ffc107, 0 0 25px rgba(255, 193, 7, 0.8);
-  }
+.hintBorderTop {
+  border-top: 3px solid #ffc107 !important;
+}
+
+.hintBorderRight {
+  border-right: 3px solid #ffc107 !important;
+}
+
+.hintBorderBottom {
+  border-bottom: 3px solid #ffc107 !important;
+}
+
+.hintBorderLeft {
+  border-left: 3px solid #ffc107 !important;
 }
 
 .cell.winFlip {
