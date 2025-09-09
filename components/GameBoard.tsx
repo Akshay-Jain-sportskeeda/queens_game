@@ -8,6 +8,7 @@ interface GameBoardProps {
   regions: number[][]
   prefills: number[][]
   violations: Set<string>
+  conflictTypes: Map<string, string>
   hintHighlights: Set<string>
   isWinAnimationActive: boolean
   onCellClick: (row: number, col: number) => void
@@ -18,6 +19,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   regions,
   prefills,
   violations,
+  conflictTypes,
   hintHighlights,
   isWinAnimationActive,
   onCellClick
@@ -77,11 +79,6 @@ const GameBoard: React.FC<GameBoardProps> = ({
     }
   }
 
-  const getConflictType = (row: number, col: number) => {
-    // This would be implemented based on the specific conflict type
-    return 'general'
-  }
-
   const shouldShowBorder = (row: number, col: number, direction: 'top' | 'right' | 'bottom' | 'left') => {
     const currentRegion = regions[row][col]
     
@@ -126,7 +123,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
             hintBorderRight={hintBorders.right}
             hintBorderBottom={hintBorders.bottom}
             hintBorderLeft={hintBorders.left}
-            conflictType={hasConflict(rowIndex, colIndex) ? getConflictType(rowIndex, colIndex) : undefined}
+            conflictType={hasConflict(rowIndex, colIndex) ? conflictTypes.get(`${rowIndex},${colIndex}`) : undefined}
             onClick={onCellClick}
             borderTop={shouldShowBorder(rowIndex, colIndex, 'top')}
             borderRight={shouldShowBorder(rowIndex, colIndex, 'right')}

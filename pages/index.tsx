@@ -105,6 +105,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           regions={currentPuzzleData.regions}
           prefills={currentPuzzleData.prefills}
           violations={gameState.violations}
+          conflictTypes={gameState.conflictTypes}
           hintHighlights={hintHighlights}
           isWinAnimationActive={gameState.isWinAnimationActive}
           onCellClick={handleCellClick}

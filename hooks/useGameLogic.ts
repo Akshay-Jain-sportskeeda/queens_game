@@ -6,6 +6,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     board: Array(initialPuzzleData.gridSize).fill().map(() => Array(initialPuzzleData.gridSize).fill('')),
     history: [],
     violations: new Set(),
+    conflictTypes: new Map(),
     moveCount: 0,
     hintCount: 0,
     startTime: Date.now(),
@@ -89,6 +90,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       board: newBoard,
       history: [],
       violations: new Set(),
+      conflictTypes: new Map(),
       moveCount: 0,
       hintCount: 0,
       startTime: Date.now(),
@@ -210,13 +212,31 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       // Check win condition
       const isWin = checkWinCondition(prev.board, footballs.length)
       
+      // Update info message based on violations
+      if (violations.size > 0) {
+        const conflictTypesList = Array.from(new Set(conflictTypes.values()))
+        let message = 'Rule violation detected: '
+        if (conflictTypesList.includes('adjacent')) {
+          message += 'Footballs cannot touch each other'
+        } else if (conflictTypesList.includes('row')) {
+          message += 'Multiple footballs in the same row'
+        } else if (conflictTypesList.includes('column')) {
+          message += 'Multiple footballs in the same column'
+        } else if (conflictTypesList.includes('region')) {
+          message += 'Multiple footballs in the same region'
+        }
+        showInfoMessage(message, 'conflict')
+      } else if (!isWin) {
+        resetInfoMessage()
+      }
+      
       return {
         ...prev,
         violations,
+        conflictTypes,
         gameCompleted: isWin,
       }
     })
-  }, [puzzleData.gridSize, puzzleData.regions, checkWinCondition])
 
   const debouncedValidation = useCallback(() => {
     if (validationTimeoutRef.current) {
@@ -736,6 +756,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       board: newBoard,
       history: [],
       violations: new Set(),
+      conflictTypes: new Map(),
       moveCount: 0,
       hintCount: 0,
       startTime: Date.now(),

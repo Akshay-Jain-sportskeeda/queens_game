@@ -10,6 +10,7 @@ export interface GameState {
   board: string[][];
   history: string[][][];
   violations: Set<string>;
+  conflictTypes: Map<string, string>;
   moveCount: number;
   hintCount: number;
   startTime: number;
