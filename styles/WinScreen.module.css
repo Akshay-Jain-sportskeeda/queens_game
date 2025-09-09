@@ -34,8 +34,8 @@
 
 .closeButton {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 10px;
+  right: 10px;
   background: transparent;
   border: none;
   color: #6b7280;
@@ -62,7 +62,7 @@
 .winBannerContainer {
   position: relative;
   margin: -30px -25px 20px -25px;
-  padding: 25px 25px 20px 25px;
+  padding: 35px 25px 20px 25px;
   background: linear-gradient(to right, #1f2937, #000000);
   border-radius: 20px 20px 0 0;
 }
