@@ -103,8 +103,67 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
       <div className="game-container">
         <header>
           <h1>🏈 NFL Field Puzzle</h1>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-            <p style={{ margin: 0, flex: 1, textAlign: 'left' }}>Place exactly one football in each row, column, and color region</p>
+        </header>
+        
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', maxWidth: '400px', margin: '0 auto 25px auto' }}>
+          <p style={{ margin: 0, flex: 1, textAlign: 'left', fontSize: '1rem', color: '#666' }}>Place exactly one football in each row, column, and color region</p>
+          <button 
+            onClick={handleRulesToggle}
+            style={{
+              background: 'transparent',
+              border: '1px solid #667eea',
+              borderRadius: '4px',
+              padding: '6px 10px',
+              color: '#667eea',
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              transition: 'all 0.2s ease',
+              flexShrink: 0
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#667eea'
+              e.currentTarget.style.color = 'white'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent'
+              e.currentTarget.style.color = '#667eea'
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9,9h0a3,3,0,0,1,5.12,2.12h0A3,3,0,0,1,13,14"/>
+              <circle cx="12" cy="17" r=".5"/>
+            </svg>
+            Rules
+          </button>
+        </div>
+        
+        <GameBoard
+          board={gameState.board}
+          regions={currentPuzzleData.regions}
+          prefills={currentPuzzleData.prefills}
+          violations={gameState.violations}
+          conflictTypes={gameState.conflictTypes}
+          hintHighlights={hintHighlights}
+          isWinAnimationActive={gameState.isWinAnimationActive}
+          onCellClick={handleCellClick}
+        />
+        
+        <Controls
+          onUndo={undo}
+          onHint={getHint}
+          onReset={reset}
+        />
+        
+        <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+          <InfoBar
+            message={infoMessage.text || "Click on cells to place × or 🏈. Use hints if you get stuck!"}
+            type={infoMessage.type as 'default' | 'hint' | 'conflict' | 'success'}
+          />
+        </div>
             <button 
               onClick={handleRulesToggle}
               style={{
