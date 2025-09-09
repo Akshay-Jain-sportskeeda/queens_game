@@ -237,6 +237,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         gameCompleted: isWin,
       }
     })
+  }, [puzzleData.gridSize, puzzleData.regions, checkWinCondition, showInfoMessage, resetInfoMessage])
 
   const debouncedValidation = useCallback(() => {
     if (validationTimeoutRef.current) {
