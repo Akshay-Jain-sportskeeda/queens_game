@@ -17,6 +17,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   const [infoMessage, setInfoMessage] = useState({ text: '', type: 'default' })
   const [hintHighlights, setHintHighlights] = useState<Set<string>>(new Set())
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Debug function to log board state
   const logBoardState = useCallback((context: string, board: string[][]) => {
@@ -201,7 +202,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         ...prev,
         violations,
         gameCompleted: isWin,
-        isWinAnimationActive: isWin
       }
     })
   }, [puzzleData.gridSize, puzzleData.regions, checkWinCondition])
@@ -218,14 +218,27 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   // Trigger win animation and then show modal
   useEffect(() => {
-    if (gameState.gameCompleted && gameState.isWinAnimationActive) {
+    if (gameState.gameCompleted && !gameState.isWinAnimationActive) {
+      console.log('Game completed! Triggering win animation...')
+      
+      // Trigger the animation
+      setGameState(prev => ({
+        ...prev,
+        isWinAnimationActive: true
+      }))
+      
       // Show success message
       showInfoMessage('🎉 Congratulations! You solved the puzzle! 🎉', 'success')
       
-      // The win screen will be shown by the parent component
-      // after detecting gameState.gameCompleted
+      // Reset animation state after animation completes (0.8s as defined in CSS)
+      animationTimeoutRef.current = setTimeout(() => {
+        console.log('Animation completed, resetting animation state')
+        setGameState(prev => ({
+          ...prev,
+          isWinAnimationActive: false
+        }))
+      }, 800)
     }
-  }, [gameState.gameCompleted, gameState.isWinAnimationActive, showInfoMessage])
 
   const handleCellClick = useCallback((row: number, col: number) => {
     // Clear any existing hint highlights when user makes a move
