@@ -21,7 +21,7 @@ const WinScreen: React.FC<WinScreenProps> = ({
     <div className={`${styles.winScreen} ${show ? styles.show : ''}`}>
       <div className={styles.winContent}>
         <div className={styles.winBannerContainer}>
-          <div className={styles.winBanner}>🎉 Congratulations! 🎉</div>
+          <div className={styles.winBanner}>🎉 Congratulations!</div>
           <div className={styles.winSubtitle}>You solved today's NFL Field Puzzle!</div>
         </div>
         
