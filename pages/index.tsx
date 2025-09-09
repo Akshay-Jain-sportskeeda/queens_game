@@ -103,22 +103,22 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
       <div className="game-container">
         <header>
           <h1>🏈 NFL Field Puzzle</h1>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            <p style={{ margin: 0 }}>Place exactly one football in each row, column, and color region</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
             <button 
               onClick={handleRulesToggle}
               style={{
                 background: 'transparent',
                 border: '1px solid #667eea',
-                borderRadius: '20px',
-                padding: '4px 12px',
+                borderRadius: '4px',
+                padding: '6px 10px',
                 color: '#667eea',
                 fontSize: '0.85rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                flexShrink: 0
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = '#667eea'
@@ -136,6 +136,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
               </svg>
               Rules
             </button>
+            <p style={{ margin: 0 }}>Place exactly one football in each row, column, and color region</p>
           </div>
         </header>
         
