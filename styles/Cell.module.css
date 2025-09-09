@@ -1,105 +1,55 @@
-import React from 'react'
-import { CellProps } from '../types/game'
-import Cell from './Cell'
-import styles from '../styles/GameBoard.module.css'
-
-interface GameBoardProps {
-  board: string[][]
-  regions: number[][]
-  prefills: number[][]
-  violations: Set<string>
-  hintHighlights: Set<string>
-  onCellClick: (row: number, col: number) => void
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  position: relative;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({
-  board,
-  regions,
-  prefills,
-  violations,
-  hintHighlights,
-  onCellClick
-}) => {
-  const boardSize = board.length
+.cell.prefilled {
+  font-weight: bold;
+}
 
-  const getRegionMap = () => {
-    const regionMap: { [key: string]: number } = {}
-    for (let row = 0; row < boardSize; row++) {
-      for (let col = 0; col < boardSize; col++) {
-        regionMap[`${row},${col}`] = regions[row][col]
-      }
-    }
-    return regionMap
-  }
+/* Region borders */
+.borderTop {
+  border-top: 1px solid #000;
+}
 
-  const regionMap = getRegionMap()
+.borderRight {
+  border-right: 1px solid #000;
+}
 
-  const isPrefilled = (row: number, col: number) => {
-    return prefills.some(([r, c]) => r === row && c === col)
-  }
+.borderBottom {
+  border-bottom: 1px solid #000;
+}
 
-  const hasConflict = (row: number, col: number) => {
-    return violations.has(`${row},${col}`)
-  }
-  
-  const hasHintHighlight = (row: number, col: number) => {
-    return hintHighlights.has(`${row},${col}`)
-  }
-  
-  const getHintBorders = (row: number, col: number) => {
-    if (!hasHintHighlight(row, col)) {
-      return { top: false, right: false, bottom: false, left: false }
-    }
-    
-    return {
+.borderLeft {
+  border-left: 1px solid #000;
+}
 
-  const getConflictType = (row: number, col: number) => {
-    // This would be implemented based on the specific conflict type
-    return 'general'
-  }
+.cell.invalid {
+  animation: shake 0.5s ease-in-out;
+}
 
-  const shouldShowBorder = (row: number, col: number, direction: 'top' | 'right' | 'bottom' | 'left') => {
-    const currentRegion = regions[row][col]
-    
-    switch (direction) {
-      case 'top':
-        return row === 0 || regions[row - 1][col] !== currentRegion
-      case 'right':
-        return col === boardSize - 1 || regions[row][col + 1] !== currentRegion
-      case 'bottom':
-        return row === boardSize - 1 || regions[row + 1][col] !== currentRegion
-      case 'left':
-        return col === 0 || regions[row][col - 1] !== currentRegion
-      default:
-        return false
-    }
-  }
+.cell.conflict {
+  animation: pulse-conflict 1.5s infinite;
+}
 
-  return (
-    <div 
-      className={styles.gameBoard}
-      style={{
-        gridTemplateColumns: `repeat(${boardSize}, 1fr)`
-      }}
-    >
-      {board.map((row, rowIndex) =>
-        row.map((cell, colIndex) => (
-          <Cell
-            key={`${rowIndex}-${colIndex}`}
-            row={rowIndex}
-            col={colIndex}
-            value={cell}
-            region={regions[rowIndex][colIndex]}
-            isPrefilled={isPrefilled(rowIndex, colIndex)}
-            hasConflict={hasConflict(rowIndex, colIndex)}
-            hasHintHighlight={hasHintHighlight(rowIndex, colIndex)}
-            conflictType={hasConflict(rowIndex, colIndex) ? getConflictType(rowIndex, colIndex) : undefined}
-            onClick={onCellClick}
-            borderTop={shouldShowBorder(rowIndex, colIndex, 'top')}
-            borderRight={shouldShowBorder(rowIndex, colIndex, 'right')}
-            borderBottom={shouldShowBorder(rowIndex, colIndex, 'bottom')}
-            borderLeft={shouldShowBorder(rowIndex, colIndex, 'left')}
-          />
+.cell.hintHighlight {
+  background: rgba(255, 193, 7, 0.2) !important;
+  position: relative;
+  z-index: 5;
+}
+
+.cell.winFlip {
+  animation: flipTile 0.8s ease-in-out forwards;
+}
+
+/* Hint border classes for edge-only highlighting */
 .hintBorderTop {
   border-top: 3px solid #ffc107 !important;
 }
@@ -116,4 +66,35 @@ const GameBoard: React.FC<GameBoardProps> = ({
   border-left: 3px solid #ffc107 !important;
 }
 
-export default GameBoard
+/* Conflict border classes for edge-only highlighting */
+.borderConflictTop {
+  border-top: 2px solid #f44336 !important;
+}
+
+.borderConflictRight {
+  border-right: 2px solid #f44336 !important;
+}
+
+.borderConflictBottom {
+  border-bottom: 2px solid #f44336 !important;
+}
+
+.borderConflictLeft {
+  border-left: 2px solid #f44336 !important;
+}
+
+/* Color regions based on the puzzle */
+.region0 { background-color: #ffcccb; } /* Pastel Red */
+.region1 { background-color: #c8e6c9; } /* Pastel Green */
+.region2 { background-color: #fff9c4; } /* Pastel Yellow */
+.region3 { background-color: #bbdefb; } /* Pastel Blue */
+.region4 { background-color: #ffcc80; } /* Pastel Orange */
+.region5 { background-color: #f8bbd9; } /* Pastel Pink */
+.region6 { background-color: #d7ccc8; } /* Pastel Brown */
+.region7 { background-color: #e1bee7; } /* Pastel Purple */
+
+@media (max-width: 480px) {
+  .cell {
+    font-size: 1rem;
+  }
+}

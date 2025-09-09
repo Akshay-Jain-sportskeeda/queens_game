@@ -68,6 +68,10 @@ const Cell: React.FC<CellProps> = ({
         ${hintBorderRight ? styles.hintBorderRight : ''}
         ${hintBorderBottom ? styles.hintBorderBottom : ''}
         ${hintBorderLeft ? styles.hintBorderLeft : ''}
+        ${hintBorderTop ? styles.hintBorderTop : ''}
+        ${hintBorderRight ? styles.hintBorderRight : ''}
+        ${hintBorderBottom ? styles.hintBorderBottom : ''}
+        ${hintBorderLeft ? styles.hintBorderLeft : ''}
       `}
       data-row={row}
       data-col={col}

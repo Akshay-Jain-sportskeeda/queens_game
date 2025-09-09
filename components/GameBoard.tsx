@@ -77,6 +77,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
     >
       {board.map((row, rowIndex) =>
         row.map((cell, colIndex) => (
+          (() => {
+            const hintBorders = getHintBorders(rowIndex, colIndex)
+            return (
           <Cell
             key={`${rowIndex}-${colIndex}`}
             row={rowIndex}
@@ -86,6 +89,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
             isPrefilled={isPrefilled(rowIndex, colIndex)}
             hasConflict={hasConflict(rowIndex, colIndex)}
             hasHintHighlight={hasHintHighlight(rowIndex, colIndex)}
+            hintBorderTop={hintBorders.top}
+            hintBorderRight={hintBorders.right}
+            hintBorderBottom={hintBorders.bottom}
+            hintBorderLeft={hintBorders.left}
             conflictType={hasConflict(rowIndex, colIndex) ? getConflictType(rowIndex, colIndex) : undefined}
             onClick={onCellClick}
             borderTop={shouldShowBorder(rowIndex, colIndex, 'top')}
@@ -93,6 +100,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
             borderBottom={shouldShowBorder(rowIndex, colIndex, 'bottom')}
             borderLeft={shouldShowBorder(rowIndex, colIndex, 'left')}
           />
+            )
+          })()
         ))
       )}
     </div>
