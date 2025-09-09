@@ -104,6 +104,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         <header>
           <h1>🏈 NFL Field Puzzle</h1>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+            <p style={{ margin: 0, flex: 1, textAlign: 'left' }}>Place exactly one football in each row, column, and color region</p>
             <button 
               onClick={handleRulesToggle}
               style={{
@@ -136,7 +137,6 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
               </svg>
               Rules
             </button>
-            <p style={{ margin: 0 }}>Place exactly one football in each row, column, and color region</p>
           </div>
         </header>
         
