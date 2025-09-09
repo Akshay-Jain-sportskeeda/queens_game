@@ -46,6 +46,27 @@ const GameBoard: React.FC<GameBoardProps> = ({
     return hintHighlights.has(`${row},${col}`)
   }
 
+  const getHintBorders = (row: number, col: number) => {
+    const isHighlighted = hasHintHighlight(row, col)
+    
+    if (!isHighlighted) {
+      return { top: false, right: false, bottom: false, left: false }
+    }
+
+    // Check if adjacent cells are also highlighted to determine edge borders
+    const topHighlighted = row > 0 && hasHintHighlight(row - 1, col)
+    const rightHighlighted = col < boardSize - 1 && hasHintHighlight(row, col + 1)
+    const bottomHighlighted = row < boardSize - 1 && hasHintHighlight(row + 1, col)
+    const leftHighlighted = col > 0 && hasHintHighlight(row, col - 1)
+
+    return {
+      top: !topHighlighted,
+      right: !rightHighlighted,
+      bottom: !bottomHighlighted,
+      left: !leftHighlighted
+    }
+  }
+
   const getConflictType = (row: number, col: number) => {
     // This would be implemented based on the specific conflict type
     return 'general'
