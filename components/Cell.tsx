@@ -39,18 +39,13 @@ const Cell: React.FC<CellProps> = ({
   const getConflictBorderClasses = () => {
     if (!hasConflict || !conflictType) return {}
     
-    // For adjacent conflicts, highlight the specific cell
-    if (conflictType === 'adjacent') {
-      return {
-        borderConflictTop: true,
-        borderConflictRight: true,
-        borderConflictBottom: true,
-        borderConflictLeft: true
-      }
+    // Apply red borders for all conflict types
+    return {
+      borderConflictTop: true,
+      borderConflictRight: true,
+      borderConflictBottom: true,
+      borderConflictLeft: true
     }
-    
-    // For row/column/region conflicts, we'll apply general conflict styling
-    return {}
   }
 
   const conflictBorders = getConflictBorderClasses()
