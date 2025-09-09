@@ -21,7 +21,7 @@ interface HomeProps {
 }
 
 export default function Home({ puzzleData, availableDates }: HomeProps) {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const {
     gameState,
     puzzleData: currentPuzzleData,
