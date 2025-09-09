@@ -1,25 +1,6 @@
 import React from 'react'
 import styles from '../styles/Cell.module.css'
-
-interface CellProps {
-  row: number
-  col: number
-  value: string
-  region: number
-  isPrefilled: boolean
-  hasConflict: boolean
-  hasHintHighlight: boolean
-  hintBorderTop?: boolean
-  hintBorderRight?: boolean
-  hintBorderBottom?: boolean
-  hintBorderLeft?: boolean
-  conflictType?: string
-  onClick: (row: number, col: number) => void
-  borderTop: boolean
-  borderRight: boolean
-  borderBottom: boolean
-  borderLeft: boolean
-}
+import { CellProps } from '../types/game'
 
 const Cell: React.FC<CellProps> = ({
   row,

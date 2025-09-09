@@ -25,8 +25,17 @@ export interface CellProps {
   isPrefilled: boolean;
   hasConflict: boolean;
   isWinAnimated: boolean;
+  hasHintHighlight: boolean;
+  hintBorderTop?: boolean;
+  hintBorderRight?: boolean;
+  hintBorderBottom?: boolean;
+  hintBorderLeft?: boolean;
   conflictType?: string;
   onClick: (row: number, col: number) => void;
+  borderTop: boolean;
+  borderRight: boolean;
+  borderBottom: boolean;
+  borderLeft: boolean;
 }
 
 export interface HintData {
