@@ -13,7 +13,7 @@
 /* Style for cross emoji specifically */
 .cell[data-symbol="×"] {
   color: #666;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
 }
 
 .cell.prefilled {
