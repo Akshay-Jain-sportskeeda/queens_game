@@ -32,6 +32,10 @@ export interface CellProps {
   hintBorderRight?: boolean;
   hintBorderBottom?: boolean;
   hintBorderLeft?: boolean;
+  conflictBorderTop?: boolean;
+  conflictBorderRight?: boolean;
+  conflictBorderBottom?: boolean;
+  conflictBorderLeft?: boolean;
   conflictType?: string;
   onClick: (row: number, col: number) => void;
   borderTop: boolean;

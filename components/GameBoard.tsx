@@ -79,6 +79,27 @@ const GameBoard: React.FC<GameBoardProps> = ({
     }
   }
 
+  const getConflictBorders = (row: number, col: number) => {
+    const hasConflictHere = hasConflict(row, col)
+    
+    if (!hasConflictHere) {
+      return { top: false, right: false, bottom: false, left: false }
+    }
+
+    // Check if adjacent cells also have conflicts to determine edge borders
+    const topConflict = row > 0 && hasConflict(row - 1, col)
+    const rightConflict = col < boardSize - 1 && hasConflict(row, col + 1)
+    const bottomConflict = row < boardSize - 1 && hasConflict(row + 1, col)
+    const leftConflict = col > 0 && hasConflict(row, col - 1)
+
+    return {
+      top: !topConflict,
+      right: !rightConflict,
+      bottom: !bottomConflict,
+      left: !leftConflict
+    }
+  }
+
   const shouldShowBorder = (row: number, col: number, direction: 'top' | 'right' | 'bottom' | 'left') => {
     const currentRegion = regions[row][col]
     
@@ -107,6 +128,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
         row.map((cell, colIndex) => (
           (() => {
             const hintBorders = getHintBorders(rowIndex, colIndex)
+            const conflictBorders = getConflictBorders(rowIndex, colIndex)
             return (
           <Cell
             key={`${rowIndex}-${colIndex}`}
@@ -123,6 +145,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
             hintBorderRight={hintBorders.right}
             hintBorderBottom={hintBorders.bottom}
             hintBorderLeft={hintBorders.left}
+            conflictBorderTop={conflictBorders.top}
+            conflictBorderRight={conflictBorders.right}
+            conflictBorderBottom={conflictBorders.bottom}
+            conflictBorderLeft={conflictBorders.left}
             conflictType={hasConflict(rowIndex, colIndex) ? conflictTypes.get(`${rowIndex},${colIndex}`) : undefined}
             onClick={onCellClick}
             borderTop={shouldShowBorder(rowIndex, colIndex, 'top')}

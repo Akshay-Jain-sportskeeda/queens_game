@@ -15,6 +15,10 @@ const Cell: React.FC<CellProps> = ({
   hintBorderRight,
   hintBorderBottom,
   hintBorderLeft,
+  conflictBorderTop,
+  conflictBorderRight,
+  conflictBorderBottom,
+  conflictBorderLeft,
   conflictType,
   onClick,
   borderTop,
@@ -35,20 +39,6 @@ const Cell: React.FC<CellProps> = ({
   // Convert region number to CSS class name
   const getRegionClassName = () => `region${region}`
 
-  // Get conflict border classes based on conflict type
-  const getConflictBorderClasses = () => {
-    if (!hasConflict || !conflictType) return {}
-    
-    // Apply red borders for all conflict types
-    return {
-      borderConflictTop: true,
-      borderConflictRight: true,
-      borderConflictBottom: true,
-      borderConflictLeft: true
-    }
-  }
-
-  const conflictBorders = getConflictBorderClasses()
   return (
     <div
       className={`
@@ -66,10 +56,10 @@ const Cell: React.FC<CellProps> = ({
         ${hintBorderRight ? styles.hintBorderRight : ''}
         ${hintBorderBottom ? styles.hintBorderBottom : ''}
         ${hintBorderLeft ? styles.hintBorderLeft : ''}
-        ${conflictBorders.borderConflictTop ? styles.borderConflictTop : ''}
-        ${conflictBorders.borderConflictRight ? styles.borderConflictRight : ''}
-        ${conflictBorders.borderConflictBottom ? styles.borderConflictBottom : ''}
-        ${conflictBorders.borderConflictLeft ? styles.borderConflictLeft : ''}
+        ${conflictBorderTop ? styles.borderConflictTop : ''}
+        ${conflictBorderRight ? styles.borderConflictRight : ''}
+        ${conflictBorderBottom ? styles.borderConflictBottom : ''}
+        ${conflictBorderLeft ? styles.borderConflictLeft : ''}
       `}
       data-row={row}
       data-col={col}
