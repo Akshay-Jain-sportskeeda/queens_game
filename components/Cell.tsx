@@ -68,7 +68,7 @@ const Cell: React.FC<CellProps> = ({
       onClick={handleClick}
       style={{
         color: value === '×' ? '#666' : '',
-        fontSize: value === '×' ? '0.7rem' : '',
+        fontSize: value === '×' ? '1.2rem' : '',
         fontWeight: isPrefilled ? 'bold' : 'normal',
         animationDelay: isWinAnimated ? `${animationDelay}ms` : undefined
       }}
