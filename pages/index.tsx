@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { useState, useEffect, useCallback } from 'react'
 import { PuzzleData, GameState, WinStats } from '../types/game'
+import { useAuth } from '../hooks/useAuth'
 import GameBoard from '../components/GameBoard'
 import Controls from '../components/Controls'
 import InfoBar from '../components/InfoBar'
@@ -11,6 +12,7 @@ import ArchiveScreen from '../components/ArchiveScreen'
 import RulesPopup from '../components/RulesPopup'
 import PFSNHeader from '../components/PFSNHeader'
 import PFSNFooter from '../components/PFSNFooter'
+import Auth from '../components/Auth'
 import { useGameLogic } from '../hooks/useGameLogic'
 
 interface HomeProps {
@@ -19,6 +21,7 @@ interface HomeProps {
 }
 
 export default function Home({ puzzleData, availableDates }: HomeProps) {
+  const { user } = useAuth()
   const {
     gameState,
     puzzleData: currentPuzzleData,
@@ -37,6 +40,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   const [showWinScreen, setShowWinScreen] = useState(false)
   const [showArchive, setShowArchive] = useState(false)
   const [showRules, setShowRules] = useState(false)
+  const [showAuth, setShowAuth] = useState(false)
   const [winStats, setWinStats] = useState<WinStats>({ moves: 0, hints: 0, time: '0:00' })
 
   // Check for win condition
@@ -88,6 +92,10 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     setShowRules(!showRules)
   }, [showRules])
 
+  const handleAuthToggle = useCallback(() => {
+    setShowAuth(!showAuth)
+  }, [showAuth])
+
   return (
     <>
       <Head>
@@ -105,6 +113,39 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
       <PFSNHeader currentPage="NFL" />
 
       <div className="game-container">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', maxWidth: '400px', margin: '0 auto 15px auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {user ? (
+              <span style={{ fontSize: '0.85rem', color: '#666' }}>
+                Welcome, {user.email?.split('@')[0]}
+              </span>
+            ) : (
+              <button 
+                onClick={handleAuthToggle}
+                style={{
+                  background: '#667eea',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '6px 12px',
+                  color: 'white',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  flexShrink: 0
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#5a6fd8'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#667eea'
+                }}
+              >
+                Sign In
+              </button>
+            )}
+          </div>
+        </div>
+        
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', maxWidth: '400px', margin: '0 auto 25px auto' }}>
           <p style={{ margin: 0, flex: 1, textAlign: 'left', fontSize: '1rem', color: '#666' }}>Place exactly 1 🏈 in each row, column & region</p>
           <button 
@@ -187,6 +228,10 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           show={showRules}
           onClose={handleRulesToggle}
         />
+        
+        {showAuth && (
+          <Auth onClose={handleAuthToggle} />
+        )}
       </div>
 
       <PFSNFooter currentPage="NFL" />
