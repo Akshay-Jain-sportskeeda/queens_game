@@ -117,7 +117,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         />
         
         <InfoBar
-          message={infoMessage.text || "Click on cells to place ❌ or 🏈. Use hints if you get stuck!"}
+          message={infoMessage.text || "Click on cells to place × or 🏈. Use hints if you get stuck!"}
           type={infoMessage.type as 'default' | 'hint' | 'conflict' | 'success'}
         />
         

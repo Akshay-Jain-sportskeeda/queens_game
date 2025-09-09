@@ -627,7 +627,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     
     for (let row = 0; row < puzzleData.gridSize; row++) {
       for (let col = 0; col < puzzleData.gridSize; col++) {
-        if (gameState.board[row][col] === '❌') {
+        if (gameState.board[row][col] === '×') {
           // Check if this X is placed where a football should be according to solution
           const shouldHaveFootball = puzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col);
           if (shouldHaveFootball) {
