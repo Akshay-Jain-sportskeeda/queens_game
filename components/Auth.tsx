@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import styles from '../styles/Auth.module.css'
 
@@ -13,6 +13,13 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const { user, loading, error, signIn, signUp, logout } = useAuth()
 
+  // Close modal when user successfully logs in
+  useEffect(() => {
+    if (user && onClose) {
+      onClose()
+    }
+  }, [user, onClose])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -20,7 +27,7 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
       if (password !== confirmPassword) {
         return
       }
-      await signUp(email, password)
+      await signUp(email, password, email.split('@')[0]) // Use email prefix as display name
     } else {
       await signIn(email, password)
     }
