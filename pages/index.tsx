@@ -92,9 +92,9 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     setShowRules(!showRules)
   }, [showRules])
 
-  const handleAuthToggle = useCallback(() => {
+  const handleAuthToggle = () => {
     setShowAuth(true)
-  }, [])
+  }
 
   return (
     <>
