@@ -116,9 +116,33 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', maxWidth: '400px', margin: '0 auto 15px auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {user ? (
-              <span style={{ fontSize: '0.85rem', color: '#666' }}>
-                Welcome, {user.email?.split('@')[0]}
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '0.85rem', color: '#666' }}>
+                  Welcome, {user.email?.split('@')[0]}
+                </span>
+                <button 
+                  onClick={logout}
+                  style={{
+                    background: '#dc3545',
+                    border: 'none',
+                    borderRadius: '4px',
+                    padding: '4px 8px',
+                    color: 'white',
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    flexShrink: 0
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#c82333'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#dc3545'
+                  }}
+                >
+                  Sign Out
+                </button>
+              </div>
             ) : (
               <button 
                 onClick={handleAuthToggle}
