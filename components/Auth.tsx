@@ -7,8 +7,6 @@ interface AuthProps {
 }
 
 const Auth: React.FC<AuthProps> = ({ onClose }) => {
-  console.log('Auth component mounted');
-  
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -127,99 +125,150 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
   };
 
   return (
-    <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
-      style={{ zIndex: 10000 }}
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        zIndex: 999999
+      }}
     >
-      <div 
-        className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto relative"
-        style={{ zIndex: 10001 }}
+      <div
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '8px',
+          padding: '24px',
+          maxWidth: '400px',
+          width: '100%',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          position: 'relative',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+        }}
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
             {isSignUp ? 'Sign Up' : 'Sign In'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 p-1"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#6b7280',
+              cursor: 'pointer',
+              padding: '4px',
+              borderRadius: '4px'
+            }}
           >
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {isSignUp && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
                 Display Name
               </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <div style={{ position: 'relative' }}>
+                <User style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }} size={16} />
                 <input
                   type="text"
                   value={displayName}
                   onChange={(e) => handleInputChange('displayName', e.target.value)}
-                  className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm ${
-                    validationErrors.displayName ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                  }`}
+                  style={{
+                    width: '100%',
+                    paddingLeft: '40px',
+                    paddingRight: '16px',
+                    paddingTop: '8px',
+                    paddingBottom: '8px',
+                    border: validationErrors.displayName ? '1px solid #ef4444' : '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '0.875rem',
+                    backgroundColor: validationErrors.displayName ? '#fef2f2' : 'white'
+                  }}
                   placeholder="Your name"
                 />
               </div>
               {validationErrors.displayName && (
-                <p className="mt-1 text-sm text-red-600 break-words">{validationErrors.displayName}</p>
+                <p style={{ marginTop: '4px', fontSize: '0.875rem', color: '#dc2626' }}>{validationErrors.displayName}</p>
               )}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
               Email
             </label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <div style={{ position: 'relative' }}>
+              <Mail style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }} size={16} />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm ${
-                  validationErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                }`}
+                style={{
+                  width: '100%',
+                  paddingLeft: '40px',
+                  paddingRight: '16px',
+                  paddingTop: '8px',
+                  paddingBottom: '8px',
+                  border: validationErrors.email ? '1px solid #ef4444' : '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  fontSize: '0.875rem',
+                  backgroundColor: validationErrors.email ? '#fef2f2' : 'white'
+                }}
                 placeholder="your@email.com"
               />
             </div>
             {validationErrors.email && (
-              <p className="mt-1 text-sm text-red-600 break-words">{validationErrors.email}</p>
+              <p style={{ marginTop: '4px', fontSize: '0.875rem', color: '#dc2626' }}>{validationErrors.email}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
               Password
             </label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <div style={{ position: 'relative' }}>
+              <Lock style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }} size={16} />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm ${
-                  validationErrors.password ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                }`}
+                style={{
+                  width: '100%',
+                  paddingLeft: '40px',
+                  paddingRight: '16px',
+                  paddingTop: '8px',
+                  paddingBottom: '8px',
+                  border: validationErrors.password ? '1px solid #ef4444' : '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  fontSize: '0.875rem',
+                  backgroundColor: validationErrors.password ? '#fef2f2' : 'white'
+                }}
                 placeholder="••••••••"
               />
             </div>
             {validationErrors.password && (
-              <p className="mt-1 text-sm text-red-600 break-words">{validationErrors.password}</p>
+              <p style={{ marginTop: '4px', fontSize: '0.875rem', color: '#dc2626' }}>{validationErrors.password}</p>
             )}
           </div>
 
           {/* Google Sign In Button */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300" />
+          <div style={{ position: 'relative', margin: '16px 0' }}>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center' }}>
+              <div style={{ width: '100%', borderTop: '1px solid #d1d5db' }} />
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">or</span>
+            <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', fontSize: '0.875rem' }}>
+              <span style={{ padding: '0 8px', backgroundColor: 'white', color: '#6b7280' }}>or</span>
             </div>
           </div>
 
@@ -227,7 +276,20 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
             type="button"
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              padding: '8px 16px',
+              border: '1px solid #d1d5db',
+              borderRadius: '6px',
+              backgroundColor: loading ? '#f9fafb' : 'white',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontSize: '0.875rem',
+              fontWeight: '500'
+            }}
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -239,12 +301,19 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
           </button>
 
           {error && (
-            <div className="text-red-700 text-sm bg-red-50 border border-red-200 p-3 rounded-lg">
-              <div className="flex items-start gap-2">
+            <div style={{
+              color: '#b91c1c',
+              fontSize: '0.875rem',
+              backgroundColor: '#fef2f2',
+              border: '1px solid #fecaca',
+              padding: '12px',
+              borderRadius: '6px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                 <svg className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
-                <span className="break-words">{error}</span>
+                <span style={{ wordBreak: 'break-words' }}>{error}</span>
               </div>
             </div>
           )}
@@ -252,17 +321,35 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+            style={{
+              width: '100%',
+              backgroundColor: loading ? '#6366f1' : '#4f46e5',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              border: 'none',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              opacity: loading ? 0.5 : 1
+            }}
           >
             {loading ? 'Loading...' : (isSignUp ? 'Sign Up' : 'Sign In')}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div style={{ marginTop: '24px', textAlign: 'center' }}>
           <button
             onClick={() => setIsSignUp(!isSignUp)}
             disabled={loading}
-            className="text-indigo-600 hover:text-indigo-700 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              color: '#4f46e5',
+              background: 'none',
+              border: 'none',
+              fontSize: '0.875rem',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              opacity: loading ? 0.5 : 1
+            }}
           >
             {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
           </button>
