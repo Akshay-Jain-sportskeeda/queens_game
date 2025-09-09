@@ -230,7 +230,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   // Trigger win animation and then show modal
   useEffect(() => {
-    if (gameState.gameCompleted && !gameState.isWinAnimationActive) {
+    if (gameState.gameCompleted) {
       console.log('Game completed! Triggering win animation...')
       
       // Trigger the animation
@@ -251,7 +251,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         }))
       }, 800)
     }
-  }, [gameState.gameCompleted, gameState.isWinAnimationActive, showInfoMessage])
+  }, [gameState.gameCompleted, showInfoMessage])
 
   const handleCellClick = useCallback((row: number, col: number) => {
     // Clear any existing hint highlights when user makes a move
