@@ -747,12 +747,14 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   const shareResults = useCallback(() => {
     const endTime = Date.now()
-    const totalTime = Math.floor((endTime - gameState.startTime) / 1000)
+    const baseTime = Math.floor((endTime - gameState.startTime) / 1000)
+    const hintPenalty = gameState.hintCount * 15 // 15 seconds per hint
+    const totalTime = baseTime + hintPenalty
     const minutes = Math.floor(totalTime / 60)
     const seconds = totalTime % 60
     const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`
     
-    const shareText = `🏈 NFL Field Puzzle Complete! 🎉\n⏱️ Time: ${timeString}\n🎯 Moves: ${gameState.moveCount}\n💡 Hints: ${gameState.hintCount}\n\nPlay at: ${window.location.href}`
+    const shareText = `🏈 NFL Field Puzzle Complete! 🎉\n⏱️ Time: ${timeString}${gameState.hintCount > 0 ? ` (+${hintPenalty}s penalty)` : ''}\n🎯 Moves: ${gameState.moveCount}\n💡 Hints: ${gameState.hintCount}\n\nPlay at: ${window.location.href}`
     
     if (navigator.share) {
       navigator.share({

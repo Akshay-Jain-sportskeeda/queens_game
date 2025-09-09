@@ -41,10 +41,12 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
       // Wait for all animations to complete before showing win screen
       setTimeout(() => {
         const endTime = Date.now()
-        const totalTime = Math.floor((endTime - gameState.startTime) / 1000)
+        const baseTime = Math.floor((endTime - gameState.startTime) / 1000)
+        const hintPenalty = gameState.hintCount * 15 // 15 seconds per hint
+        const totalTime = baseTime + hintPenalty
         const minutes = Math.floor(totalTime / 60)
         const seconds = totalTime % 60
-        const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`
+        const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}${gameState.hintCount > 0 ? ` (+${hintPenalty}s)` : ''}`
         
         setWinStats({
           moves: gameState.moveCount,
