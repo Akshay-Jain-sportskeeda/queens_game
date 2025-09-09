@@ -216,6 +216,17 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     }, 300)
   }, [validateAndHighlight])
 
+  // Trigger win animation and then show modal
+  useEffect(() => {
+    if (gameState.gameCompleted && gameState.isWinAnimationActive) {
+      // Show success message
+      showInfoMessage('🎉 Congratulations! You solved the puzzle! 🎉', 'success')
+      
+      // The win screen will be shown by the parent component
+      // after detecting gameState.gameCompleted
+    }
+  }, [gameState.gameCompleted, gameState.isWinAnimationActive, showInfoMessage])
+
   const handleCellClick = useCallback((row: number, col: number) => {
     // Clear any existing hint highlights when user makes a move
     clearHintHighlights()

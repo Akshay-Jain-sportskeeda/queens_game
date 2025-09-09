@@ -18,6 +18,7 @@ interface HomeProps {
 export default function Home({ puzzleData, availableDates }: HomeProps) {
   const {
     gameState,
+    puzzleData: currentPuzzleData,
     infoMessage,
     hintHighlights,
     handleCellClick,
@@ -26,9 +27,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     reset,
     shareResults,
     loadPuzzleForDate,
-    showInfoMessage,
-    clearHintHighlights,
-    resetInfoMessage
+    showInfoMessage
   } = useGameLogic(puzzleData)
 
   const [showWinScreen, setShowWinScreen] = useState(false)
@@ -38,20 +37,23 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   // Check for win condition
   useEffect(() => {
     if (gameState.gameCompleted && !showWinScreen) {
-      const endTime = Date.now()
-      const totalTime = Math.floor((endTime - gameState.startTime) / 1000)
-      const minutes = Math.floor(totalTime / 60)
-      const seconds = totalTime % 60
-      const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`
-      
-      setWinStats({
-        moves: gameState.moveCount,
-        hints: gameState.hintCount,
-        time: timeString
-      })
-      setShowWinScreen(true)
+      // Wait for animation to complete before showing win screen
+      setTimeout(() => {
+        const endTime = Date.now()
+        const totalTime = Math.floor((endTime - gameState.startTime) / 1000)
+        const minutes = Math.floor(totalTime / 60)
+        const seconds = totalTime % 60
+        const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`
+        
+        setWinStats({
+          moves: gameState.moveCount,
+          hints: gameState.hintCount,
+          time: timeString
+        })
+        setShowWinScreen(true)
+      }, 1000) // Wait 1 second for animation to play
     }
-  }, [gameState.gameCompleted, gameState.startTime, gameState.moveCount, gameState.hintCount])
+  }, [gameState.gameCompleted, gameState.startTime, gameState.moveCount, gameState.hintCount, showWinScreen])
 
   const handleWinScreenClose = useCallback(() => {
     setShowWinScreen(false)
@@ -83,8 +85,8 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         
         <GameBoard
           board={gameState.board}
-          regions={puzzleData.regions}
-          prefills={puzzleData.prefills}
+          regions={currentPuzzleData.regions}
+          prefills={currentPuzzleData.prefills}
           violations={gameState.violations}
           hintHighlights={hintHighlights}
           isWinAnimationActive={gameState.isWinAnimationActive}
