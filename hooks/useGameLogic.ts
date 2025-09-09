@@ -241,15 +241,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       
       // Show success message
       showInfoMessage('🎉 Congratulations! You solved the puzzle! 🎉', 'success')
-      
-      // Calculate total animation time: 4 rows × 2 at a time × 0.8s + 1s delay = 2.6s
-      animationTimeoutRef.current = setTimeout(() => {
-        console.log('Animation completed, resetting animation state')
-        setGameState(prev => ({
-          ...prev,
-          isWinAnimationActive: false
-        }))
-      }, 2600) // Total time for all animations plus delay
     }
   }, [gameState.gameCompleted, showInfoMessage])
 
