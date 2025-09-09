@@ -24,7 +24,7 @@ const ArchiveScreen: React.FC<ArchiveScreenProps> = ({
   }
 
   return (
-    <div className={styles.archiveScreen}>
+    <div className={`${styles.archiveScreen} ${styles.show}`}>
       <div className={styles.archiveContent}>
         <div className={styles.archiveHeader}>
           <button className={styles.archiveCloseX} onClick={onClose} type="button" aria-label="Close">
