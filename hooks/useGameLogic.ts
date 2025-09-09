@@ -215,16 +215,20 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       // Update info message based on violations
       if (violations.size > 0) {
         const conflictTypesList = Array.from(new Set(conflictTypes.values()))
-        let message = 'Rule violation detected: '
+        const messages: string[] = []
         if (conflictTypesList.includes('adjacent')) {
-          message += 'Footballs cannot touch each other'
-        } else if (conflictTypesList.includes('row')) {
-          message += 'Multiple footballs in the same row'
-        } else if (conflictTypesList.includes('column')) {
-          message += 'Multiple footballs in the same column'
-        } else if (conflictTypesList.includes('region')) {
-          message += 'Multiple footballs in the same region'
+          messages.push('Footballs cannot touch each other')
         }
+        if (conflictTypesList.includes('row')) {
+          messages.push('Multiple footballs in the same row')
+        }
+        if (conflictTypesList.includes('column')) {
+          messages.push('Multiple footballs in the same column')
+        }
+        if (conflictTypesList.includes('region')) {
+          messages.push('Multiple footballs in the same region')
+        }
+        const message = messages.join('\n')
         showInfoMessage(message, 'conflict')
       } else if (!isWin) {
         resetInfoMessage()
