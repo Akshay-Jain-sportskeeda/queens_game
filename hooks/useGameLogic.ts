@@ -257,7 +257,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     })
 
     debouncedValidation()
-  }, [puzzleData.prefills, saveState, debouncedValidation])
+  }, [puzzleData.prefills, saveState, debouncedValidation, clearHintHighlights, logBoardState, gameState.board])
 
   const undo = useCallback(() => {
     setGameState(prev => {
@@ -276,6 +276,20 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     })
     debouncedValidation()
   }, [debouncedValidation]);
+
+  const isValidFootball = useCallback((row: number, col: number): boolean => {
+    console.log(`Checking isValidFootball(${row}, ${col})`);
+    // First check if there's actually a football in this cell
+    if (gameState.board[row][col] !== '🏈') {
+      console.log(`  No football in cell (${row}, ${col}), value: "${gameState.board[row][col]}"`);
+      return false;
+    }
+    
+    // Check if it matches the solution
+    const isInSolution = puzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col);
+    console.log(`  Football at (${row}, ${col}) matches solution: ${isInSolution}`);
+    return isInSolution;
+  }, [gameState.board, puzzleData.prefills, puzzleData.queens]);
 
   const getHint = useCallback(() => {
     console.log('=== HINT SYSTEM DEBUG ===');
@@ -391,18 +405,11 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     if (validPlacement) {
       console.log('Found valid placement hint:', validPlacement);
       showValidFootballHint(validPlacement);
-    console.log(`Checking isValidFootball(${row}, ${col})`);
-    // First check if there's actually a football in this cell
-    if (gameState.board[row][col] !== '🏈') {
-      console.log(`  No football in cell (${row}, ${col}), value: "${gameState.board[row][col]}"`);
-      return false;
+      return;
+    } else {
+      console.log('No valid placement hints found');
     }
-    
-    // Check if it matches the solution
-    const isInSolution = puzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col);
-    console.log(`  Football at (${row}, ${col}) matches solution: ${isInSolution}`);
-    return isInSolution;
-  }, [gameState.board, puzzleData.prefills, puzzleData.queens]);
+  }, [gameState.board, puzzleData.prefills, puzzleData.queens, logBoardState]);
 
   // Helper functions for hint system
   const getWrongFootballHint = useCallback(() => {

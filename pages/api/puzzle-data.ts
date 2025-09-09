@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PuzzleData } from '../../types/game'
 
-const PUZZLE_DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7zVz3B8XRn-mIHVTBSLJ6JBp7liPx9micD9t3KOiMFAMpqqnJT1wpXbZl8KrZQ9WtGtMn0gM9Hvu9/pub?gid=0&single=true&output=csv'
+const PUZZLE_DATA_URL = process.env.NEXT_PUBLIC_PUZZLE_DATA_URL || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7zVz3B8XRn-mIHVTBSLJ6JBp7liPx9micD9t3KOiMFAMpqqnJT1wpXbZl8KrZQ9WtGtMn0gM9Hvu9/pub?gid=0&single=true&output=csv'
 
 // Cache for puzzle data
 let puzzleCache: { [key: string]: PuzzleData } = {}
@@ -56,14 +56,28 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     for (let i = 1; i < lines.length; i++) {
       const row = parseCSVLine(lines[i])
       if (row[dateIndex] && row[dateIndex] !== '') {
-        const puzzleData: PuzzleData = {
-          date: row[dateIndex],
-          gridSize: parseInt(row[gridSizeIndex]),
-          regions: JSON.parse(row[regionsIndex].replace(/^"|"$/g, '')),
-          queens: JSON.parse(row[queensIndex].replace(/^"|"$/g, '')),
-          prefills: JSON.parse(row[prefillsIndex].replace(/^"|"$/g, ''))
+        try {
+          const regions = JSON.parse(row[regionsIndex].replace(/^"|"$/g, ''))
+          const queens = JSON.parse(row[queensIndex].replace(/^"|"$/g, ''))
+          const prefills = JSON.parse(row[prefillsIndex].replace(/^"|"$/g, ''))
+          
+          // Validate regions data
+          if (!regions || regions.length === 0 || !Array.isArray(regions[0])) {
+            throw new Error(`Invalid regions data for date ${row[dateIndex]}`)
+          }
+          
+          const puzzleData: PuzzleData = {
+            date: row[dateIndex],
+            gridSize: parseInt(row[gridSizeIndex]),
+            regions,
+            queens,
+            prefills
+          }
+          puzzles[row[dateIndex]] = puzzleData
+        } catch (parseError) {
+          console.error(`Error parsing puzzle data for date ${row[dateIndex]}:`, parseError)
+          continue
         }
-        puzzles[row[dateIndex]] = puzzleData
       }
     }
     
