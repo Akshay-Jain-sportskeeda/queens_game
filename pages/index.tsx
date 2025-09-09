@@ -105,10 +105,6 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
       <PFSNHeader currentPage="NFL" />
 
       <div className="game-container">
-        <header>
-          <h1>🏈 NFL Field Puzzle</h1>
-        </header>
-        
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', maxWidth: '400px', margin: '0 auto 25px auto' }}>
           <p style={{ margin: 0, flex: 1, textAlign: 'left', fontSize: '1rem', color: '#666' }}>Place exactly 1 🏈 in each row, column & region</p>
           <button 
