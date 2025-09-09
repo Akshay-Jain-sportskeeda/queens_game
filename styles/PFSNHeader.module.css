@@ -116,6 +116,14 @@
     display: flex;
   }
 
+  .pfsnLogoSection {
+    gap: 0;
+  }
+
+  .pfsnLogo {
+    height: 24px;
+  }
+
   .pfsnMainNav {
     position: fixed;
     top: 60px;
