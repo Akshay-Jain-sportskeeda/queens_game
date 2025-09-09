@@ -145,7 +145,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
               </div>
             ) : (
               <button 
-                onClick={handleAuthToggle}
+                onClick={() => setShowAuth(true)}
                 style={{
                   background: '#667eea',
                   border: 'none',
