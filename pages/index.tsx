@@ -112,6 +112,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
             onShare={shareResults}
             onArchive={handleArchiveToggle}
             onClose={handleWinScreenClose}
+            show={showWinScreen}
           />
         )}
         

@@ -7,16 +7,18 @@ interface WinScreenProps {
   onShare: () => void
   onArchive: () => void
   onClose: () => void
+  show: boolean
 }
 
 const WinScreen: React.FC<WinScreenProps> = ({
   stats,
   onShare,
   onArchive,
-  onClose
+  onClose,
+  show
 }) => {
   return (
-    <div className={styles.winScreen}>
+    <div className={`${styles.winScreen} ${show ? styles.show : ''}`}>
       <div className={styles.winContent}>
         <div className={styles.winBannerContainer}>
           <div className={styles.winBanner}>🎉 Congratulations! 🎉</div>
