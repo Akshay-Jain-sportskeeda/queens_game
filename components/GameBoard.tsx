@@ -9,6 +9,7 @@ interface GameBoardProps {
   prefills: number[][]
   violations: Set<string>
   hintHighlights: Set<string>
+  isWinAnimationActive: boolean
   onCellClick: (row: number, col: number) => void
 }
 
@@ -18,6 +19,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   prefills,
   violations,
   hintHighlights,
+  isWinAnimationActive,
   onCellClick
 }) => {
   const boardSize = board.length
@@ -110,6 +112,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
             isPrefilled={isPrefilled(rowIndex, colIndex)}
             hasConflict={hasConflict(rowIndex, colIndex)}
             hasHintHighlight={hasHintHighlight(rowIndex, colIndex)}
+            isWinAnimated={isWinAnimationActive}
             hintBorderTop={hintBorders.top}
             hintBorderRight={hintBorders.right}
             hintBorderBottom={hintBorders.bottom}

@@ -9,7 +9,8 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     moveCount: 0,
     hintCount: 0,
     startTime: Date.now(),
-    gameCompleted: false
+    gameCompleted: false,
+    isWinAnimationActive: false
   }))
 
   const [puzzleData, setPuzzleData] = useState<PuzzleData>(initialPuzzleData)
@@ -78,7 +79,8 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       moveCount: 0,
       hintCount: 0,
       startTime: Date.now(),
-      gameCompleted: false
+      gameCompleted: false,
+      isWinAnimationActive: false
     }))
   }, [puzzleData])
 
@@ -198,7 +200,8 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       return {
         ...prev,
         violations,
-        gameCompleted: isWin
+        gameCompleted: isWin,
+        isWinAnimationActive: isWin
       }
     })
   }, [puzzleData.gridSize, puzzleData.regions, checkWinCondition])
@@ -269,7 +272,8 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
           board: previousBoard,
           history: newHistory,
           gameCompleted: false,
-          violations: new Set()
+          violations: new Set(),
+          isWinAnimationActive: false
         }
       }
       return prev
@@ -707,7 +711,8 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       moveCount: 0,
       hintCount: 0,
       startTime: Date.now(),
-      gameCompleted: false
+      gameCompleted: false,
+      isWinAnimationActive: false
     })
     setInfoMessage({ text: 'Use hints if you get stuck!', type: 'default' })
   }, [puzzleData, clearHintHighlights])

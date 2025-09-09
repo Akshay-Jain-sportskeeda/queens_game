@@ -58,6 +58,7 @@ const Cell: React.FC<CellProps> = ({
         ${styles[getRegionClassName()]}
         ${hasConflict ? styles.conflict : ''}
         ${hasHintHighlight ? styles.hintHighlight : ''}
+        ${isWinAnimated ? styles.winFlip : ''}
         ${hasConflict && conflictType ? styles[`conflict${conflictType.charAt(0).toUpperCase() + conflictType.slice(1)}`] : ''}
         ${isPrefilled ? styles.prefilled : ''}
         ${borderTop ? styles.borderTop : ''}

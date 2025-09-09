@@ -14,6 +14,7 @@ export interface GameState {
   hintCount: number;
   startTime: number;
   gameCompleted: boolean;
+  isWinAnimationActive: boolean;
 }
 
 export interface CellProps {
@@ -23,6 +24,7 @@ export interface CellProps {
   region: number;
   isPrefilled: boolean;
   hasConflict: boolean;
+  isWinAnimated: boolean;
   conflictType?: string;
   onClick: (row: number, col: number) => void;
 }
