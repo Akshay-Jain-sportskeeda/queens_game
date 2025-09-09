@@ -27,7 +27,8 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     reset,
     shareResults,
     loadPuzzleForDate,
-    showInfoMessage
+    showInfoMessage,
+    resetWinAnimation
   } = useGameLogic(puzzleData)
 
   const [showWinScreen, setShowWinScreen] = useState(false)
@@ -57,11 +58,17 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
   const handleWinScreenClose = useCallback(() => {
     setShowWinScreen(false)
-  }, [])
+    resetWinAnimation()
+  }, [resetWinAnimation])
 
   const handleArchiveToggle = useCallback(() => {
+    // If we're opening the archive and the win screen is showing, close it first
+    if (!showArchive && showWinScreen) {
+      setShowWinScreen(false)
+      resetWinAnimation()
+    }
     setShowArchive(!showArchive)
-  }, [showArchive])
+  }, [showArchive, showWinScreen, resetWinAnimation])
 
   return (
     <>

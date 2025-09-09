@@ -779,6 +779,13 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     }
   }, [])
 
+  const resetWinAnimation = useCallback(() => {
+    setGameState(prev => ({
+      ...prev,
+      isWinAnimationActive: false,
+      gameCompleted: false
+    }))
+  }, [])
 
   return {
     gameState,
@@ -791,6 +798,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     reset,
     shareResults,
     loadPuzzleForDate,
-    showInfoMessage
+    showInfoMessage,
+    resetWinAnimation
   }
 }
