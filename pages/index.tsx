@@ -9,6 +9,8 @@ import Instructions from '../components/Instructions'
 import WinScreen from '../components/WinScreen'
 import ArchiveScreen from '../components/ArchiveScreen'
 import RulesPopup from '../components/RulesPopup'
+import PFSNHeader from '../components/PFSNHeader'
+import PFSNFooter from '../components/PFSNFooter'
 import { useGameLogic } from '../hooks/useGameLogic'
 
 interface HomeProps {
@@ -100,6 +102,8 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         <meta name="twitter:description" content="A challenging logic puzzle game where you place exactly one football in each row, column, and color region. Play daily puzzles with hints and archive access." />
       </Head>
 
+      <PFSNHeader currentPage="NFL" />
+
       <div className="game-container">
         <header>
           <h1>🏈 NFL Field Puzzle</h1>
@@ -188,6 +192,8 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           onClose={handleRulesToggle}
         />
       </div>
+
+      <PFSNFooter currentPage="NFL" />
     </>
   )
 }
