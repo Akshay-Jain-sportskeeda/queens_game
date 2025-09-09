@@ -628,19 +628,38 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   }, [showInfoMessage, addHintHighlight])
 
   const showRegionXHint = useCallback((hint: { region: number, emptyCells: number[][] }) => {
-    addHintHighlight(hint.emptyCells)
+    // Highlight all cells in the region, not just empty ones
+    const allRegionCells: number[][] = []
+    for (let row = 0; row < puzzleData.gridSize; row++) {
+      for (let col = 0; col < puzzleData.gridSize; col++) {
+        if (puzzleData.regions[row][col] === hint.region) {
+          allRegionCells.push([row, col])
+        }
+      }
+    }
+    addHintHighlight(allRegionCells)
     showInfoMessage(`This region already has a football. Mark the highlighted cells with X`, 'hint');
   }, [showInfoMessage, addHintHighlight])
 
   const showRowXHint = useCallback((hint: { row: number, emptyCells: number[][] }) => {
-    addHintHighlight(hint.emptyCells)
+    // Highlight all cells in the row, not just empty ones
+    const allRowCells: number[][] = []
+    for (let col = 0; col < puzzleData.gridSize; col++) {
+      allRowCells.push([hint.row, col])
+    }
+    addHintHighlight(allRowCells)
     showInfoMessage(`Row ${hint.row + 1} already has a football. Mark the highlighted cells with X`, 'hint');
   }, [showInfoMessage, addHintHighlight])
 
   const showColumnXHint = useCallback((hint: { column: number, emptyCells: number[][] }) => {
-    addHintHighlight(hint.emptyCells)
+    // Highlight all cells in the column, not just empty ones
+    const allColumnCells: number[][] = []
+    for (let row = 0; row < puzzleData.gridSize; row++) {
+      allColumnCells.push([row, hint.column])
+    }
+    addHintHighlight(allColumnCells)
     showInfoMessage(`Column ${hint.column + 1} already has a football. Mark the highlighted cells with X`, 'hint');
-  }, [showInfoMessage, addHintHighlight])
+  }, [showInfoMessage, addHintHighlight, puzzleData.gridSize])
 
   const showAdjacentXHint = useCallback((hint: { footballRow: number, footballCol: number, adjacentCells: number[][] }) => {
     addHintHighlight(hint.adjacentCells)
