@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react'
-import { User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth'
+import { 
+  User, 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile
+} from 'firebase/auth'
 import { auth } from '../utils/firebase'
 
 export interface AuthState {
@@ -27,29 +36,86 @@ export function useAuth() {
     return () => unsubscribe()
   }, [])
 
+  const formatFirebaseError = (error: any): string => {
+    const errorCode = error.code
+    const errorMessage = error.message
+
+    switch (errorCode) {
+      case 'auth/user-not-found':
+        return 'No account found with this email address.'
+      case 'auth/wrong-password':
+        return 'Incorrect password. Please try again.'
+      case 'auth/email-already-in-use':
+        return 'An account with this email already exists.'
+      case 'auth/weak-password':
+        return 'Password should be at least 6 characters long.'
+      case 'auth/invalid-email':
+        return 'Please enter a valid email address.'
+      case 'auth/too-many-requests':
+        return 'Too many failed attempts. Please try again later.'
+      case 'auth/network-request-failed':
+        return 'Network error. Please check your connection and try again.'
+      case 'auth/popup-blocked':
+        return 'Pop-up was blocked by your browser. Please allow pop-ups for this site.'
+      case 'auth/popup-closed-by-user':
+        return 'Sign-in was cancelled. Please try again.'
+      case 'auth/cancelled-popup-request':
+        return 'Sign-in was cancelled. Please try again.'
+      default:
+        return errorMessage || 'An unexpected error occurred. Please try again.'
+    }
+  }
+
   const signIn = async (email: string, password: string) => {
     try {
       setAuthState(prev => ({ ...prev, loading: true, error: null }))
       await signInWithEmailAndPassword(auth, email, password)
     } catch (error: any) {
+      const formattedError = formatFirebaseError(error)
       setAuthState(prev => ({ 
         ...prev, 
         loading: false, 
-        error: error.message || 'An error occurred during sign in' 
+        error: formattedError
       }))
+      throw new Error(formattedError)
     }
   }
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, displayName?: string) => {
     try {
       setAuthState(prev => ({ ...prev, loading: true, error: null }))
-      await createUserWithEmailAndPassword(auth, email, password)
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      
+      // If displayName is provided, update the user's profile
+      if (displayName && userCredential.user) {
+        await updateProfile(userCredential.user, {
+          displayName: displayName
+        })
+      }
     } catch (error: any) {
+      const formattedError = formatFirebaseError(error)
       setAuthState(prev => ({ 
         ...prev, 
         loading: false, 
-        error: error.message || 'An error occurred during sign up' 
+        error: formattedError
       }))
+      throw new Error(formattedError)
+    }
+  }
+
+  const signInWithGoogle = async () => {
+    try {
+      setAuthState(prev => ({ ...prev, loading: true, error: null }))
+      const provider = new GoogleAuthProvider()
+      await signInWithPopup(auth, provider)
+    } catch (error: any) {
+      const formattedError = formatFirebaseError(error)
+      setAuthState(prev => ({ 
+        ...prev, 
+        loading: false, 
+        error: formattedError
+      }))
+      throw new Error(formattedError)
     }
   }
 
@@ -57,9 +123,10 @@ export function useAuth() {
     try {
       await signOut(auth)
     } catch (error: any) {
+      const formattedError = formatFirebaseError(error)
       setAuthState(prev => ({ 
         ...prev, 
-        error: error.message || 'An error occurred during sign out' 
+        error: formattedError
       }))
     }
   }
@@ -68,6 +135,7 @@ export function useAuth() {
     ...authState,
     signIn,
     signUp,
+    signInWithGoogle,
     logout
   }
 }

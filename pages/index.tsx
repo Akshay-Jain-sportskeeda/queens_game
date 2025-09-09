@@ -117,8 +117,8 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {user ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '0.85rem', color: '#666' }}>
-                  Welcome, {user.email?.split('@')[0]}
+                <span style={{ fontSize: '0.85rem', color: '#666', whiteSpace: 'nowrap' }}>
+                  Welcome, {user.displayName || user.email?.split('@')[0]}
                 </span>
                 <button 
                   onClick={logout}
@@ -254,7 +254,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         />
         
         {showAuth && (
-          <Auth onClose={handleAuthToggle} />
+          <Auth onClose={() => setShowAuth(false)} />
         )}
       </div>
 
