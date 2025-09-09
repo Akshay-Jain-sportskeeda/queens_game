@@ -217,16 +217,16 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         const conflictTypesList = Array.from(new Set(conflictTypes.values()))
         const messages: string[] = []
         if (conflictTypesList.includes('adjacent')) {
-          messages.push('Footballs cannot touch each other')
+          messages.push('⚠️ Footballs cannot touch each other')
         }
         if (conflictTypesList.includes('row')) {
-          messages.push('Multiple footballs in the same row')
+          messages.push('⚠️ Multiple footballs in the same row')
         }
         if (conflictTypesList.includes('column')) {
-          messages.push('Multiple footballs in the same column')
+          messages.push('⚠️ Multiple footballs in the same column')
         }
         if (conflictTypesList.includes('region')) {
-          messages.push('Multiple footballs in the same region')
+          messages.push('⚠️ Multiple footballs in the same region')
         }
         const message = messages.join('\n')
         showInfoMessage(message, 'conflict')
