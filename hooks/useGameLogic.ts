@@ -19,6 +19,18 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Cleanup function for validation timeout
+  useEffect(() => {
+    return () => {
+      if (validationTimeoutRef.current) {
+        clearTimeout(validationTimeoutRef.current)
+      }
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current)
+      }
+    }
+  }, [])
+
   // Debug function to log board state
   const logBoardState = useCallback((context: string, board: string[][]) => {
     console.log(`=== BOARD STATE: ${context} ===`);
@@ -238,13 +250,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
           isWinAnimationActive: false
         }))
       }, 800)
-    }
-    
-    // Cleanup function
-    return () => {
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current)
-      }
     }
   }, [gameState.gameCompleted, gameState.isWinAnimationActive, showInfoMessage])
 
