@@ -267,8 +267,8 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       let newValue = ''
 
       if (currentValue === '') {
-        newValue = '❌'
-      } else if (currentValue === '❌') {
+        newValue = '×'
+      } else if (currentValue === '×') {
         newValue = '🏈'
       } else {
         newValue = ''
@@ -670,7 +670,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     addHintHighlight(allRegionCells)
-    showInfoMessage(`This region already has a football. Mark the highlighted cells with ❌`, 'hint');
+    showInfoMessage(`This region already has a football. Mark the highlighted cells with ×`, 'hint');
   }, [showInfoMessage, addHintHighlight])
 
   const showRowXHint = useCallback((hint: { row: number, emptyCells: number[][] }) => {
@@ -680,7 +680,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       allRowCells.push([hint.row, col])
     }
     addHintHighlight(allRowCells)
-    showInfoMessage(`Row ${hint.row + 1} already has a football. Mark the highlighted cells with ❌`, 'hint');
+    showInfoMessage(`Row ${hint.row + 1} already has a football. Mark the highlighted cells with ×`, 'hint');
   }, [showInfoMessage, addHintHighlight])
 
   const showColumnXHint = useCallback((hint: { column: number, emptyCells: number[][] }) => {
@@ -690,12 +690,12 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       allColumnCells.push([row, hint.column])
     }
     addHintHighlight(allColumnCells)
-    showInfoMessage(`Column ${hint.column + 1} already has a football. Mark the highlighted cells with ❌`, 'hint');
+    showInfoMessage(`Column ${hint.column + 1} already has a football. Mark the highlighted cells with ×`, 'hint');
   }, [showInfoMessage, addHintHighlight, puzzleData.gridSize])
 
   const showAdjacentXHint = useCallback((hint: { footballRow: number, footballCol: number, adjacentCells: number[][] }) => {
     addHintHighlight(hint.adjacentCells)
-    showInfoMessage('Footballs cannot touch each other. Mark the highlighted cells with ❌', 'conflict');
+    showInfoMessage('Footballs cannot touch each other. Mark the highlighted cells with ×', 'conflict');
   }, [showInfoMessage, addHintHighlight])
 
   const showEmptyRegionHint = useCallback((hint: { region: number, regionCells: number[][] }) => {
@@ -715,7 +715,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   const showWrongXHint = useCallback((hint: { wrongXCells: number[][] }) => {
     addHintHighlight(hint.wrongXCells)
-    showInfoMessage('These ❌ marks are incorrect. Remove them - these cells should have footballs', 'conflict');
+    showInfoMessage('These × marks are incorrect. Remove them - these cells should have footballs', 'conflict');
   }, [showInfoMessage, addHintHighlight])
 
   const showValidFootballHint = useCallback((hint: { row: number, col: number }) => {

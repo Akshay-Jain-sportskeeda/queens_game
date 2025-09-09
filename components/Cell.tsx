@@ -64,11 +64,11 @@ const Cell: React.FC<CellProps> = ({
       `}
       data-row={row}
       data-col={col}
-      data-symbol={value === '❌' ? '❌' : undefined}
+      data-symbol={value === '×' ? '×' : undefined}
       onClick={handleClick}
       style={{
-        color: value === '❌' ? '#444' : '',
-        fontSize: value === '❌' ? '0.8rem' : '',
+        color: value === '×' ? '#666' : '',
+        fontSize: value === '×' ? '0.7rem' : '',
         fontWeight: isPrefilled ? 'bold' : 'normal',
         animationDelay: isWinAnimated ? `${animationDelay}ms` : undefined
       }}
