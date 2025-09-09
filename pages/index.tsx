@@ -259,12 +259,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         />
         
         {showAuth && (
-          <>
-          {console.log('Rendering Auth component, showAuth:', showAuth)}
-          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 99999, pointerEvents: 'auto' }}>
-            <Auth onClose={() => setShowAuth(false)} />
-          </div>
-          </>
+          <Auth onClose={() => setShowAuth(false)} />
         )}
       </div>
 

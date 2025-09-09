@@ -7,8 +7,6 @@ interface AuthProps {
 }
 
 const Auth: React.FC<AuthProps> = ({ onClose }) => {
-  console.log('Auth component rendered, props:', { onClose })
-  
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -127,17 +125,21 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
   };
 
   return (
-    <>
-    {console.log('Auth component returning JSX')}
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto relative z-[10000]">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+      style={{ zIndex: 9999 }}
+    >
+      <div 
+        className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto relative"
+        style={{ zIndex: 10000 }}
+      >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800">
             {isSignUp ? 'Sign Up' : 'Sign In'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-gray-700 p-1"
           >
             <X size={24} />
           </button>
@@ -265,7 +267,6 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
         </div>
       </div>
     </div>
-    </>
   );
 };
 
