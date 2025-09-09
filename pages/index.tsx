@@ -258,9 +258,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           onClose={handleRulesToggle}
         />
         
-        {showAuth && (
-          <Auth onClose={() => setShowAuth(false)} />
-        )}
+        {showAuth && <Auth onClose={() => setShowAuth(false)} />}
       </div>
 
       <PFSNFooter currentPage="NFL" />
