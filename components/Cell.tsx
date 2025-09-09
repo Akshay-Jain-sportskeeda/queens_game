@@ -32,13 +32,28 @@ const Cell: React.FC<CellProps> = ({
     onClick(row, col)
   }
 
-  const getRegionClass = () => `region-${region}`
-  const getConflictClass = () => hasConflict ? `conflict-${conflictType || 'general'}` : ''
-  const getPrefilledClass = () => isPrefilled ? 'prefilled' : ''
-  
   // Convert region number to CSS class name
   const getRegionClassName = () => `region${region}`
 
+  // Get conflict border classes based on conflict type
+  const getConflictBorderClasses = () => {
+    if (!hasConflict || !conflictType) return {}
+    
+    // For adjacent conflicts, highlight the specific cell
+    if (conflictType === 'adjacent') {
+      return {
+        borderConflictTop: true,
+        borderConflictRight: true,
+        borderConflictBottom: true,
+        borderConflictLeft: true
+      }
+    }
+    
+    // For row/column/region conflicts, we'll apply general conflict styling
+    return {}
+  }
+
+  const conflictBorders = getConflictBorderClasses()
   return (
     <div
       className={`
@@ -47,7 +62,6 @@ const Cell: React.FC<CellProps> = ({
         ${hasConflict ? styles.conflict : ''}
         ${hasHintHighlight ? styles.hintHighlight : ''}
         ${isWinAnimated ? styles.winFlip : ''}
-        ${hasConflict && conflictType ? styles[`conflict${conflictType.charAt(0).toUpperCase() + conflictType.slice(1)}`] : ''}
         ${isPrefilled ? styles.prefilled : ''}
         ${borderTop ? styles.borderTop : ''}
         ${borderRight ? styles.borderRight : ''}
@@ -57,10 +71,10 @@ const Cell: React.FC<CellProps> = ({
         ${hintBorderRight ? styles.hintBorderRight : ''}
         ${hintBorderBottom ? styles.hintBorderBottom : ''}
         ${hintBorderLeft ? styles.hintBorderLeft : ''}
-        ${hintBorderTop ? styles.hintBorderTop : ''}
-        ${hintBorderRight ? styles.hintBorderRight : ''}
-        ${hintBorderBottom ? styles.hintBorderBottom : ''}
-        ${hintBorderLeft ? styles.hintBorderLeft : ''}
+        ${conflictBorders.borderConflictTop ? styles.borderConflictTop : ''}
+        ${conflictBorders.borderConflictRight ? styles.borderConflictRight : ''}
+        ${conflictBorders.borderConflictBottom ? styles.borderConflictBottom : ''}
+        ${conflictBorders.borderConflictLeft ? styles.borderConflictLeft : ''}
       `}
       data-row={row}
       data-col={col}
