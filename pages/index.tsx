@@ -8,6 +8,7 @@ import InfoBar from '../components/InfoBar'
 import Instructions from '../components/Instructions'
 import WinScreen from '../components/WinScreen'
 import ArchiveScreen from '../components/ArchiveScreen'
+import RulesPopup from '../components/RulesPopup'
 import { useGameLogic } from '../hooks/useGameLogic'
 
 interface HomeProps {
@@ -33,6 +34,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
   const [showWinScreen, setShowWinScreen] = useState(false)
   const [showArchive, setShowArchive] = useState(false)
+  const [showRules, setShowRules] = useState(false)
   const [winStats, setWinStats] = useState<WinStats>({ moves: 0, hints: 0, time: '0:00' })
 
   // Check for win condition
@@ -80,6 +82,10 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     setShowArchive(!showArchive)
   }, [showArchive, showWinScreen, resetWinAnimation])
 
+  const handleRulesToggle = useCallback(() => {
+    setShowRules(!showRules)
+  }, [showRules])
+
   return (
     <>
       <Head>
@@ -97,7 +103,40 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
       <div className="game-container">
         <header>
           <h1>🏈 NFL Field Puzzle</h1>
-          <p>Place exactly one football in each row, column, and color region</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <p style={{ margin: 0 }}>Place exactly one football in each row, column, and color region</p>
+            <button 
+              onClick={handleRulesToggle}
+              style={{
+                background: 'transparent',
+                border: '1px solid #667eea',
+                borderRadius: '20px',
+                padding: '4px 12px',
+                color: '#667eea',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#667eea'
+                e.currentTarget.style.color = 'white'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.color = '#667eea'
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9,9h0a3,3,0,0,1,5.12,2.12h0A3,3,0,0,1,13,14"/>
+                <circle cx="12" cy="17" r=".5"/>
+              </svg>
+              Rules
+            </button>
+          </div>
         </header>
         
         <GameBoard
@@ -122,8 +161,6 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           type={infoMessage.type as 'default' | 'hint' | 'conflict' | 'success'}
         />
         
-        <Instructions />
-        
         {showWinScreen && (
           <WinScreen
             stats={winStats}
@@ -141,6 +178,11 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
             onClose={handleArchiveToggle}
           />
         )}
+        
+        <RulesPopup
+          show={showRules}
+          onClose={handleRulesToggle}
+        />
       </div>
     </>
   )

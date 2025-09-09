@@ -1,0 +1,125 @@
+.rulesScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1002;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.rulesScreen.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.rulesContent {
+  background: white;
+  border-radius: 16px;
+  padding: 0;
+  max-width: 400px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.rulesScreen.show .rulesContent {
+  transform: scale(1);
+}
+
+.rulesHeader {
+  background: linear-gradient(to right, #374151, #1f2937);
+  padding: 24px 24px 24px 24px;
+  text-align: center;
+  position: relative;
+  margin: 0;
+  border-radius: 16px 16px 0 0;
+}
+
+.rulesCloseX {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  border-radius: 0;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  font-size: 0;
+}
+
+.rulesCloseX:hover {
+  background: transparent;
+  color: white;
+  transform: scale(1.05);
+}
+
+.rulesTitle {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 0;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.rulesContentBody {
+  padding: 24px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.rulesText {
+  color: #333;
+}
+
+.rulesText h3 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.rulesText ol {
+  padding-left: 20px;
+}
+
+.rulesText li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+  color: #555;
+}
+
+@media (max-width: 480px) {
+  .rulesContent {
+    padding: 0;
+    max-width: 350px;
+  }
+  
+  .rulesContentBody {
+    padding: 20px;
+  }
+  
+  .rulesTitle {
+    font-size: 1.4rem;
+  }
+}
