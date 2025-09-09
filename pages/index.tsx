@@ -51,7 +51,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           time: timeString
         })
         setShowWinScreen(true)
-      }, 3600) // Wait for all row animations (2.6s) + 1s delay = 3.6s
+      }, 2500) // Wait for all row animations (2s) + 0.5s delay = 2.5s
     }
   }, [gameState.gameCompleted, gameState.startTime, gameState.moveCount, gameState.hintCount, showWinScreen])
 

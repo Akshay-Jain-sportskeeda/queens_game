@@ -75,10 +75,10 @@
 }
 
 .winFlip {
-  animation: flipTile 0.8s ease-in-out forwards;
+  animation: flipTile 0.5s ease-in-out forwards;
 }
 .cell.winFlip {
-  animation: flipTile 0.8s ease-in-out forwards;
+  animation: flipTile 0.5s ease-in-out forwards;
 }
 
 /* Hint border classes for edge-only highlighting */

@@ -28,9 +28,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
   const getAnimationDelay = (rowIndex: number) => {
     if (!isWinAnimationActive) return 0
     
-    // Animate 2 rows at a time with 0.8s delay between groups
+    // Animate 2 rows at a time with 0.5s delay between groups
     const groupIndex = Math.floor(rowIndex / 2)
-    return groupIndex * 800 // 800ms delay between each group of 2 rows
+    return groupIndex * 500 // 500ms delay between each group of 2 rows
   }
   const getRegionMap = () => {
     const regionMap: { [key: string]: number } = {}
