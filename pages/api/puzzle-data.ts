@@ -7,8 +7,8 @@ const PUZZLE_DATA_URL = process.env.NEXT_PUBLIC_PUZZLE_DATA_URL
 
 // Fallback puzzle data for when external source fails
 const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
-  '2025-09-01': {
-    date: '2025-09-01',
+  '2025-01-08': {
+    date: '2025-01-08',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -27,8 +27,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
       [2, 5], [7, 0]
     ]
   },
-  '2025-09-02': {
-    date: '2025-09-02',
+  '2025-01-09': {
+    date: '2025-01-09',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -45,8 +45,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-09-03': {
-    date: '2025-09-03',
+  '2025-01-10': {
+    date: '2025-01-10',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -63,8 +63,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-09-04': {
-    date: '2025-09-04',
+  '2025-01-11': {
+    date: '2025-01-11',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -81,8 +81,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-09-05': {
-    date: '2025-09-05',
+  '2025-01-12': {
+    date: '2025-01-12',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -99,8 +99,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-09-06': {
-    date: '2025-09-06',
+  '2025-01-13': {
+    date: '2025-01-13',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -117,8 +117,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-09-07': {
-    date: '2025-09-07',
+  '2025-01-14': {
+    date: '2025-01-14',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -135,8 +135,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-09-08': {
-    date: '2025-09-08',
+  '2025-01-15': {
+    date: '2025-01-15',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -153,8 +153,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-09-09': {
-    date: '2025-09-09',
+  '2025-01-16': {
+    date: '2025-01-16',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -171,8 +171,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-09-10': {
-    date: '2025-09-10',
+  '2025-01-17': {
+    date: '2025-01-17',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
