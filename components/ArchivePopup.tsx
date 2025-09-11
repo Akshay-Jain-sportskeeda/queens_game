@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, Clock, Check } from 'lucide-react';
-import { fetchAllAvailablePuzzles } from '../utils/dailyPuzzle';
 import { trackArchiveView, trackArchivePuzzleLoad, trackModalOpen, trackModalClose } from '../utils/analytics';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 
@@ -76,8 +75,8 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
   const handleDateSelect = (date: string) => {
     // Track archive puzzle selection
     trackArchivePuzzleLoad(date, true);
+    console.log('🎯 [Archive] Date selected:', date);
     onSelectDate(date);
-    onClose();
   };
 
   const isDateCompleted = (date: string) => completedDates.includes(date);
@@ -103,7 +102,7 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
         </div>
         
         {/* Content */}
-        <div className="p-3 max-h-96 overflow-y-auto">
+        <div className="p-4 max-h-80 overflow-y-auto">
           {isLoading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -114,25 +113,27 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
               <p className="text-gray-600">No archive puzzles available</p>
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               {/* Today's Game */}
               <button
                 onClick={() => handleDateSelect(new Date().toISOString().split('T')[0])}
-                className="relative p-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-center border-2 border-blue-300 hover:border-blue-400 min-h-[60px]"
+                className="relative p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-center border-2 border-blue-300 hover:border-blue-400 min-h-[70px] flex flex-col justify-center"
               >
                 {isDateCompleted(new Date().toISOString().split('T')[0]) && (
-                  <div className="absolute top-1 right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                    <Check className="w-2.5 h-2.5 text-white" />
+                  <div className="absolute top-2 right-2 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                    <Check className="w-3 h-3 text-white" />
                   </div>
                 )}
-                <div className="text-xs font-medium text-blue-800 mb-1">
+                <div className="text-sm font-medium text-blue-800 mb-1">
                   Today
                 </div>
-                <div className="text-xs font-semibold text-blue-900">
+                <div className="text-sm font-semibold text-blue-900">
                   {(() => {
                     const today = new Date();
-                    const { dayMonth } = formatDate(today.toISOString().split('T')[0]);
-                    return dayMonth;
+                    return today.toLocaleDateString('en-US', { 
+                      day: 'numeric', 
+                      month: 'short' 
+                    });
                   })()}
                 </div>
               </button>
@@ -149,18 +150,24 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
                 <button
                   key={puzzle.date}
                   onClick={() => handleDateSelect(puzzle.date)}
-                  className="relative p-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors text-center border border-gray-200 hover:border-gray-300 min-h-[60px]"
+                  className="relative p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors text-center border border-gray-200 hover:border-gray-300 min-h-[70px] flex flex-col justify-center"
                 >
                   {isCompleted && (
-                    <div className="absolute top-1 right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                      <Check className="w-2.5 h-2.5 text-white" />
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" />
                     </div>
                   )}
-                  <div className="text-xs font-medium text-gray-800 mb-1">
+                  <div className="text-sm font-medium text-gray-800 mb-1">
                     {dayOfWeek}
                   </div>
-                  <div className="text-xs font-semibold text-gray-900">
-                    {dayMonth}
+                  <div className="text-sm font-semibold text-gray-900">
+                    {(() => {
+                      const date = new Date(puzzle.date);
+                      return date.toLocaleDateString('en-US', { 
+                        day: 'numeric', 
+                        month: 'short' 
+                      });
+                    })()}
                   </div>
                 </button>
                 );

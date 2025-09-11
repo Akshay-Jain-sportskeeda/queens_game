@@ -800,12 +800,18 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   }, [gameState])
 
   const loadPuzzleForDate = useCallback(async (date: string) => {
+    console.log('🎯 [useGameLogic] Loading puzzle for date:', date);
     try {
       const response = await fetch(`/api/puzzle-data?date=${date}`)
+      if (!response.ok) {
+        throw new Error(`Failed to fetch puzzle: ${response.status} ${response.statusText}`);
+      }
       const newPuzzleData = await response.json()
+      console.log('✅ [useGameLogic] Successfully fetched puzzle data for:', date);
       setPuzzleData(newPuzzleData)
     } catch (error) {
-      console.error('Error loading puzzle for date:', error)
+      console.error('❌ [useGameLogic] Error loading puzzle for date:', date, error);
+      throw error; // Re-throw so calling code can handle it
     }
   }, [])
 

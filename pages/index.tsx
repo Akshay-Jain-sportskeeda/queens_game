@@ -235,6 +235,23 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     setShowArchive(!showArchive)
   }, [showArchive, showWinScreen, resetWinAnimation])
 
+  const handleArchiveDateSelect = useCallback(async (date: string) => {
+    console.log('🎯 [Game] Archive date selected:', date);
+    try {
+      await loadPuzzleForDate(date);
+      console.log('✅ [Game] Successfully loaded puzzle for date:', date);
+      // Switch to game tab and close archive
+      setActiveTab('game');
+      setShowArchive(false);
+      // Reset game state for new puzzle
+      setShowInlineWinMetrics(false);
+      setHasShownWinScreen(false);
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('❌ [Game] Error loading puzzle for date:', date, error);
+    }
+  }, [loadPuzzleForDate]);
   const handleRulesToggle = useCallback(() => {
     setShowRules(!showRules)
   }, [showRules])
@@ -703,7 +720,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         {showArchive && (
           <ArchiveScreen
             availableDates={availableDates}
-            onDateSelect={loadPuzzleForDate}
+            onDateSelect={handleArchiveDateSelect}
             onClose={handleArchiveToggle}
           />
         )}

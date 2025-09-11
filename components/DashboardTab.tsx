@@ -212,6 +212,7 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
                   <div className="flex justify-center">
                     <button
                       onClick={() => {
+                        console.log('🎯 [Dashboard] Pending games button clicked');
                         trackPendingGamesClick(pendingGamesCount, totalAvailableGames);
                         setShowArchivePopup(true);
                       }}
@@ -345,7 +346,9 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
           <ArchivePopup
             onClose={() => setShowArchivePopup(false)}
             onSelectDate={(date) => {
+              console.log('🎯 [Dashboard] Archive date selected:', date);
               if (onPlayArchive) {
+                console.log('🎯 [Dashboard] Calling onPlayArchive with date:', date);
                 onPlayArchive(date);
               }
               setShowArchivePopup(false);
