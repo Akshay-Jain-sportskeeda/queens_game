@@ -1,200 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import fs from 'fs'
-import path from 'path'
 import { PuzzleData } from '../../types/game'
 
-const PUZZLE_DATA_URL = process.env.NEXT_PUBLIC_PUZZLE_DATA_URL
-
-// Fallback puzzle data for when external source fails
-const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
-  '2025-09-08': {
-    date: '2025-09-08',
-    gridSize: 8,
-    regions: [
-      [1, 1, 1, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0],
-      [1, 1, 4, 1, 2, 2, 2, 3],
-      [4, 4, 4, 1, 2, 2, 3, 3],
-      [7, 6, 4, 4, 5, 5, 3, 3],
-      [7, 6, 4, 5, 5, 5, 5, 3],
-      [7, 6, 6, 5, 5, 5, 5, 3],
-      [7, 7, 7, 7, 5, 5, 5, 5]
-    ],
-    queens: [
-      [0, 6], [1, 3], [2, 5], [3, 7], [4, 2], [5, 4], [6, 1], [7, 0]
-    ],
-    prefills: [
-      [2, 5], [7, 0]
-    ]
-  },
-  '2025-09-09': {
-    date: '2025-09-09',
-    gridSize: 8,
-    regions: [
-      [1, 1, 1, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0],
-      [1, 1, 4, 1, 2, 2, 2, 3],
-      [4, 4, 4, 1, 2, 2, 3, 3],
-      [7, 6, 4, 4, 5, 5, 3, 3],
-      [7, 6, 4, 5, 5, 5, 5, 3],
-      [7, 6, 6, 5, 5, 5, 5, 3],
-      [7, 7, 7, 7, 5, 5, 5, 5]
-    ],
-    queens: [
-      [0, 4], [1, 6], [2, 1], [3, 3], [4, 0], [5, 7], [6, 5], [7, 2]
-    ],
-    prefills: []
-  },
-  '2025-09-10': {
-    date: '2025-09-10',
-    gridSize: 8,
-    regions: [
-      [1, 1, 1, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0],
-      [1, 1, 4, 1, 2, 2, 2, 3],
-      [4, 4, 4, 1, 2, 2, 3, 3],
-      [7, 6, 4, 4, 5, 5, 3, 3],
-      [7, 6, 4, 5, 5, 5, 5, 3],
-      [7, 6, 6, 5, 5, 5, 5, 3],
-      [7, 7, 7, 7, 5, 5, 5, 5]
-    ],
-    queens: [
-      [0, 5], [1, 2], [2, 6], [3, 1], [4, 3], [5, 0], [6, 4], [7, 7]
-    ],
-    prefills: []
-  },
-  '2025-09-11': {
-    date: '2025-09-11',
-    gridSize: 8,
-    regions: [
-      [1, 1, 1, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0],
-      [1, 1, 4, 1, 2, 2, 2, 3],
-      [4, 4, 4, 1, 2, 2, 3, 3],
-      [7, 6, 4, 4, 5, 5, 3, 3],
-      [7, 6, 4, 5, 5, 5, 5, 3],
-      [7, 6, 6, 5, 5, 5, 5, 3],
-      [7, 7, 7, 7, 5, 5, 5, 5]
-    ],
-    queens: [
-      [0, 2], [1, 5], [2, 7], [3, 4], [4, 6], [5, 1], [6, 3], [7, 0]
-    ],
-    prefills: []
-  },
-  '2025-09-12': {
-    date: '2025-09-12',
-    gridSize: 8,
-    regions: [
-      [1, 1, 1, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0],
-      [1, 1, 4, 1, 2, 2, 2, 3],
-      [4, 4, 4, 1, 2, 2, 3, 3],
-      [7, 6, 4, 4, 5, 5, 3, 3],
-      [7, 6, 4, 5, 5, 5, 5, 3],
-      [7, 6, 6, 5, 5, 5, 5, 3],
-      [7, 7, 7, 7, 5, 5, 5, 5]
-    ],
-    queens: [
-      [0, 1], [1, 4], [2, 0], [3, 6], [4, 7], [5, 3], [6, 5], [7, 2]
-    ],
-    prefills: []
-  },
-  '2025-09-13': {
-    date: '2025-09-13',
-    gridSize: 8,
-    regions: [
-      [1, 1, 1, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0],
-      [1, 1, 4, 1, 2, 2, 2, 3],
-      [4, 4, 4, 1, 2, 2, 3, 3],
-      [7, 6, 4, 4, 5, 5, 3, 3],
-      [7, 6, 4, 5, 5, 5, 5, 3],
-      [7, 6, 6, 5, 5, 5, 5, 3],
-      [7, 7, 7, 7, 5, 5, 5, 5]
-    ],
-    queens: [
-      [0, 7], [1, 1], [2, 4], [3, 2], [4, 5], [5, 0], [6, 6], [7, 3]
-    ],
-    prefills: []
-  },
-  '2025-09-14': {
-    date: '2025-09-14',
-    gridSize: 8,
-    regions: [
-      [1, 1, 1, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0],
-      [1, 1, 4, 1, 2, 2, 2, 3],
-      [4, 4, 4, 1, 2, 2, 3, 3],
-      [7, 6, 4, 4, 5, 5, 3, 3],
-      [7, 6, 4, 5, 5, 5, 5, 3],
-      [7, 6, 6, 5, 5, 5, 5, 3],
-      [7, 7, 7, 7, 5, 5, 5, 5]
-    ],
-    queens: [
-      [0, 3], [1, 0], [2, 2], [3, 5], [4, 1], [5, 6], [6, 4], [7, 7]
-    ],
-    prefills: []
-  },
-  '2025-09-15': {
-    date: '2025-09-15',
-    gridSize: 8,
-    regions: [
-      [1, 1, 1, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0],
-      [1, 1, 4, 1, 2, 2, 2, 3],
-      [4, 4, 4, 1, 2, 2, 3, 3],
-      [7, 6, 4, 4, 5, 5, 3, 3],
-      [7, 6, 4, 5, 5, 5, 5, 3],
-      [7, 6, 6, 5, 5, 5, 5, 3],
-      [7, 7, 7, 7, 5, 5, 5, 5]
-    ],
-    queens: [
-      [0, 0], [1, 7], [2, 3], [3, 1], [4, 4], [5, 2], [6, 6], [7, 5]
-    ],
-    prefills: []
-  },
-  '2025-09-16': {
-    date: '2025-09-16',
-    gridSize: 8,
-    regions: [
-      [1, 1, 1, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0],
-      [1, 1, 4, 1, 2, 2, 2, 3],
-      [4, 4, 4, 1, 2, 2, 3, 3],
-      [7, 6, 4, 4, 5, 5, 3, 3],
-      [7, 6, 4, 5, 5, 5, 5, 3],
-      [7, 6, 6, 5, 5, 5, 5, 3],
-      [7, 7, 7, 7, 5, 5, 5, 5]
-    ],
-    queens: [
-      [0, 6], [1, 4], [2, 1], [3, 7], [4, 0], [5, 3], [6, 5], [7, 2]
-    ],
-    prefills: []
-  },
-  '2025-09-17': {
-    date: '2025-09-17',
-    gridSize: 8,
-    regions: [
-      [1, 1, 1, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0],
-      [1, 1, 4, 1, 2, 2, 2, 3],
-      [4, 4, 4, 1, 2, 2, 3, 3],
-      [7, 6, 4, 4, 5, 5, 3, 3],
-      [7, 6, 4, 5, 5, 5, 5, 3],
-      [7, 6, 6, 5, 5, 5, 5, 3],
-      [7, 7, 7, 7, 5, 5, 5, 5]
-    ],
-    queens: [
-      [0, 5], [1, 7], [2, 2], [3, 0], [4, 3], [5, 1], [6, 6], [7, 4]
-    ],
-    prefills: []
-  }
-}
-
-// Cache for puzzle data
-let puzzleCache: { [key: string]: PuzzleData } = {}
-let lastFetch = 0
-const CACHE_DURATION = 60 * 60 * 1000 // 1 hour
+// Hardcoded Google Sheet URL - the only data source
+const PUZZLE_DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7zVz3B8XRn-mIHVTBSLJ6JBp7liPx9micD9t3KOiMFAMpqqnJT1wpXbZl8KrZQ9WtGtMn0gM9Hvu9/pub?gid=0&single=true&output=csv'
 
 function validateRegionsData(regions: any, gridSize: number): boolean {
   // Check if regions is an array
@@ -283,75 +91,25 @@ function parseCSVLine(line: string): string[] {
   return result
 }
 
-function readLocalCSV(): string | null {
-  try {
-    const csvPath = path.join(process.cwd(), 'puzzle_data.csv')
-    if (fs.existsSync(csvPath)) {
-      return fs.readFileSync(csvPath, 'utf-8')
-    }
-  } catch (error) {
-    console.error('Error reading local CSV file:', error)
-  }
-  return null
-}
-
 async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
-  const now = Date.now()
-  
-  // Return cached data if still fresh
-  if (now - lastFetch < CACHE_DURATION && Object.keys(puzzleCache).length > 0) {
-    console.log('🔄 [fetchPuzzleData] Using cached data')
-    return puzzleCache
-  }
-
-  console.log('🚀 [fetchPuzzleData] Starting fresh data fetch...')
-  let csvText: string | null = null
-
-  // PRIORITY 1: Try to fetch from external source (Google Sheet) first
-  if (PUZZLE_DATA_URL) {
-    try {
-      console.log('🌐 [fetchPuzzleData] Attempting to fetch puzzle data from external source:', PUZZLE_DATA_URL)
-      const response = await fetch(PUZZLE_DATA_URL)
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      
-      csvText = await response.text()
-      console.log('✅ [fetchPuzzleData] Successfully fetched puzzle data from external source')
-      console.log('📄 [fetchPuzzleData] External data length:', csvText?.length || 0, 'characters')
-      console.log('📄 [fetchPuzzleData] First 200 chars of external data:', csvText?.substring(0, 200))
-    } catch (error) {
-      console.warn('❌ [fetchPuzzleData] Failed to fetch from external source:', error.message)
-      csvText = null
-    }
-  } else {
-    console.log('⚠️ [fetchPuzzleData] No NEXT_PUBLIC_PUZZLE_DATA_URL configured, skipping external fetch')
-  }
-  
-  // PRIORITY 2: If external fetch failed, try local CSV file
-  if (!csvText) {
-    console.log('📁 [fetchPuzzleData] Attempting to read from local CSV file...')
-    csvText = readLocalCSV()
-    if (csvText) {
-      console.log('✅ [fetchPuzzleData] Successfully read from local CSV file')
-      console.log('📄 [fetchPuzzleData] Local CSV data length:', csvText.length, 'characters')
-      console.log('📄 [fetchPuzzleData] First 200 chars of local CSV:', csvText.substring(0, 200))
-    } else {
-      console.log('❌ [fetchPuzzleData] No local CSV file found or failed to read')
-    }
-  }
-
-  // PRIORITY 3: If both external and local failed, use hardcoded fallback
-  if (!csvText || csvText.trim().length === 0) {
-    console.warn('⚠️ [fetchPuzzleData] No CSV data available, using fallback puzzle data')
-    console.log('📊 [fetchPuzzleData] Fallback data contains dates:', Object.keys(FALLBACK_PUZZLE_DATA))
-    puzzleCache = FALLBACK_PUZZLE_DATA
-    lastFetch = now
-    return FALLBACK_PUZZLE_DATA
-  }
+  console.log('🚀 [fetchPuzzleData] Starting data fetch from Google Sheet...')
+  console.log('🌐 [fetchPuzzleData] Google Sheet URL:', PUZZLE_DATA_URL)
 
   try {
+    const response = await fetch(PUZZLE_DATA_URL)
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
+    const csvText = await response.text()
+    console.log('✅ [fetchPuzzleData] Successfully fetched data from Google Sheet')
+    console.log('📄 [fetchPuzzleData] CSV data length:', csvText?.length || 0, 'characters')
+    
+    if (!csvText || csvText.trim().length === 0) {
+      throw new Error('Empty CSV data received from Google Sheet')
+    }
+
     console.log('🔍 [fetchPuzzleData] Parsing CSV data...')
     const lines = csvText.trim().split('\n')
     console.log('📊 [fetchPuzzleData] CSV has', lines.length, 'lines')
@@ -408,42 +166,29 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
           
           // Validate the complete puzzle data
           if (!validatePuzzleData(puzzleData)) {
-            throw new Error(`Invalid regions data for date ${row[dateIndex]}`)
+            throw new Error(`Invalid puzzle data for date ${row[dateIndex]}`)
           }
           
           puzzles[row[dateIndex]] = puzzleData
           console.log(`✅ [fetchPuzzleData] Successfully added puzzle for date:`, row[dateIndex])
         } catch (parseError) {
           console.error(`❌ [fetchPuzzleData] Error parsing puzzle data for date ${row[dateIndex]}:`, parseError)
-          continue
+          throw new Error(`Failed to parse puzzle data for date ${row[dateIndex]}: ${parseError.message}`)
         }
       }
     }
     
     console.log('📊 [fetchPuzzleData] Successfully parsed puzzles for dates:', Object.keys(puzzles))
     
-    // If no valid puzzles were parsed, use fallback data
+    // If no valid puzzles were parsed, throw error
     if (Object.keys(puzzles).length === 0) {
-      console.warn('⚠️ [fetchPuzzleData] No valid puzzles found in CSV data, using fallback data')
-      console.log('📊 [fetchPuzzleData] Fallback data contains dates:', Object.keys(FALLBACK_PUZZLE_DATA))
-      puzzleCache = FALLBACK_PUZZLE_DATA
-      lastFetch = now
-      return FALLBACK_PUZZLE_DATA
+      throw new Error('No valid puzzles found in Google Sheet data')
     }
-    
-    puzzleCache = puzzles
-    lastFetch = now
     
     return puzzles
   } catch (error) {
-    console.error('❌ [fetchPuzzleData] Error parsing CSV data:', error)
-    console.warn('⚠️ [fetchPuzzleData] Using fallback puzzle data due to parsing error')
-    console.log('📊 [fetchPuzzleData] Fallback data contains dates:', Object.keys(FALLBACK_PUZZLE_DATA))
-    
-    // Return fallback data instead of throwing error
-    puzzleCache = FALLBACK_PUZZLE_DATA
-    lastFetch = now
-    return FALLBACK_PUZZLE_DATA
+    console.error('❌ [fetchPuzzleData] Error fetching/parsing Google Sheet data:', error)
+    throw error
   }
 }
 
@@ -456,7 +201,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const today = new Date()
   const todayString = today.toISOString().split('T')[0]
   console.log('🗓️ [API] Today\'s date:', todayString)
-  console.log('🗓️ [API] Today\'s date object:', today)
 
   try {
     const { date } = req.query
@@ -471,14 +215,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Return specific date's puzzle
       const puzzle = puzzles[date]
       if (!puzzle) {
-        console.log('❌ [API] Specific date not found, using first available')
-        // If specific date not found, return the first available puzzle
-        const firstPuzzle = Object.values(puzzles)[0]
-        if (firstPuzzle) {
-          console.log('✅ [API] Returning first puzzle:', firstPuzzle.date)
-          return res.status(200).json(firstPuzzle)
-        }
-        return res.status(404).json({ error: 'No puzzles available' })
+        console.log('❌ [API] Specific date not found')
+        return res.status(404).json({ error: `No puzzle found for date: ${date}` })
       }
       console.log('✅ [API] Found specific date puzzle:', puzzle.date)
       return res.status(200).json(puzzle)
@@ -489,6 +227,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } catch (error) {
     console.error('❌ [API] Error:', error)
-    return res.status(500).json({ error: 'Internal server error' })
+    return res.status(500).json({ 
+      error: 'Failed to fetch puzzle data from Google Sheet',
+      details: error.message 
+    })
   }
 }

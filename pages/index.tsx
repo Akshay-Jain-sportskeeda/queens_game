@@ -21,12 +21,73 @@ import { saveGameResult, fetchLeaderboard, getUserRank } from '../utils/firestor
 import { useGameLogic } from '../hooks/useGameLogic'
 
 interface HomeProps {
-  puzzleData: PuzzleData
+  puzzleData: PuzzleData | null
   availableDates: string[]
 }
 
 export default function Home({ puzzleData, availableDates }: HomeProps) {
   const { user, logout } = useAuth()
+  
+  // If no puzzle data is available, show error message
+  if (!puzzleData) {
+    return (
+      <>
+        <Head>
+          <title>NFL Field Puzzle - No Puzzle Available</title>
+        </Head>
+        <PFSNHeader currentPage="NFL" />
+        <div style={{
+          minHeight: '50vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px 20px'
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '20px',
+            padding: '40px',
+            boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)',
+            maxWidth: '500px',
+            textAlign: 'center'
+          }}>
+            <h1 style={{ fontSize: '2rem', color: '#dc2626', marginBottom: '20px' }}>
+              ⚠️ No Puzzle Available
+            </h1>
+            <p style={{ color: '#666', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '20px' }}>
+              Unable to load puzzle data from the Google Sheet. This could be due to:
+            </p>
+            <ul style={{ textAlign: 'left', color: '#666', marginBottom: '30px', paddingLeft: '20px' }}>
+              <li>Network connectivity issues</li>
+              <li>Google Sheet is not publicly accessible</li>
+              <li>Invalid data format in the sheet</li>
+              <li>No puzzle available for today's date</li>
+            </ul>
+            <p style={{ color: '#888', fontSize: '0.9rem' }}>
+              Please check the Google Sheet and try refreshing the page.
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              style={{
+                marginTop: '20px',
+                padding: '12px 24px',
+                background: '#667eea',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                cursor: 'pointer'
+              }}
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+        <PFSNFooter currentPage="NFL" />
+      </>
+    )
+  }
+  
   const {
     gameState,
     puzzleData: currentPuzzleData,
@@ -662,73 +723,51 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    console.log('🚀 [SSR] Starting getServerSideProps for NFL Field Puzzle...')
+    console.log('🚀 [SSR] Starting getServerSideProps - fetching from Google Sheet only...')
     
     const baseUrl = context.req.headers.host
     const protocol = context.req.headers['x-forwarded-proto'] || 'http'
     const apiUrl = `${protocol}://${baseUrl}/api/puzzle-data`
     
-    console.log('🌐 [SSR] Fetching puzzle data from API URL:', apiUrl)
+    console.log('🌐 [SSR] Calling internal API:', apiUrl)
     
     const response = await fetch(apiUrl)
-    const puzzles = await response.json()
     
-    console.log('📊 [SSR] Received puzzles for dates:', Object.keys(puzzles))
+    if (!response.ok) {
+      console.error('❌ [SSR] API call failed with status:', response.status)
+      const errorData = await response.json()
+      console.error('❌ [SSR] Error details:', errorData)
+      throw new Error(`API call failed: ${response.status} - ${errorData.error}`)
+    }
+    
+    const puzzles = await response.json()
+    console.log('📊 [SSR] Successfully received puzzles for dates:', Object.keys(puzzles))
     console.log('📊 [SSR] Total puzzles received:', Object.keys(puzzles).length)
     
     // Get today's puzzle
     const today = new Date().toISOString().split('T')[0]
-    console.log('🗓️ [SSR] Today\'s date (calculated):', today)
-    console.log('🗓️ [SSR] Today\'s date object:', new Date())
+    console.log('🗓️ [SSR] Today\'s date:', today)
     
     // Check if today's puzzle exists
     const todaysPuzzle = puzzles[today]
-    console.log('🎯 [SSR] Today\'s puzzle exists:', !!todaysPuzzle)
     if (todaysPuzzle) {
       console.log('✅ [SSR] Found today\'s puzzle for', today)
-      console.log('🎮 [SSR] Today\'s puzzle details:', {
-        date: todaysPuzzle.date,
-        gridSize: todaysPuzzle.gridSize,
-        prefillsCount: todaysPuzzle.prefills?.length || 0,
-        queensCount: todaysPuzzle.queens?.length || 0
-      })
     } else {
       console.log('❌ [SSR] No puzzle found for today\'s date:', today)
-      console.log('📋 [SSR] Available dates:', Object.keys(puzzles))
     }
     
-    // Use today's puzzle if available, otherwise use the first available puzzle
-    const fallbackPuzzle = {
-      date: today,
-      gridSize: 8,
-      regions: [
-        [1, 1, 1, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 1, 0, 0],
-        [1, 1, 4, 1, 2, 2, 2, 3],
-        [4, 4, 4, 1, 2, 2, 3, 3],
-        [7, 6, 4, 4, 5, 5, 3, 3],
-        [7, 6, 4, 5, 5, 5, 5, 3],
-        [7, 6, 6, 5, 5, 5, 5, 3],
-        [7, 7, 7, 7, 5, 5, 5, 5]
-      ],
-      queens: [[0, 2], [1, 5], [2, 7], [3, 4], [4, 6], [5, 1], [6, 3], [7, 0]],
-      prefills: []
-    }
-    
-    const puzzleData = todaysPuzzle || puzzles[Object.keys(puzzles)[0]] || fallbackPuzzle
+    // Use today's puzzle if available, otherwise use the first available puzzle, otherwise null
+    const puzzleData = todaysPuzzle || puzzles[Object.keys(puzzles)[0]] || null
     
     const availableDates = Object.keys(puzzles).sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-    console.log('📅 [SSR] Available dates (sorted newest first):', availableDates)
-    console.log('🎯 [SSR] Selected puzzle date for display:', puzzleData.date)
-    console.log('🎮 [SSR] Final puzzle data being sent to client:', {
-      date: puzzleData.date,
-      gridSize: puzzleData.gridSize,
-      prefillsCount: puzzleData.prefills?.length || 0,
-      queensCount: puzzleData.queens?.length || 0
-    })
     
-    if (puzzleData.date !== today) {
-      console.log('⚠️ [SSR] Using fallback puzzle because today\'s puzzle not found')
+    if (puzzleData) {
+      console.log('🎯 [SSR] Selected puzzle date for display:', puzzleData.date)
+      if (puzzleData.date !== today) {
+        console.log('⚠️ [SSR] Using different date puzzle because today\'s not available')
+      }
+    } else {
+      console.log('❌ [SSR] No puzzle data available - will show error page')
     }
     
     return {
@@ -740,30 +779,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (error) {
     console.error('❌ [SSR] Error in getServerSideProps:', error)
     
-    // Fallback data
-    const fallbackPuzzle: PuzzleData = {
-      date: new Date().toISOString().split('T')[0],
-      gridSize: 8,
-      regions: [
-        [1, 1, 1, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 1, 0, 0],
-        [1, 1, 4, 1, 2, 2, 2, 3],
-        [4, 4, 4, 1, 2, 2, 3, 3],
-        [7, 6, 4, 4, 5, 5, 3, 3],
-        [7, 6, 4, 5, 5, 5, 5, 3],
-        [7, 6, 6, 5, 5, 5, 5, 3],
-        [7, 7, 7, 7, 5, 5, 5, 5]
-      ],
-      queens: [[0, 2], [1, 5], [2, 7], [3, 4], [4, 6], [5, 1], [6, 3], [7, 0]],
-      prefills: []
-    }
-    
-    console.log('🔄 [SSR] Using emergency fallback puzzle for date:', fallbackPuzzle.date)
+    // No fallback - return null to show error page
+    console.log('🚫 [SSR] No fallback available - returning null puzzle data')
     
     return {
       props: {
-        puzzleData: fallbackPuzzle,
-        availableDates: [fallbackPuzzle.date]
+        puzzleData: null,
+        availableDates: []
       }
     }
   }
