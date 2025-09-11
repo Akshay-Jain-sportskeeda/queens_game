@@ -71,7 +71,7 @@ export async function saveGameResult(
       
       // Check if a record already exists for this user and puzzle date
       const existingQuery = query(
-        collection(db, COLLECTION_NAME),
+        collection(db!, COLLECTION_NAME),
         where('userId', '==', user.uid),
         where('puzzleDate', '==', puzzleDate)
       )
@@ -108,7 +108,7 @@ export async function saveGameResult(
       
       console.log('📝 [saveGameResult] Document data to save:', gameResult)
       
-      await addDoc(collection(db, COLLECTION_NAME), gameResult)
+      await addDoc(collection(db!, COLLECTION_NAME), gameResult)
       console.log('💾 [saveGameResult] Document successfully added to Firestore')
       console.log('💾 [saveGameResult] Document successfully added to Firestore')
       return true
@@ -155,7 +155,7 @@ export async function fetchLeaderboard(puzzleDate: string): Promise<GameResult[]
     // Simplified query to avoid composite index requirement
     // We'll sort in JavaScript instead of using multiple orderBy clauses
     const leaderboardQuery = query(
-      collection(db, COLLECTION_NAME),
+      collection(db!, COLLECTION_NAME),
       where('puzzleDate', '==', puzzleDate)
     )
 
@@ -221,7 +221,7 @@ export async function getUserRank(userId: string, puzzleDate: string): Promise<{
   try {
     // Get all entries for the puzzle date (we'll sort in JavaScript)
     const allEntriesQuery = query(
-      collection(db, COLLECTION_NAME),
+      collection(db!, COLLECTION_NAME),
       where('puzzleDate', '==', puzzleDate)
     )
 
@@ -292,7 +292,7 @@ export async function fetchUserGameHistory(userId: string): Promise<GameResult[]
     // Simplified query to avoid composite index requirement
     // We'll sort in JavaScript instead of using orderBy with where clause
     const userHistoryQuery = query(
-      collection(db, COLLECTION_NAME),
+      collection(db!, COLLECTION_NAME),
       where('userId', '==', userId)
     )
 
