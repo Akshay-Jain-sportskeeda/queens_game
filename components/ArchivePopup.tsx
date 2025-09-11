@@ -52,12 +52,11 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
     try {
       const date = new Date(dateString);
       return {
-        day: date.toLocaleDateString('en-US', { weekday: 'short' }),
-        dayNumber: date.getDate().toString(),
-        monthShort: date.toLocaleDateString('en-US', { month: 'short' })
+        dayOfWeek: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        dayMonth: date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
       };
     } catch (error) {
-      return { day: 'Invalid', dayNumber: 'Date', monthShort: '' };
+      return { dayOfWeek: 'Invalid', dayMonth: 'Date' };
     }
   };
 
@@ -85,7 +84,7 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 max-h-[80vh] overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-xs w-full mx-4 max-h-[80vh] overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-gray-800 to-black p-6 text-center relative">
           <button
@@ -104,7 +103,7 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
         </div>
         
         {/* Content */}
-        <div className="p-4 max-h-96 overflow-y-auto">
+        <div className="p-3 max-h-96 overflow-y-auto">
           {isLoading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -115,48 +114,48 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
               <p className="text-gray-600">No archive puzzles available</p>
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1.5">
               {/* Today's Game */}
               <button
                 onClick={() => handleDateSelect(new Date().toLocaleDateString('en-CA'))}
-                className="relative p-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-center border-2 border-blue-300 hover:border-blue-400"
+                className="relative p-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-center border-2 border-blue-300 hover:border-blue-400 min-h-[60px]"
               >
                 {isDateCompleted(new Date().toLocaleDateString('en-CA')) && (
-                  <div className="absolute top-1 right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                    <Check className="w-2.5 h-2.5 text-white" />
+                  <div className="absolute top-0.5 right-0.5 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                    <Check className="w-2 h-2 text-white" />
                   </div>
                 )}
-                <div className="text-xs font-medium text-blue-800 mb-1">
+                <div className="text-xs font-medium text-blue-800">
                   Today
                 </div>
-                <div className="text-xs font-semibold text-blue-900 mb-1">
+                <div className="text-xs font-semibold text-blue-900">
                   {(() => {
                     const today = new Date();
-                    const { dayNumber, monthShort } = formatDate(today.toLocaleDateString('en-CA'));
-                    return `${dayNumber} ${monthShort}`;
+                    const { dayMonth } = formatDate(today.toLocaleDateString('en-CA'));
+                    return dayMonth;
                   })()}
                 </div>
               </button>
               
               {availablePuzzles.map((puzzle) => {
-                const { day, dayNumber, monthShort } = formatDate(puzzle.date);
+                const { dayOfWeek, dayMonth } = formatDate(puzzle.date);
                 const isCompleted = isDateCompleted(puzzle.date);
                 return (
                 <button
                   key={puzzle.date}
                   onClick={() => handleDateSelect(puzzle.date)}
-                  className="relative p-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors text-center border border-gray-200 hover:border-gray-300"
+                  className="relative p-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors text-center border border-gray-200 hover:border-gray-300 min-h-[60px]"
                 >
                   {isCompleted && (
-                    <div className="absolute top-1 right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                      <Check className="w-2.5 h-2.5 text-white" />
+                    <div className="absolute top-0.5 right-0.5 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                      <Check className="w-2 h-2 text-white" />
                     </div>
                   )}
-                  <div className="text-xs font-medium text-gray-800 mb-1">
-                    {day}
+                  <div className="text-xs font-medium text-gray-800">
+                    {dayOfWeek}
                   </div>
-                  <div className="text-xs font-semibold text-gray-900 mb-1">
-                    {dayNumber} {monthShort}
+                  <div className="text-xs font-semibold text-gray-900">
+                    {dayMonth}
                   </div>
                 </button>
                 );

@@ -284,7 +284,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           <div className="game-container">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', maxWidth: '400px', margin: '0 auto 25px auto' }}>
               <div style={{ flex: 1, textAlign: 'left' }}>
-                <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#333', marginBottom: '4px' }}>
+                <div style={{ fontSize: '1rem', fontWeight: '600', color: '#333', marginBottom: '4px' }}>
                   {currentPuzzleData.date === new Date().toISOString().split('T')[0] 
                     ? "Today's Puzzle" 
                     : `Archive: ${new Date(currentPuzzleData.date).toLocaleDateString('en-US', { 
@@ -294,7 +294,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
                       })}`
                   }
                 </div>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: '#666', lineHeight: '1.3' }}>Fill grid with 🏈</p>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: '#666', lineHeight: '1.3' }}>Fill the grid with 🏈</p>
               </div>
               <button 
                 onClick={handleRulesToggle}
