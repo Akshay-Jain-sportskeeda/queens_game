@@ -335,6 +335,76 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     debouncedValidation()
   }, [debouncedValidation]);
 
+  // Helper functions for showing hints (must be defined before getHint)
+  const showWrongFootballHint = useCallback((hint: { row: number, col: number }) => {
+    addHintHighlight([[hint.row, hint.col]])
+    showInfoMessage('This football is in the wrong position', 'conflict');
+  }, [showInfoMessage, addHintHighlight])
+
+  const showRegionXHint = useCallback((hint: { region: number, emptyCells: number[][] }) => {
+    // Highlight all cells in the region, not just empty ones
+    const allRegionCells: number[][] = []
+    for (let row = 0; row < puzzleData.gridSize; row++) {
+      for (let col = 0; col < puzzleData.gridSize; col++) {
+        if (puzzleData.regions[row][col] === hint.region) {
+          allRegionCells.push([row, col])
+        }
+      }
+    }
+    addHintHighlight(allRegionCells)
+    showInfoMessage(`This region already has a football. Mark the highlighted cells with ×`, 'hint');
+  }, [showInfoMessage, addHintHighlight, puzzleData])
+
+  const showRowXHint = useCallback((hint: { row: number, emptyCells: number[][] }) => {
+    // Highlight all cells in the row, not just empty ones
+    const allRowCells: number[][] = []
+    for (let col = 0; col < puzzleData.gridSize; col++) {
+      allRowCells.push([hint.row, col])
+    }
+    addHintHighlight(allRowCells)
+    showInfoMessage(`Row ${hint.row + 1} already has a football. Mark the highlighted cells with ×`, 'hint');
+  }, [showInfoMessage, addHintHighlight, puzzleData]);
+
+  const showColumnXHint = useCallback((hint: { column: number, emptyCells: number[][] }) => {
+    // Highlight all cells in the column, not just empty ones
+    const allColumnCells: number[][] = []
+    for (let row = 0; row < puzzleData.gridSize; row++) {
+      allColumnCells.push([row, hint.column])
+    }
+    addHintHighlight(allColumnCells)
+    showInfoMessage(`Column ${hint.column + 1} already has a football. Mark the highlighted cells with ×`, 'hint');
+  }, [showInfoMessage, addHintHighlight, puzzleData])
+
+  const showAdjacentXHint = useCallback((hint: { footballRow: number, footballCol: number, adjacentCells: number[][] }) => {
+    addHintHighlight(hint.adjacentCells)
+    showInfoMessage('Footballs cannot touch each other. Mark the highlighted cells with ×', 'conflict');
+  }, [showInfoMessage, addHintHighlight])
+
+  const showEmptyRegionHint = useCallback((hint: { region: number, regionCells: number[][] }) => {
+    addHintHighlight(hint.regionCells)
+    showInfoMessage('This region needs a football. Look for a valid placement in the highlighted area', 'hint');
+  }, [showInfoMessage, addHintHighlight])
+
+  const showEmptyRowHint = useCallback((hint: { row: number, rowCells: number[][] }) => {
+    addHintHighlight(hint.rowCells)
+    showInfoMessage(`Row ${hint.row + 1} needs a football. Look for a valid placement in the highlighted row`, 'hint');
+  }, [showInfoMessage, addHintHighlight])
+
+  const showEmptyColumnHint = useCallback((hint: { column: number, columnCells: number[][] }) => {
+    addHintHighlight(hint.columnCells)
+    showInfoMessage(`Column ${hint.column + 1} needs a football. Look for a valid placement in the highlighted column`, 'hint');
+  }, [showInfoMessage, addHintHighlight])
+
+  const showWrongXHint = useCallback((hint: { wrongXCells: number[][] }) => {
+    addHintHighlight(hint.wrongXCells)
+    showInfoMessage('These × marks are incorrect. Remove them - these cells should have footballs', 'conflict');
+  }, [showInfoMessage, addHintHighlight])
+
+  const showValidFootballHint = useCallback((hint: { row: number, col: number }) => {
+    addHintHighlight([[hint.row, hint.col]])
+    showInfoMessage('Try placing a football in the highlighted cell', 'hint');
+  }, [showInfoMessage, addHintHighlight])
+
   // Helper function to check if a football is valid (NOT using useCallback to avoid stale closures)
   const isValidFootball = (row: number, col: number): boolean => {
     console.log(`Checking isValidFootball(${row}, ${col}) with puzzle date: ${puzzleData.date}`);
@@ -725,75 +795,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     }
     return null;
   };
-
-  const showWrongFootballHint = useCallback((hint: { row: number, col: number }) => {
-    addHintHighlight([[hint.row, hint.col]])
-    showInfoMessage('This football is in the wrong position', 'conflict');
-  }, [showInfoMessage, addHintHighlight])
-
-  const showRegionXHint = useCallback((hint: { region: number, emptyCells: number[][] }) => {
-    // Highlight all cells in the region, not just empty ones
-    const allRegionCells: number[][] = []
-    for (let row = 0; row < puzzleData.gridSize; row++) {
-      for (let col = 0; col < puzzleData.gridSize; col++) {
-        if (puzzleData.regions[row][col] === hint.region) {
-          allRegionCells.push([row, col])
-        }
-      }
-    }
-    addHintHighlight(allRegionCells)
-    showInfoMessage(`This region already has a football. Mark the highlighted cells with ×`, 'hint');
-  }, [showInfoMessage, addHintHighlight, puzzleData])
-
-  const showRowXHint = useCallback((hint: { row: number, emptyCells: number[][] }) => {
-    // Highlight all cells in the row, not just empty ones
-    const allRowCells: number[][] = []
-    for (let col = 0; col < puzzleData.gridSize; col++) {
-      allRowCells.push([hint.row, col])
-    }
-    addHintHighlight(allRowCells)
-    showInfoMessage(`Row ${hint.row + 1} already has a football. Mark the highlighted cells with ×`, 'hint');
-  }, [showInfoMessage, addHintHighlight, puzzleData]);
-
-  const showColumnXHint = useCallback((hint: { column: number, emptyCells: number[][] }) => {
-    // Highlight all cells in the column, not just empty ones
-    const allColumnCells: number[][] = []
-    for (let row = 0; row < puzzleData.gridSize; row++) {
-      allColumnCells.push([row, hint.column])
-    }
-    addHintHighlight(allColumnCells)
-    showInfoMessage(`Column ${hint.column + 1} already has a football. Mark the highlighted cells with ×`, 'hint');
-  }, [showInfoMessage, addHintHighlight, puzzleData])
-
-  const showAdjacentXHint = useCallback((hint: { footballRow: number, footballCol: number, adjacentCells: number[][] }) => {
-    addHintHighlight(hint.adjacentCells)
-    showInfoMessage('Footballs cannot touch each other. Mark the highlighted cells with ×', 'conflict');
-  }, [showInfoMessage, addHintHighlight])
-
-  const showEmptyRegionHint = useCallback((hint: { region: number, regionCells: number[][] }) => {
-    addHintHighlight(hint.regionCells)
-    showInfoMessage('This region needs a football. Look for a valid placement in the highlighted area', 'hint');
-  }, [showInfoMessage, addHintHighlight])
-
-  const showEmptyRowHint = useCallback((hint: { row: number, rowCells: number[][] }) => {
-    addHintHighlight(hint.rowCells)
-    showInfoMessage(`Row ${hint.row + 1} needs a football. Look for a valid placement in the highlighted row`, 'hint');
-  }, [showInfoMessage, addHintHighlight])
-
-  const showEmptyColumnHint = useCallback((hint: { column: number, columnCells: number[][] }) => {
-    addHintHighlight(hint.columnCells)
-    showInfoMessage(`Column ${hint.column + 1} needs a football. Look for a valid placement in the highlighted column`, 'hint');
-  }, [showInfoMessage, addHintHighlight])
-
-  const showWrongXHint = useCallback((hint: { wrongXCells: number[][] }) => {
-    addHintHighlight(hint.wrongXCells)
-    showInfoMessage('These × marks are incorrect. Remove them - these cells should have footballs', 'conflict');
-  }, [showInfoMessage, addHintHighlight])
-
-  const showValidFootballHint = useCallback((hint: { row: number, col: number }) => {
-    addHintHighlight([[hint.row, hint.col]])
-    showInfoMessage('Try placing a football in the highlighted cell', 'hint');
-  }, [showInfoMessage, addHintHighlight])
 
   const reset = useCallback(() => {
     clearHintHighlights()
