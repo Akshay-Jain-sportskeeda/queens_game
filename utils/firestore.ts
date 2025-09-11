@@ -127,17 +127,21 @@ export async function saveGameResult(
     return result
   } catch (error) {
     console.error('❌ [saveGameResult] Error saving game result:', error)
-    console.error('❌ [saveGameResult] Error details:', {
-      message: error.message,
-      code: error.code,
-      stack: error.stack
-    })
+    if (error instanceof Error) {
+      console.error('❌ [saveGameResult] Error details:', {
+        message: error.message,
+        code: (error as any).code,
+        stack: error.stack
+      })
+    }
     console.error('❌ [saveGameResult] Error saving game result:', error)
-    console.error('❌ [saveGameResult] Error details:', {
-      message: error.message,
-      code: error.code,
-      stack: error.stack
-    })
+    if (error instanceof Error) {
+      console.error('❌ [saveGameResult] Error details:', {
+        message: error.message,
+        code: (error as any).code,
+        stack: error.stack
+      })
+    }
     return false
   }
 }
@@ -202,11 +206,13 @@ export async function fetchLeaderboard(puzzleDate: string): Promise<GameResult[]
     return topResults
   } catch (error) {
     console.error('❌ [fetchLeaderboard] Error fetching leaderboard:', error)
-    console.error('❌ [fetchLeaderboard] Error details:', {
-      message: error.message,
-      code: error.code,
-      stack: error.stack
-    })
+    if (error instanceof Error) {
+      console.error('❌ [fetchLeaderboard] Error details:', {
+        message: error.message,
+        code: (error as any).code,
+        stack: error.stack
+      })
+    }
     return []
   }
 }
