@@ -662,15 +662,23 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
+    console.log('🚀 [SSR] Starting getServerSideProps...')
+    
     const baseUrl = context.req.headers.host
     const protocol = context.req.headers['x-forwarded-proto'] || 'http'
     const apiUrl = `${protocol}://${baseUrl}/api/puzzle-data`
     
+    console.log('🌐 [SSR] API URL:', apiUrl)
+    
     const response = await fetch(apiUrl)
     const puzzles = await response.json()
     
+    console.log('📊 [SSR] Received puzzles:', Object.keys(puzzles))
+    
     // Get today's puzzle
     const today = new Date().toISOString().split('T')[0]
+    console.log('🗓️ [SSR] Today\'s date:', today)
+    
     const puzzleData = puzzles[today] || puzzles[Object.keys(puzzles)[0]] || {
       date: today,
       gridSize: 8,
@@ -689,6 +697,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
     
     const availableDates = Object.keys(puzzles).sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+    console.log('📅 [SSR] Available dates (sorted):', availableDates)
+    console.log('🎯 [SSR] Selected puzzle date:', puzzleData.date)
     
     return {
       props: {

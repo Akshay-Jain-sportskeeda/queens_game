@@ -358,12 +358,23 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     // Parse all puzzle data
     for (let i = 1; i < lines.length; i++) {
       const row = parseCSVLine(lines[i])
+      console.log(`📝 [DEBUG] Processing CSV row ${i}:`, row)
+      
       if (row[dateIndex] && row[dateIndex] !== '') {
+        console.log(`🗓️ [DEBUG] Found date in row ${i}:`, row[dateIndex])
+        
         try {
           const regions = JSON.parse(row[regionsIndex].replace(/^"|"$/g, ''))
           const queens = JSON.parse(row[queensIndex].replace(/^"|"$/g, ''))
           const prefills = JSON.parse(row[prefillsIndex].replace(/^"|"$/g, ''))
           const gridSize = parseInt(row[gridSizeIndex])
+          
+          console.log(`🎯 [DEBUG] Parsed data for ${row[dateIndex]}:`, {
+            gridSize,
+            regionsLength: regions.length,
+            queensCount: queens.length,
+            prefillsCount: prefills.length
+          })
           
           const puzzleData: PuzzleData = {
             date: row[dateIndex],
@@ -379,6 +390,7 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
           }
           
           puzzles[row[dateIndex]] = puzzleData
+          console.log(`✅ [DEBUG] Successfully added puzzle for date:`, row[dateIndex])
         } catch (parseError) {
           console.error(`Error parsing puzzle data for date ${row[dateIndex]}:`, parseError)
           continue
@@ -414,23 +426,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
+  // Debug: Log today's date
+  const today = new Date()
+  const todayString = today.toISOString().split('T')[0]
+  console.log('🗓️ [DEBUG] Today\'s date:', todayString)
+  console.log('🗓️ [DEBUG] Today\'s date object:', today)
+
   try {
     const { date } = req.query
+    console.log('🔍 [DEBUG] Requested date from query:', date)
+    
     const puzzles = await fetchPuzzleData()
+    console.log('📊 [DEBUG] Available puzzle dates:', Object.keys(puzzles))
+    console.log('📊 [DEBUG] Total puzzles loaded:', Object.keys(puzzles).length)
     
     if (date && typeof date === 'string') {
+      console.log('🎯 [DEBUG] Looking for specific date:', date)
       // Return specific date's puzzle
       const puzzle = puzzles[date]
       if (!puzzle) {
+        console.log('❌ [DEBUG] Specific date not found, using first available')
         // If specific date not found, return the first available puzzle
         const firstPuzzle = Object.values(puzzles)[0]
         if (firstPuzzle) {
+          console.log('✅ [DEBUG] Returning first puzzle:', firstPuzzle.date)
           return res.status(200).json(firstPuzzle)
         }
         return res.status(404).json({ error: 'No puzzles available' })
       }
+      console.log('✅ [DEBUG] Found specific date puzzle:', puzzle.date)
       return res.status(200).json(puzzle)
     } else {
+      console.log('📋 [DEBUG] No specific date requested, returning all puzzles')
       // Return all puzzles
       return res.status(200).json(puzzles)
     }
