@@ -7,8 +7,8 @@ const PUZZLE_DATA_URL = process.env.NEXT_PUBLIC_PUZZLE_DATA_URL
 
 // Fallback puzzle data for when external source fails
 const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
-  '2025-01-08': {
-    date: '2025-01-08',
+  '2025-09-08': {
+    date: '2025-09-08',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -27,8 +27,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
       [2, 5], [7, 0]
     ]
   },
-  '2025-01-09': {
-    date: '2025-01-09',
+  '2025-09-09': {
+    date: '2025-09-09',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -45,8 +45,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-10': {
-    date: '2025-01-10',
+  '2025-09-10': {
+    date: '2025-09-10',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -63,8 +63,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-11': {
-    date: '2025-01-11',
+  '2025-09-11': {
+    date: '2025-09-11',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -81,8 +81,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-12': {
-    date: '2025-01-12',
+  '2025-09-12': {
+    date: '2025-09-12',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -99,8 +99,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-13': {
-    date: '2025-01-13',
+  '2025-09-13': {
+    date: '2025-09-13',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -117,8 +117,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-14': {
-    date: '2025-01-14',
+  '2025-09-14': {
+    date: '2025-09-14',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -135,8 +135,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-15': {
-    date: '2025-01-15',
+  '2025-09-15': {
+    date: '2025-09-15',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -153,8 +153,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-16': {
-    date: '2025-01-16',
+  '2025-09-16': {
+    date: '2025-09-16',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -171,8 +171,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-17': {
-    date: '2025-01-17',
+  '2025-09-17': {
+    date: '2025-09-17',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -300,18 +300,16 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
   
   // Return cached data if still fresh
   if (now - lastFetch < CACHE_DURATION && Object.keys(puzzleCache).length > 0) {
+    console.log('🔄 [fetchPuzzleData] Using cached data')
     return puzzleCache
   }
 
   let csvText: string | null = null
 
-  // First try to read from local CSV file
-  csvText = readLocalCSV()
-  
-  // If no local CSV and external URL is configured, try fetching from external source
-  if (!csvText && PUZZLE_DATA_URL) {
+  // First try to fetch from external source if URL is configured
+  if (PUZZLE_DATA_URL) {
     try {
-      console.log('Attempting to fetch puzzle data from external source...')
+      console.log('🌐 [fetchPuzzleData] Attempting to fetch puzzle data from external source:', PUZZLE_DATA_URL)
       const response = await fetch(PUZZLE_DATA_URL)
       
       if (!response.ok) {
@@ -319,23 +317,38 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
       }
       
       csvText = await response.text()
-      console.log('Successfully fetched puzzle data from external source')
+      console.log('✅ [fetchPuzzleData] Successfully fetched puzzle data from external source')
+      console.log('📄 [fetchPuzzleData] External data length:', csvText?.length || 0, 'characters')
     } catch (error) {
-      console.warn('Failed to fetch from external source:', error.message)
+      console.warn('❌ [fetchPuzzleData] Failed to fetch from external source:', error.message)
       csvText = null
+    }
+  }
+  
+  // If external fetch failed or no URL configured, try local CSV file
+  if (!csvText) {
+    console.log('📁 [fetchPuzzleData] Attempting to read from local CSV file...')
+    csvText = readLocalCSV()
+    if (csvText) {
+      console.log('✅ [fetchPuzzleData] Successfully read from local CSV file')
+      console.log('📄 [fetchPuzzleData] Local CSV data length:', csvText.length, 'characters')
+    } else {
+      console.log('❌ [fetchPuzzleData] No local CSV file found or failed to read')
     }
   }
 
   // If we still don't have CSV data, use fallback
   if (!csvText || csvText.trim().length === 0) {
-    console.warn('No CSV data available, using fallback puzzle data')
+    console.warn('⚠️ [fetchPuzzleData] No CSV data available, using fallback puzzle data')
     puzzleCache = FALLBACK_PUZZLE_DATA
     lastFetch = now
     return FALLBACK_PUZZLE_DATA
   }
 
   try {
+    console.log('🔍 [fetchPuzzleData] Parsing CSV data...')
     const lines = csvText.trim().split('\n')
+    console.log('📊 [fetchPuzzleData] CSV has', lines.length, 'lines')
     
     if (lines.length < 2) {
       throw new Error('Invalid CSV format: insufficient data')
@@ -343,6 +356,7 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     
     // Parse header to find column indices
     const headers = parseCSVLine(lines[0])
+    console.log('📋 [fetchPuzzleData] CSV headers:', headers)
     const dateIndex = headers.indexOf('date')
     const gridSizeIndex = headers.indexOf('grid_size')
     const regionsIndex = headers.indexOf('regions')
@@ -353,15 +367,17 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
       throw new Error('Invalid CSV format: missing required columns')
     }
     
+    console.log('🎯 [fetchPuzzleData] Column indices - date:', dateIndex, 'gridSize:', gridSizeIndex, 'regions:', regionsIndex, 'queens:', queensIndex, 'prefills:', prefillsIndex)
+    
     const puzzles: { [key: string]: PuzzleData } = {}
     
     // Parse all puzzle data
     for (let i = 1; i < lines.length; i++) {
       const row = parseCSVLine(lines[i])
-      console.log(`📝 [DEBUG] Processing CSV row ${i}:`, row)
+      console.log(`📝 [fetchPuzzleData] Processing CSV row ${i}:`, row)
       
       if (row[dateIndex] && row[dateIndex] !== '') {
-        console.log(`🗓️ [DEBUG] Found date in row ${i}:`, row[dateIndex])
+        console.log(`🗓️ [fetchPuzzleData] Found date in row ${i}:`, row[dateIndex])
         
         try {
           const regions = JSON.parse(row[regionsIndex].replace(/^"|"$/g, ''))
@@ -369,7 +385,7 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
           const prefills = JSON.parse(row[prefillsIndex].replace(/^"|"$/g, ''))
           const gridSize = parseInt(row[gridSizeIndex])
           
-          console.log(`🎯 [DEBUG] Parsed data for ${row[dateIndex]}:`, {
+          console.log(`🎯 [fetchPuzzleData] Parsed data for ${row[dateIndex]}:`, {
             gridSize,
             regionsLength: regions.length,
             queensCount: queens.length,
@@ -390,17 +406,19 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
           }
           
           puzzles[row[dateIndex]] = puzzleData
-          console.log(`✅ [DEBUG] Successfully added puzzle for date:`, row[dateIndex])
+          console.log(`✅ [fetchPuzzleData] Successfully added puzzle for date:`, row[dateIndex])
         } catch (parseError) {
-          console.error(`Error parsing puzzle data for date ${row[dateIndex]}:`, parseError)
+          console.error(`❌ [fetchPuzzleData] Error parsing puzzle data for date ${row[dateIndex]}:`, parseError)
           continue
         }
       }
     }
     
+    console.log('📊 [fetchPuzzleData] Successfully parsed puzzles for dates:', Object.keys(puzzles))
+    
     // If no valid puzzles were parsed, use fallback data
     if (Object.keys(puzzles).length === 0) {
-      console.warn('No valid puzzles found in external data, using fallback data')
+      console.warn('⚠️ [fetchPuzzleData] No valid puzzles found in CSV data, using fallback data')
       puzzleCache = FALLBACK_PUZZLE_DATA
       lastFetch = now
       return FALLBACK_PUZZLE_DATA
@@ -411,8 +429,8 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     
     return puzzles
   } catch (error) {
-    console.error('Error fetching puzzle data:', error)
-    console.warn('Using fallback puzzle data due to fetch error')
+    console.error('❌ [fetchPuzzleData] Error parsing CSV data:', error)
+    console.warn('⚠️ [fetchPuzzleData] Using fallback puzzle data due to parsing error')
     
     // Return fallback data instead of throwing error
     puzzleCache = FALLBACK_PUZZLE_DATA
@@ -429,40 +447,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Debug: Log today's date
   const today = new Date()
   const todayString = today.toISOString().split('T')[0]
-  console.log('🗓️ [DEBUG] Today\'s date:', todayString)
-  console.log('🗓️ [DEBUG] Today\'s date object:', today)
+  console.log('🗓️ [API] Today\'s date:', todayString)
+  console.log('🗓️ [API] Today\'s date object:', today)
 
   try {
     const { date } = req.query
-    console.log('🔍 [DEBUG] Requested date from query:', date)
+    console.log('🔍 [API] Requested date from query:', date)
     
     const puzzles = await fetchPuzzleData()
-    console.log('📊 [DEBUG] Available puzzle dates:', Object.keys(puzzles))
-    console.log('📊 [DEBUG] Total puzzles loaded:', Object.keys(puzzles).length)
+    console.log('📊 [API] Available puzzle dates:', Object.keys(puzzles))
+    console.log('📊 [API] Total puzzles loaded:', Object.keys(puzzles).length)
     
     if (date && typeof date === 'string') {
-      console.log('🎯 [DEBUG] Looking for specific date:', date)
+      console.log('🎯 [API] Looking for specific date:', date)
       // Return specific date's puzzle
       const puzzle = puzzles[date]
       if (!puzzle) {
-        console.log('❌ [DEBUG] Specific date not found, using first available')
+        console.log('❌ [API] Specific date not found, using first available')
         // If specific date not found, return the first available puzzle
         const firstPuzzle = Object.values(puzzles)[0]
         if (firstPuzzle) {
-          console.log('✅ [DEBUG] Returning first puzzle:', firstPuzzle.date)
+          console.log('✅ [API] Returning first puzzle:', firstPuzzle.date)
           return res.status(200).json(firstPuzzle)
         }
         return res.status(404).json({ error: 'No puzzles available' })
       }
-      console.log('✅ [DEBUG] Found specific date puzzle:', puzzle.date)
+      console.log('✅ [API] Found specific date puzzle:', puzzle.date)
       return res.status(200).json(puzzle)
     } else {
-      console.log('📋 [DEBUG] No specific date requested, returning all puzzles')
+      console.log('📋 [API] No specific date requested, returning all puzzles')
       // Return all puzzles
       return res.status(200).json(puzzles)
     }
   } catch (error) {
-    console.error('API Error:', error)
+    console.error('❌ [API] Error:', error)
     return res.status(500).json({ error: 'Internal server error' })
   }
 }

@@ -662,24 +662,37 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    console.log('🚀 [SSR] Starting getServerSideProps...')
+    console.log('🚀 [SSR] Starting getServerSideProps for NFL Field Puzzle...')
     
     const baseUrl = context.req.headers.host
     const protocol = context.req.headers['x-forwarded-proto'] || 'http'
     const apiUrl = `${protocol}://${baseUrl}/api/puzzle-data`
     
-    console.log('🌐 [SSR] API URL:', apiUrl)
+    console.log('🌐 [SSR] Fetching puzzle data from API URL:', apiUrl)
     
     const response = await fetch(apiUrl)
     const puzzles = await response.json()
     
-    console.log('📊 [SSR] Received puzzles:', Object.keys(puzzles))
+    console.log('📊 [SSR] Received puzzles for dates:', Object.keys(puzzles))
+    console.log('📊 [SSR] Total puzzles received:', Object.keys(puzzles).length)
     
     // Get today's puzzle
     const today = new Date().toISOString().split('T')[0]
-    console.log('🗓️ [SSR] Today\'s date:', today)
+    console.log('🗓️ [SSR] Today\'s date (calculated):', today)
+    console.log('🗓️ [SSR] Today\'s date object:', new Date())
     
-    const puzzleData = puzzles[today] || puzzles[Object.keys(puzzles)[0]] || {
+    // Check if today's puzzle exists
+    const todaysPuzzle = puzzles[today]
+    console.log('🎯 [SSR] Today\'s puzzle exists:', !!todaysPuzzle)
+    if (todaysPuzzle) {
+      console.log('✅ [SSR] Found today\'s puzzle for', today)
+    } else {
+      console.log('❌ [SSR] No puzzle found for today\'s date:', today)
+      console.log('📋 [SSR] Available dates:', Object.keys(puzzles))
+    }
+    
+    // Use today's puzzle if available, otherwise use the first available puzzle
+    const fallbackPuzzle = {
       date: today,
       gridSize: 8,
       regions: [
@@ -696,9 +709,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       prefills: []
     }
     
+    const puzzleData = todaysPuzzle || puzzles[Object.keys(puzzles)[0]] || fallbackPuzzle
+    
     const availableDates = Object.keys(puzzles).sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-    console.log('📅 [SSR] Available dates (sorted):', availableDates)
-    console.log('🎯 [SSR] Selected puzzle date:', puzzleData.date)
+    console.log('📅 [SSR] Available dates (sorted newest first):', availableDates)
+    console.log('🎯 [SSR] Selected puzzle date for display:', puzzleData.date)
+    
+    if (puzzleData.date !== today) {
+      console.log('⚠️ [SSR] Using fallback puzzle because today\'s puzzle not found')
+    }
     
     return {
       props: {
@@ -707,7 +726,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   } catch (error) {
-    console.error('Error in getServerSideProps:', error)
+    console.error('❌ [SSR] Error in getServerSideProps:', error)
     
     // Fallback data
     const fallbackPuzzle: PuzzleData = {
@@ -726,6 +745,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       queens: [[0,6],[1,3],[2,5],[3,7],[4,2],[5,4],[6,1],[7,0]],
       prefills: []
     }
+    
+    console.log('🔄 [SSR] Using emergency fallback puzzle for date:', fallbackPuzzle.date)
     
     return {
       props: {
