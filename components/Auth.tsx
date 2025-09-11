@@ -4,9 +4,10 @@ import { useAuth } from '../hooks/useAuth';
 
 interface AuthProps {
   onClose: () => void;
+  onAuthSuccess?: () => void;
 }
 
-const Auth: React.FC<AuthProps> = ({ onClose }) => {
+const Auth: React.FC<AuthProps> = ({ onClose, onAuthSuccess }) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -97,6 +98,10 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
       } else {
         await signIn(email, password);
       }
+      // Call onAuthSuccess callback if provided
+      if (onAuthSuccess) {
+        onAuthSuccess();
+      }
       onClose();
     } catch (error: any) {
       // The useAuth hook already handles error formatting
@@ -112,6 +117,10 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
     
     try {
       await signInWithGoogle();
+      // Call onAuthSuccess callback if provided
+      if (onAuthSuccess) {
+        onAuthSuccess();
+      }
       onClose();
     } catch (error: any) {
       if (error.message.includes('popup-blocked')) {

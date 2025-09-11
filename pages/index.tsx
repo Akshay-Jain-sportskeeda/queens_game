@@ -116,6 +116,52 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
   const [isLoadingPuzzle, setIsLoadingPuzzle] = useState(false)
 
+  // Handle authentication success - save completed game if user was guest
+  const handleAuthSuccess = useCallback(() => {
+    console.log('🔐 [Auth] User successfully logged in, checking for completed game...')
+    
+    // Check if game is completed and we have win stats
+    if (gameState.gameCompleted && winStats.moves > 0) {
+      console.log('🎮 [Auth] Found completed game as guest, saving to database...')
+      console.log('📊 [Auth] Win stats to save:', winStats)
+      
+      // Wait a moment for user object to be fully available
+      setTimeout(() => {
+        if (user) {
+          console.log('👤 [Auth] User object available, saving game result...')
+          
+          // Calculate total time in milliseconds (same logic as in win condition)
+          const endTime = Date.now()
+          const baseTime = Math.floor((endTime - gameState.startTime) / 1000)
+          const hintPenalty = gameState.hintCount * 15
+          const totalTime = baseTime + hintPenalty
+          const score = -(totalTime * 1000)
+          
+          saveGameResult(
+            user,
+            currentPuzzleData.date,
+            gameState.moveCount,
+            gameState.hintCount,
+            totalTime * 1000,
+            score
+          ).then((saved) => {
+            if (saved) {
+              console.log('✅ [Auth] Guest game result saved successfully after login')
+            } else {
+              console.log('ℹ️ [Auth] Guest game result not saved (already exists or error)')
+            }
+          }).catch((error) => {
+            console.error('❌ [Auth] Error saving guest game result after login:', error)
+          })
+        } else {
+          console.log('⚠️ [Auth] User object not yet available, skipping save')
+        }
+      }, 1000) // Wait 1 second for user object to be available
+    } else {
+      console.log('🚫 [Auth] No completed game found or game not completed')
+    }
+  }, [gameState.gameCompleted, gameState.startTime, gameState.moveCount, gameState.hintCount, winStats.moves, user, currentPuzzleData.date])
+
   // Check for win condition
   useEffect(() => {
     if (gameState.gameCompleted && !showWinScreen && !hasShownWinScreen && gameState.moveCount > 0) {
@@ -787,6 +833,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         />
         
         {showAuth && <Auth onClose={() => setShowAuth(false)} />}
+        {showAuth && <Auth onClose={() => setShowAuth(false)} onAuthSuccess={handleAuthSuccess} />}
       </div>
 
       <PFSNFooter currentPage="NFL" />
