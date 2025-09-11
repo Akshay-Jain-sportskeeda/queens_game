@@ -638,7 +638,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     return null;
-  }, [gameState.board, puzzleData, isValidFootball]);
+  }, [gameState.board, puzzleData.gridSize, isValidFootball]);
 
   const getEmptyColumnHint = useCallback(() => {
     for (let targetCol = 0; targetCol < puzzleData.gridSize; targetCol++) {
@@ -657,7 +657,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     return null;
-  }, [gameState.board, puzzleData.gridSize, isValidFootball]);
+  }, [gameState.board, puzzleData, isValidFootball]);
 
   const getWrongXHint = useCallback(() => {
     const wrongXCells: number[][] = [];
@@ -675,7 +675,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     }
     
     return wrongXCells.length > 0 ? { wrongXCells } : null;
-  }, [gameState.board, puzzleData]);
+  }, [gameState.board, puzzleData.gridSize, puzzleData.queens]);
 
   const getValidFootballHint = useCallback(() => {
     for (let row = 0; row < puzzleData.gridSize; row++) {
@@ -689,7 +689,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
     }
     return null;
-  }, [gameState.board, puzzleData])
+  }, [gameState.board, puzzleData.gridSize, puzzleData.queens])
 
   const showWrongFootballHint = useCallback((hint: { row: number, col: number }) => {
     addHintHighlight([[hint.row, hint.col]])
