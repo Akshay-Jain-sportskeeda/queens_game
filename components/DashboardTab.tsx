@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, Clock, Target, Lightbulb, Calendar, TrendingUp, Award, LogIn, Archive } from 'lucide-react';
 import { useLeaderboard } from '../hooks/useLeaderboard';
-import ArchivePopup from './ArchivePopup';
+import ArchiveScreen from './ArchiveScreen';
 import { trackDashboardView, trackUserStatsView, trackPendingGamesClick, trackCTAClick } from '../utils/analytics';
 import { UserStats } from '../types/game';
 
@@ -343,7 +343,7 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
 
         {/* Archive Popup */}
         {showArchivePopup && (
-          <ArchivePopup
+          <ArchiveScreen
             onClose={() => setShowArchivePopup(false)}
             onSelectDate={(date) => {
               console.log('🎯 [Dashboard] Archive date selected:', date);
