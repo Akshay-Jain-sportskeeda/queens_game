@@ -808,6 +808,11 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
       const newPuzzleData = await response.json()
       console.log('✅ [useGameLogic] Successfully fetched puzzle data for:', date);
+      
+      // Clear all hints and info messages when loading new puzzle
+      clearHintHighlights();
+      setInfoMessage({ text: 'Click on cells to place × or 🏈. Use hints if you get stuck!', type: 'default' });
+      
       setPuzzleData(newPuzzleData)
     } catch (error) {
       console.error('❌ [useGameLogic] Error loading puzzle for date:', date, error);

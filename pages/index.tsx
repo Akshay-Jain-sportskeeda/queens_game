@@ -237,15 +237,18 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
   const handleArchiveDateSelect = useCallback(async (date: string) => {
     console.log('🎯 [Game] Archive date selected:', date);
+    
+    // Reset all game state before loading new puzzle
+    setShowInlineWinMetrics(false);
+    setHasShownWinScreen(false);
+    setShowWinScreen(false);
+    
     try {
       await loadPuzzleForDate(date);
       console.log('✅ [Game] Successfully loaded puzzle for date:', date);
       // Switch to game tab and close archive
       setActiveTab('game');
       setShowArchive(false);
-      // Reset game state for new puzzle
-      setShowInlineWinMetrics(false);
-      setHasShownWinScreen(false);
       // Scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
