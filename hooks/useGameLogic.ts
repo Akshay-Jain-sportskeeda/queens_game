@@ -3,7 +3,7 @@ import { PuzzleData, GameState, HintData } from '../types/game'
 
 export function useGameLogic(initialPuzzleData: PuzzleData) {
   const [gameState, setGameState] = useState<GameState>(() => ({
-    board: Array(initialPuzzleData.gridSize).fill().map(() => Array(initialPuzzleData.gridSize).fill('')),
+    board: Array(initialPuzzleData.gridSize).fill(undefined).map(() => Array(initialPuzzleData.gridSize).fill('')),
     history: [],
     violations: new Set(),
     conflictTypes: new Map(),
@@ -68,7 +68,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     console.log('Grid size:', puzzleData.gridSize);
     console.log('Prefills:', puzzleData.prefills);
     
-    const newBoard = Array(puzzleData.gridSize).fill().map(() => Array(puzzleData.gridSize).fill(''))
+    const newBoard = Array(puzzleData.gridSize).fill(undefined).map(() => Array(puzzleData.gridSize).fill(''))
     console.log('Empty board created:', newBoard);
     
     puzzleData.prefills.forEach(([row, col]) => {
@@ -798,7 +798,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   const reset = useCallback(() => {
     clearHintHighlights()
-    const newBoard = Array(puzzleData.gridSize).fill().map(() => Array(puzzleData.gridSize).fill(''))
+    const newBoard = Array(puzzleData.gridSize).fill(undefined).map(() => Array(puzzleData.gridSize).fill(''))
     puzzleData.prefills.forEach(([row, col]) => {
       if (row < puzzleData.gridSize && col < puzzleData.gridSize) {
         newBoard[row][col] = '🏈'
