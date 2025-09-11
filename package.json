@@ -1,0 +1,41 @@
+{
+  "name": "nfl-field-puzzle-nextjs",
+  "version": "1.0.0",
+  "description": "NFL Field Puzzle Game with Next.js for better SEO and SSR",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "firebase": "^12.2.1",
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "lucide-react": "^0.543.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13"
+  },
+  "keywords": [
+    "puzzle",
+    "game",
+    "nfl",
+    "nextjs",
+    "react"
+  ],
+  "author": "",
+  "license": "MIT"
+}

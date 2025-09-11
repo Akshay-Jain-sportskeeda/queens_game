@@ -1,0 +1,37 @@
+# Node
+node_modules/
+*.log
+.eslintcache
+
+# Env
+.env
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# Build output / caches
+.next/
+dist/
+build/
+coverage/
+.turbo/
+.vercel/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temp
+tmp/
+*.tmp
+*.bak
+*.tgz
+*.zip
+*.tar
+*.tar.gz
+
+# TypeScript/Nest
+tsconfig.tsbuildinfo

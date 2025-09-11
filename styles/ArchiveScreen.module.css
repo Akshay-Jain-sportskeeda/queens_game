@@ -1,0 +1,180 @@
+.archiveScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s ease;
+}
+
+.archiveScreen.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.archiveContent {
+  background: white;
+  border-radius: 16px;
+  padding: 0;
+  max-width: 400px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.archiveScreen.show .archiveContent {
+  transform: scale(1);
+}
+
+.archiveHeader {
+  background: linear-gradient(to right, #374151, #1f2937);
+  padding: 24px 24px 24px 24px;
+  text-align: center;
+  position: relative;
+  margin: 0;
+  border-radius: 16px 16px 0 0;
+}
+
+.archiveCloseX {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  border-radius: 0;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  font-size: 0;
+}
+
+.archiveCloseX:hover {
+  background: transparent;
+  color: white;
+  transform: scale(1.05);
+}
+
+.archiveTitle {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.archiveSubtitle {
+  color: #f3f4f6;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.archiveContentBody {
+  padding: 24px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.archiveDates {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.dateItem {
+  padding: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.dateItem:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.dateItem.today {
+  background: #dbeafe;
+  border-color: #3b82f6;
+  font-weight: bold;
+}
+
+.dateItem.today:hover {
+  background: #bfdbfe;
+}
+
+.dateText {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.dateDay {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.dateNumber {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 480px) {
+  .archiveContent {
+    padding: 0;
+    max-width: 350px;
+  }
+  
+  .archiveContentBody {
+    padding: 20px;
+  }
+  
+  .archiveTitle {
+    font-size: 1.6rem;
+  }
+  
+  .archiveDates {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  
+  .dateItem {
+    padding: 8px 6px;
+  }
+  
+  .dateText {
+    font-size: 0.8rem;
+  }
+  
+  .dateDay {
+    font-size: 0.7rem;
+  }
+}
