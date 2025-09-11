@@ -115,68 +115,19 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   const [leaderboardLoading, setLeaderboardLoading] = useState(false)
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
   const [isLoadingPuzzle, setIsLoadingPuzzle] = useState(false)
+  const [pendingGameSave, setPendingGameSave] = useState(false)
 
   // Handle authentication success - save completed game if user was guest
   const handleAuthSuccess = useCallback(() => {
     console.log('🔐 [Auth] User successfully logged in, checking for completed game...')
     console.log('🎮 [Auth] Current gameState.gameCompleted:', gameState.gameCompleted)
     console.log('📊 [Auth] Current winStats:', winStats)
-    console.log('👤 [Auth] Current user object:', user)
     console.log('🗓️ [Auth] Current puzzle date:', currentPuzzleData.date)
     
     // Check if game is completed and we have win stats
     if (gameState.gameCompleted && winStats.moves > 0) {
       console.log('🎮 [Auth] Found completed game as guest, saving to database...')
-      console.log('📊 [Auth] Win stats to save:', winStats)
-      
-      // Try multiple times with increasing delays to ensure user object is available
-      const attemptSave = (attempt = 1, maxAttempts = 5) => {
-        console.log(`🔄 [Auth] Save attempt ${attempt}/${maxAttempts}`)
-        console.log('👤 [Auth] User object check:', !!user, user?.uid)
-        
-        if (user && user.uid) {
-          console.log('👤 [Auth] User object available, saving game result...')
-          
-          // Calculate total time in milliseconds (same logic as in win condition)
-          const endTime = Date.now()
-          const baseTime = Math.floor((endTime - gameState.startTime) / 1000)
-          const hintPenalty = gameState.hintCount * 15
-          const totalTime = baseTime + hintPenalty
-          const score = -(totalTime * 1000)
-          
-          console.log('📊 [Auth] Calculated values for save:', {
-            moves: gameState.moveCount,
-            hints: gameState.hintCount,
-            totalTime: totalTime * 1000,
-            score,
-            puzzleDate: currentPuzzleData.date
-          })
-          
-          saveGameResult(
-            user,
-            currentPuzzleData.date,
-            gameState.moveCount,
-            gameState.hintCount,
-            totalTime * 1000,
-            score
-          ).then((saved) => {
-            if (saved) {
-              console.log('✅ [Auth] Guest game result saved successfully after login')
-            } else {
-              console.log('ℹ️ [Auth] Guest game result not saved (already exists or error)')
-            }
-          }).catch((error) => {
-            console.error('❌ [Auth] Error saving guest game result after login:', error)
-          })
-        } else if (attempt < maxAttempts) {
-          console.log(`⏳ [Auth] User object not yet available, retrying in ${attempt * 500}ms...`)
-          setTimeout(() => attemptSave(attempt + 1, maxAttempts), attempt * 500)
-        } else {
-          console.log('❌ [Auth] Max attempts reached, user object still not available')
-        }
-      }
-      
-      attemptSave()
+      setPendingGameSave(true)
     } else {
       console.log('🚫 [Auth] No completed game found or game not completed:', {
         gameCompleted: gameState.gameCompleted,
@@ -184,7 +135,56 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         hasWinStats: winStats.moves > 0
       })
     }
-  }, [gameState.gameCompleted, gameState.startTime, gameState.moveCount, gameState.hintCount, winStats, user, currentPuzzleData.date])
+  }, [gameState.gameCompleted, winStats, currentPuzzleData.date])
+
+  // Save game result when user becomes available after login
+  useEffect(() => {
+    if (user && pendingGameSave && gameState.gameCompleted && winStats.moves > 0) {
+      console.log('💾 [Auth] User object now available, saving guest game result...')
+      console.log('👤 [Auth] User details:', {
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email
+      })
+      console.log('📊 [Auth] Win stats to save:', winStats)
+      
+      // Calculate total time in milliseconds (same logic as in win condition)
+      const endTime = Date.now()
+      const baseTime = Math.floor((endTime - gameState.startTime) / 1000)
+      const hintPenalty = gameState.hintCount * 15
+      const totalTime = baseTime + hintPenalty
+      const score = -(totalTime * 1000)
+      
+      console.log('📊 [Auth] Calculated values for save:', {
+        moves: gameState.moveCount,
+        hints: gameState.hintCount,
+        totalTime: totalTime * 1000,
+        score,
+        puzzleDate: currentPuzzleData.date
+      })
+      
+      saveGameResult(
+        user,
+        currentPuzzleData.date,
+        gameState.moveCount,
+        gameState.hintCount,
+        totalTime * 1000,
+        score
+      ).then((saved) => {
+        if (saved) {
+          console.log('✅ [Auth] Guest game result saved successfully after login')
+        } else {
+          console.log('ℹ️ [Auth] Guest game result not saved (already exists or error)')
+        }
+      }).catch((error) => {
+        console.error('❌ [Auth] Error saving guest game result after login:', error)
+      }).finally(() => {
+        // Reset the flag regardless of success or failure
+        setPendingGameSave(false)
+        console.log('🔄 [Auth] Reset pending game save flag')
+      })
+    }
+  }, [user, pendingGameSave, gameState.gameCompleted, gameState.startTime, gameState.moveCount, gameState.hintCount, winStats, currentPuzzleData.date])
 
   // Check for win condition
   useEffect(() => {
