@@ -86,20 +86,20 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-xs w-full mx-4 max-h-[80vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-gray-800 to-black p-6 text-center relative">
+        <div className="bg-gradient-to-r from-gray-800 to-black p-4 text-center relative">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
+            className="absolute top-3 right-3 text-white hover:text-gray-200 transition-colors"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
           
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <Calendar className="w-6 h-6 text-white" />
-            <h2 className="text-2xl font-bold text-white">Archive Games</h2>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Calendar className="w-5 h-5 text-white" />
+            <h2 className="text-xl font-bold text-white">Archive Games</h2>
           </div>
           
-          <p className="text-gray-100">Select a previous day to play</p>
+          <p className="text-gray-100 text-sm">Select a previous day to play</p>
         </div>
         
         {/* Content */}
@@ -114,18 +114,18 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
               <p className="text-gray-600">No archive puzzles available</p>
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-3 gap-2">
               {/* Today's Game */}
               <button
                 onClick={() => handleDateSelect(new Date().toLocaleDateString('en-CA'))}
                 className="relative p-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-center border-2 border-blue-300 hover:border-blue-400 min-h-[60px]"
               >
                 {isDateCompleted(new Date().toLocaleDateString('en-CA')) && (
-                  <div className="absolute top-0.5 right-0.5 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                    <Check className="w-2 h-2 text-white" />
+                  <div className="absolute top-1 right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                    <Check className="w-2.5 h-2.5 text-white" />
                   </div>
                 )}
-                <div className="text-xs font-medium text-blue-800">
+                <div className="text-xs font-medium text-blue-800 mb-1">
                   Today
                 </div>
                 <div className="text-xs font-semibold text-blue-900">
@@ -147,11 +147,11 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
                   className="relative p-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors text-center border border-gray-200 hover:border-gray-300 min-h-[60px]"
                 >
                   {isCompleted && (
-                    <div className="absolute top-0.5 right-0.5 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                      <Check className="w-2 h-2 text-white" />
+                    <div className="absolute top-1 right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                      <Check className="w-2.5 h-2.5 text-white" />
                     </div>
                   )}
-                  <div className="text-xs font-medium text-gray-800">
+                  <div className="text-xs font-medium text-gray-800 mb-1">
                     {dayOfWeek}
                   </div>
                   <div className="text-xs font-semibold text-gray-900">
