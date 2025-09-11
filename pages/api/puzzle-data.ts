@@ -228,9 +228,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } catch (error) {
     console.error('❌ [API] Error:', error)
+    const errorMessage = error instanceof Error ? error.message : String(error)
     return res.status(500).json({ 
       error: 'Failed to fetch puzzle data from Google Sheet',
-      details: error.message 
+      details: errorMessage 
     })
   }
 }
