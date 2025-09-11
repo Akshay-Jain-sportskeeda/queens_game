@@ -662,21 +662,15 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    console.log('🏠 [SSR] Starting getServerSideProps')
     const baseUrl = context.req.headers.host
     const protocol = context.req.headers['x-forwarded-proto'] || 'http'
     const apiUrl = `${protocol}://${baseUrl}/api/puzzle-data`
     
-    console.log('🌐 [SSR] Fetching from API URL:', apiUrl)
     const response = await fetch(apiUrl)
     const puzzles = await response.json()
     
-    console.log('📊 [SSR] Received puzzles:', Object.keys(puzzles))
-    
     // Get today's puzzle
     const today = new Date().toISOString().split('T')[0]
-    console.log('📅 [SSR] Today\'s date:', today)
-    
     const puzzleData = puzzles[today] || puzzles[Object.keys(puzzles)[0]] || {
       date: today,
       gridSize: 8,
@@ -694,14 +688,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       prefills: []
     }
     
-    console.log('🎯 [SSR] Selected puzzle data:', {
-      date: puzzleData.date,
-      isToday: puzzleData.date === today,
-      fallback: !puzzles[today] && !puzzles[Object.keys(puzzles)[0]]
-    })
-    
     const availableDates = Object.keys(puzzles).sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-    console.log('📋 [SSR] Available dates (sorted):', availableDates)
     
     return {
       props: {
@@ -710,11 +697,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   } catch (error) {
-    console.error('❌ [SSR] Error in getServerSideProps:', error)
+    console.error('Error in getServerSideProps:', error)
     
     // Fallback data
     const fallbackPuzzle: PuzzleData = {
-      date: '2025-09-08', // Use a date that exists in our data
+      date: new Date().toISOString().split('T')[0],
       gridSize: 8,
       regions: [
         [0,0,0,0,0,0,0,0],
@@ -729,8 +716,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       queens: [[0,6],[1,3],[2,5],[3,7],[4,2],[5,4],[6,1],[7,0]],
       prefills: []
     }
-    
-    console.log('🔄 [SSR] Using fallback puzzle:', fallbackPuzzle.date)
     
     return {
       props: {
