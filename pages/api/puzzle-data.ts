@@ -7,8 +7,8 @@ const PUZZLE_DATA_URL = process.env.NEXT_PUBLIC_PUZZLE_DATA_URL
 
 // Fallback puzzle data for when external source fails
 const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
-  '2025-01-08': {
-    date: '2025-01-08',
+  '2025-09-08': {
+    date: '2025-09-08',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -27,8 +27,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
       [2, 5], [7, 0]
     ]
   },
-  '2025-01-09': {
-    date: '2025-01-09',
+  '2025-09-09': {
+    date: '2025-09-09',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -45,8 +45,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-10': {
-    date: '2025-01-10',
+  '2025-09-10': {
+    date: '2025-09-10',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -63,8 +63,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-11': {
-    date: '2025-01-11',
+  '2025-09-11': {
+    date: '2025-09-11',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -81,8 +81,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-12': {
-    date: '2025-01-12',
+  '2025-09-12': {
+    date: '2025-09-12',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -99,8 +99,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-13': {
-    date: '2025-01-13',
+  '2025-09-13': {
+    date: '2025-09-13',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -117,8 +117,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-14': {
-    date: '2025-01-14',
+  '2025-09-14': {
+    date: '2025-09-14',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -135,8 +135,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-15': {
-    date: '2025-01-15',
+  '2025-09-15': {
+    date: '2025-09-15',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -153,8 +153,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-16': {
-    date: '2025-01-16',
+  '2025-09-16': {
+    date: '2025-09-16',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -171,8 +171,8 @@ const FALLBACK_PUZZLE_DATA: { [key: string]: PuzzleData } = {
     ],
     prefills: []
   },
-  '2025-01-17': {
-    date: '2025-01-17',
+  '2025-09-17': {
+    date: '2025-09-17',
     gridSize: 8,
     regions: [
       [1, 1, 1, 1, 0, 0, 0, 0],
@@ -414,28 +414,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
+  console.log('🔍 [API] Puzzle data request received')
+  console.log('🔍 [API] Query params:', req.query)
+
   try {
     const { date } = req.query
     const puzzles = await fetchPuzzleData()
     
+    console.log('📅 [API] Available puzzle dates:', Object.keys(puzzles))
+    console.log('📅 [API] Today\'s date (server):', new Date().toISOString().split('T')[0])
+    
     if (date && typeof date === 'string') {
+      console.log('🎯 [API] Requested specific date:', date)
       // Return specific date's puzzle
       const puzzle = puzzles[date]
       if (!puzzle) {
+        console.log('❌ [API] Puzzle not found for date:', date)
         // If specific date not found, return the first available puzzle
         const firstPuzzle = Object.values(puzzles)[0]
         if (firstPuzzle) {
+          console.log('🔄 [API] Returning first available puzzle:', firstPuzzle.date)
           return res.status(200).json(firstPuzzle)
         }
+        console.log('❌ [API] No puzzles available at all')
         return res.status(404).json({ error: 'No puzzles available' })
       }
+      console.log('✅ [API] Returning puzzle for date:', puzzle.date)
       return res.status(200).json(puzzle)
     } else {
+      console.log('📋 [API] Returning all puzzles, count:', Object.keys(puzzles).length)
       // Return all puzzles
       return res.status(200).json(puzzles)
     }
   } catch (error) {
-    console.error('API Error:', error)
+    console.error('❌ [API] Error:', error)
     return res.status(500).json({ error: 'Internal server error' })
   }
 }
