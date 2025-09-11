@@ -217,6 +217,7 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
                         setShowArchivePopup(true);
                       }}
                       className="w-full max-w-xs p-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 shadow-lg border-0"
+                      style={{ border: 'none' }}
                     >
                       <div className="flex items-center justify-center gap-3">
                         <Archive className="w-6 h-6" />
