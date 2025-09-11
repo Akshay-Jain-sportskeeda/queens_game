@@ -59,21 +59,7 @@
 }
 
 .cell.hintHighlight {
-  position: relative;
-  z-index: 5;
-  box-shadow: 0 0 0 2px #ffc107, 0 0 15px rgba(255, 193, 7, 0.6);
-  animation: hint-pulse 2s infinite;
-}
-
-@keyframes hint-pulse {
-  0%, 100% { 
-    box-shadow: 0 0 0 2px #ffc107, 0 0 15px rgba(255, 193, 7, 0.6);
-    opacity: 1;
-  }
-  50% { 
-    box-shadow: 0 0 0 3px #ffc107, 0 0 25px rgba(255, 193, 7, 0.9);
-    opacity: 0.8;
-  }
+  /* Remove the full cell highlighting - we'll use borders instead */
 }
 
 @keyframes flipTile {
@@ -105,18 +91,33 @@
 /* Hint border classes for edge-only highlighting */
 .hintBorderTop {
   border-top: 3px solid #ffc107 !important;
+  animation: hint-pulse-border 2s infinite;
 }
 
 .hintBorderRight {
   border-right: 3px solid #ffc107 !important;
+  animation: hint-pulse-border 2s infinite;
 }
 
 .hintBorderBottom {
   border-bottom: 3px solid #ffc107 !important;
+  animation: hint-pulse-border 2s infinite;
 }
 
 .hintBorderLeft {
   border-left: 3px solid #ffc107 !important;
+  animation: hint-pulse-border 2s infinite;
+}
+
+@keyframes hint-pulse-border {
+  0%, 100% { 
+    border-color: #ffc107;
+    opacity: 1;
+  }
+  50% { 
+    border-color: #ffb300;
+    opacity: 0.8;
+  }
 }
 
 /* Conflict border classes for edge-only highlighting */
