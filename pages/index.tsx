@@ -106,7 +106,14 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   const [showArchive, setShowArchive] = useState(false)
   const [showRules, setShowRules] = useState(false)
   const [showAuth, setShowAuth] = useState(false)
-  const [winStats, setWinStats] = useState<WinStats>({ moves: 0, hints: 0, time: '0:00' })
+  const [winStats, setWinStats] = useState<WinStats>({ 
+    moves: 0, 
+    hints: 0, 
+    time: '0:00',
+    displayTime: '0:00',
+    calculation: '0:00',
+    score: 0
+  })
   const [showInlineWinMetrics, setShowInlineWinMetrics] = useState(false)
   const [hasShownWinScreen, setHasShownWinScreen] = useState(false)
   const [activeTab, setActiveTab] = useState<'game' | 'leaderboard' | 'dashboard'>('game')
