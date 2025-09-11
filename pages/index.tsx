@@ -242,6 +242,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     setShowInlineWinMetrics(false);
     setHasShownWinScreen(false);
     setShowWinScreen(false);
+    resetWinAnimation();
     
     try {
       await loadPuzzleForDate(date);
@@ -254,7 +255,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     } catch (error) {
       console.error('❌ [Game] Error loading puzzle for date:', date, error);
     }
-  }, [loadPuzzleForDate]);
+  }, [loadPuzzleForDate, resetWinAnimation]);
   const handleRulesToggle = useCallback(() => {
     setShowRules(!showRules)
   }, [showRules])
@@ -673,7 +674,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
             isLoggedIn={!!user}
             userId={user?.uid}
             onShowLogin={handleAuthToggle}
-            onPlayArchive={loadPuzzleForDate}
+            onPlayArchive={handleArchiveDateSelect}
             availablePuzzles={availableDates.map(date => ({ date, difficulty: 'medium' }))}
           />
         )
