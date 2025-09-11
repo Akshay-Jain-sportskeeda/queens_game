@@ -686,6 +686,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     console.log('🎯 [SSR] Today\'s puzzle exists:', !!todaysPuzzle)
     if (todaysPuzzle) {
       console.log('✅ [SSR] Found today\'s puzzle for', today)
+      console.log('🎮 [SSR] Today\'s puzzle details:', {
+        date: todaysPuzzle.date,
+        gridSize: todaysPuzzle.gridSize,
+        prefillsCount: todaysPuzzle.prefills?.length || 0,
+        queensCount: todaysPuzzle.queens?.length || 0
+      })
     } else {
       console.log('❌ [SSR] No puzzle found for today\'s date:', today)
       console.log('📋 [SSR] Available dates:', Object.keys(puzzles))
@@ -696,16 +702,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       date: today,
       gridSize: 8,
       regions: [
-        [0,0,0,0,0,0,0,0],
-        [0,0,1,1,0,0,0,0],
-        [0,2,3,3,3,1,0,0],
-        [0,4,3,3,3,5,5,0],
-        [0,4,3,3,3,5,5,0],
-        [0,0,6,6,6,0,5,0],
-        [7,0,0,6,0,0,0,0],
-        [7,0,0,6,0,0,0,0]
+        [1, 1, 1, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 0, 0],
+        [1, 1, 4, 1, 2, 2, 2, 3],
+        [4, 4, 4, 1, 2, 2, 3, 3],
+        [7, 6, 4, 4, 5, 5, 3, 3],
+        [7, 6, 4, 5, 5, 5, 5, 3],
+        [7, 6, 6, 5, 5, 5, 5, 3],
+        [7, 7, 7, 7, 5, 5, 5, 5]
       ],
-      queens: [[0,6],[1,3],[2,5],[3,7],[4,2],[5,4],[6,1],[7,0]],
+      queens: [[0, 2], [1, 5], [2, 7], [3, 4], [4, 6], [5, 1], [6, 3], [7, 0]],
       prefills: []
     }
     
@@ -714,6 +720,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const availableDates = Object.keys(puzzles).sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
     console.log('📅 [SSR] Available dates (sorted newest first):', availableDates)
     console.log('🎯 [SSR] Selected puzzle date for display:', puzzleData.date)
+    console.log('🎮 [SSR] Final puzzle data being sent to client:', {
+      date: puzzleData.date,
+      gridSize: puzzleData.gridSize,
+      prefillsCount: puzzleData.prefills?.length || 0,
+      queensCount: puzzleData.queens?.length || 0
+    })
     
     if (puzzleData.date !== today) {
       console.log('⚠️ [SSR] Using fallback puzzle because today\'s puzzle not found')
@@ -733,16 +745,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       date: new Date().toISOString().split('T')[0],
       gridSize: 8,
       regions: [
-        [0,0,0,0,0,0,0,0],
-        [0,0,1,1,0,0,0,0],
-        [0,2,3,3,3,1,0,0],
-        [0,4,3,3,3,5,5,0],
-        [0,4,3,3,3,5,5,0],
-        [0,0,6,6,6,0,5,0],
-        [7,0,0,6,0,0,0,0],
-        [7,0,0,6,0,0,0,0]
+        [1, 1, 1, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 0, 0],
+        [1, 1, 4, 1, 2, 2, 2, 3],
+        [4, 4, 4, 1, 2, 2, 3, 3],
+        [7, 6, 4, 4, 5, 5, 3, 3],
+        [7, 6, 4, 5, 5, 5, 5, 3],
+        [7, 6, 6, 5, 5, 5, 5, 3],
+        [7, 7, 7, 7, 5, 5, 5, 5]
       ],
-      queens: [[0,6],[1,3],[2,5],[3,7],[4,2],[5,4],[6,1],[7,0]],
+      queens: [[0, 2], [1, 5], [2, 7], [3, 4], [4, 6], [5, 1], [6, 3], [7, 0]],
       prefills: []
     }
     

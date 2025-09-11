@@ -117,10 +117,10 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
             <div className="grid grid-cols-3 gap-2">
               {/* Today's Game */}
               <button
-                onClick={() => handleDateSelect(new Date().toLocaleDateString('en-CA'))}
+                onClick={() => handleDateSelect(new Date().toISOString().split('T')[0])}
                 className="relative p-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-center border-2 border-blue-300 hover:border-blue-400 min-h-[60px]"
               >
-                {isDateCompleted(new Date().toLocaleDateString('en-CA')) && (
+                {isDateCompleted(new Date().toISOString().split('T')[0]) && (
                   <div className="absolute top-1 right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
                     <Check className="w-2.5 h-2.5 text-white" />
                   </div>
@@ -131,7 +131,7 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
                 <div className="text-xs font-semibold text-blue-900">
                   {(() => {
                     const today = new Date();
-                    const { dayMonth } = formatDate(today.toLocaleDateString('en-CA'));
+                    const { dayMonth } = formatDate(today.toISOString().split('T')[0]);
                     return dayMonth;
                   })()}
                 </div>
@@ -140,6 +140,11 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
               {availablePuzzles.map((puzzle) => {
                 const { dayOfWeek, dayMonth } = formatDate(puzzle.date);
                 const isCompleted = isDateCompleted(puzzle.date);
+                const isToday = puzzle.date === new Date().toISOString().split('T')[0];
+                
+                // Skip today's puzzle since we show it separately
+                if (isToday) return null;
+                
                 return (
                 <button
                   key={puzzle.date}
@@ -159,7 +164,7 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
                   </div>
                 </button>
                 );
-              })}
+              }).filter(Boolean)}
             </div>
           )}
         </div>

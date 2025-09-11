@@ -304,9 +304,10 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     return puzzleCache
   }
 
+  console.log('🚀 [fetchPuzzleData] Starting fresh data fetch...')
   let csvText: string | null = null
 
-  // First try to fetch from external source if URL is configured
+  // PRIORITY 1: Try to fetch from external source (Google Sheet) first
   if (PUZZLE_DATA_URL) {
     try {
       console.log('🌐 [fetchPuzzleData] Attempting to fetch puzzle data from external source:', PUZZLE_DATA_URL)
@@ -319,27 +320,32 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
       csvText = await response.text()
       console.log('✅ [fetchPuzzleData] Successfully fetched puzzle data from external source')
       console.log('📄 [fetchPuzzleData] External data length:', csvText?.length || 0, 'characters')
+      console.log('📄 [fetchPuzzleData] First 200 chars of external data:', csvText?.substring(0, 200))
     } catch (error) {
       console.warn('❌ [fetchPuzzleData] Failed to fetch from external source:', error.message)
       csvText = null
     }
+  } else {
+    console.log('⚠️ [fetchPuzzleData] No NEXT_PUBLIC_PUZZLE_DATA_URL configured, skipping external fetch')
   }
   
-  // If external fetch failed or no URL configured, try local CSV file
+  // PRIORITY 2: If external fetch failed, try local CSV file
   if (!csvText) {
     console.log('📁 [fetchPuzzleData] Attempting to read from local CSV file...')
     csvText = readLocalCSV()
     if (csvText) {
       console.log('✅ [fetchPuzzleData] Successfully read from local CSV file')
       console.log('📄 [fetchPuzzleData] Local CSV data length:', csvText.length, 'characters')
+      console.log('📄 [fetchPuzzleData] First 200 chars of local CSV:', csvText.substring(0, 200))
     } else {
       console.log('❌ [fetchPuzzleData] No local CSV file found or failed to read')
     }
   }
 
-  // If we still don't have CSV data, use fallback
+  // PRIORITY 3: If both external and local failed, use hardcoded fallback
   if (!csvText || csvText.trim().length === 0) {
     console.warn('⚠️ [fetchPuzzleData] No CSV data available, using fallback puzzle data')
+    console.log('📊 [fetchPuzzleData] Fallback data contains dates:', Object.keys(FALLBACK_PUZZLE_DATA))
     puzzleCache = FALLBACK_PUZZLE_DATA
     lastFetch = now
     return FALLBACK_PUZZLE_DATA
@@ -419,6 +425,7 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     // If no valid puzzles were parsed, use fallback data
     if (Object.keys(puzzles).length === 0) {
       console.warn('⚠️ [fetchPuzzleData] No valid puzzles found in CSV data, using fallback data')
+      console.log('📊 [fetchPuzzleData] Fallback data contains dates:', Object.keys(FALLBACK_PUZZLE_DATA))
       puzzleCache = FALLBACK_PUZZLE_DATA
       lastFetch = now
       return FALLBACK_PUZZLE_DATA
@@ -431,6 +438,7 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
   } catch (error) {
     console.error('❌ [fetchPuzzleData] Error parsing CSV data:', error)
     console.warn('⚠️ [fetchPuzzleData] Using fallback puzzle data due to parsing error')
+    console.log('📊 [fetchPuzzleData] Fallback data contains dates:', Object.keys(FALLBACK_PUZZLE_DATA))
     
     // Return fallback data instead of throwing error
     puzzleCache = FALLBACK_PUZZLE_DATA

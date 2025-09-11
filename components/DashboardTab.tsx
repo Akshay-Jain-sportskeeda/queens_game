@@ -70,9 +70,19 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
   }, [isLoggedIn, userId]); // Remove getUserStats from dependencies to prevent loops
 
   // Calculate pending games
-  const totalAvailableGames = availablePuzzles.length + 1; // +1 for today's game
+  const today = new Date().toISOString().split('T')[0];
+  const todayInAvailable = availablePuzzles.some(puzzle => puzzle.date === today);
+  const totalAvailableGames = todayInAvailable ? availablePuzzles.length : availablePuzzles.length + 1;
   const pendingGamesCount = totalAvailableGames - (completedDates.length || 0);
-  
+
+  console.log('📊 [Dashboard] Pending games calculation:', {
+    today,
+    todayInAvailable,
+    availablePuzzlesCount: availablePuzzles.length,
+    totalAvailableGames,
+    completedDatesCount: completedDates.length,
+    pendingGamesCount
+  });
 
   const formatTime = (milliseconds: number): string => {
     const seconds = Math.floor(milliseconds / 1000);
