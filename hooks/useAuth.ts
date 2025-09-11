@@ -25,6 +25,15 @@ export function useAuth() {
   })
 
   useEffect(() => {
+    if (!auth) {
+      setAuthState({
+        user: null,
+        loading: false,
+        error: 'Firebase authentication is not configured'
+      })
+      return
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setAuthState({
         user,
@@ -68,6 +77,9 @@ export function useAuth() {
 
   const signIn = async (email: string, password: string) => {
     try {
+      if (!auth) {
+        throw new Error('Firebase authentication is not configured')
+      }
       setAuthState(prev => ({ ...prev, loading: true, error: null }))
       await signInWithEmailAndPassword(auth, email, password)
     } catch (error: any) {
@@ -83,6 +95,9 @@ export function useAuth() {
 
   const signUp = async (email: string, password: string, displayName?: string) => {
     try {
+      if (!auth) {
+        throw new Error('Firebase authentication is not configured')
+      }
       setAuthState(prev => ({ ...prev, loading: true, error: null }))
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       
@@ -105,6 +120,9 @@ export function useAuth() {
 
   const signInWithGoogle = async () => {
     try {
+      if (!auth) {
+        throw new Error('Firebase authentication is not configured')
+      }
       setAuthState(prev => ({ ...prev, loading: true, error: null }))
       const provider = new GoogleAuthProvider()
       await signInWithPopup(auth, provider)
@@ -121,6 +139,9 @@ export function useAuth() {
 
   const logout = async () => {
     try {
+      if (!auth) {
+        throw new Error('Firebase authentication is not configured')
+      }
       await signOut(auth)
     } catch (error: any) {
       const formattedError = formatFirebaseError(error)
