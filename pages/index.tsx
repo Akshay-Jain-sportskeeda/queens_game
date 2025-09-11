@@ -248,6 +248,9 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     setShowWinScreen(false);
     resetWinAnimation();
     
+    // Reset the core game state to ensure gameCompleted is false
+    reset();
+    
     try {
       await loadPuzzleForDate(date);
       console.log('✅ [Game] Successfully loaded puzzle for date:', date);
@@ -261,7 +264,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     } finally {
       setIsLoadingPuzzle(false);
     }
-  }, [loadPuzzleForDate, resetWinAnimation]);
+  }, [loadPuzzleForDate, resetWinAnimation, reset]);
   const handleRulesToggle = useCallback(() => {
     setShowRules(!showRules)
   }, [showRules])
