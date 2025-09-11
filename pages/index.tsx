@@ -114,10 +114,11 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   const [currentLeaderboard, setCurrentLeaderboard] = useState<any[]>([])
   const [leaderboardLoading, setLeaderboardLoading] = useState(false)
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
+  const [isLoadingPuzzle, setIsLoadingPuzzle] = useState(false)
 
   // Check for win condition
   useEffect(() => {
-    if (gameState.gameCompleted && !showWinScreen && !hasShownWinScreen) {
+    if (gameState.gameCompleted && !showWinScreen && !hasShownWinScreen && gameState.moveCount > 0) {
       console.log('🎮 [Game] Win condition detected, calculating stats...')
       
       console.log('🎮 [Game] Win condition detected, calculating stats...')
@@ -238,6 +239,9 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   const handleArchiveDateSelect = useCallback(async (date: string) => {
     console.log('🎯 [Game] Archive date selected:', date);
     
+    // Set loading state
+    setIsLoadingPuzzle(true);
+    
     // Reset all game state before loading new puzzle
     setShowInlineWinMetrics(false);
     setHasShownWinScreen(false);
@@ -254,6 +258,8 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('❌ [Game] Error loading puzzle for date:', date, error);
+    } finally {
+      setIsLoadingPuzzle(false);
     }
   }, [loadPuzzleForDate, resetWinAnimation]);
   const handleRulesToggle = useCallback(() => {
@@ -706,6 +712,47 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         onLogout={logout}
       />
 
+      {/* Loading Overlay */}
+      {isLoadingPuzzle && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            padding: '30px 40px',
+            textAlign: 'center',
+            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+          }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              border: '4px solid #f3f4f6',
+              borderTop: '4px solid #667eea',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 20px'
+            }}></div>
+            <div style={{
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              color: '#374151'
+            }}>
+              Loading puzzle...
+            </div>
+          </div>
+        </div>
+      )}
+
       <div>
       {renderTabContent()}
         
@@ -723,6 +770,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         
         {showArchive && (
           <ArchiveScreen
+            show={showArchive}
             availablePuzzles={availableDates.map(date => ({ date, difficulty: 'medium' }))}
             onSelectDate={handleArchiveDateSelect}
             onClose={handleArchiveToggle}

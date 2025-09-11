@@ -5,6 +5,7 @@ import { useLeaderboard } from '../hooks/useLeaderboard';
 import styles from '../styles/ArchiveScreen.module.css';
 
 interface ArchiveScreenProps {
+  show?: boolean;
   onClose: () => void;
   onSelectDate: (date: string) => void;
   availablePuzzles: {date: string; difficulty: string}[];
@@ -12,6 +13,7 @@ interface ArchiveScreenProps {
 }
 
 const ArchiveScreen: React.FC<ArchiveScreenProps> = ({ 
+  show = true,
   onClose, 
   onSelectDate, 
   availablePuzzles, 
@@ -75,7 +77,7 @@ const ArchiveScreen: React.FC<ArchiveScreenProps> = ({
   const isDateCompleted = (date: string) => completedDates.includes(date);
 
   return (
-    <div className={`${styles.archiveScreen} ${styles.show}`}>
+    <div className={`${styles.archiveScreen} ${show ? styles.show : ''}`}>
       <div className={styles.archiveContent}>
         <div className={styles.archiveHeader}>
           <button className={styles.archiveCloseX} onClick={onClose} type="button" aria-label="Close">
