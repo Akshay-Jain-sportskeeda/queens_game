@@ -53,10 +53,11 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
       const date = new Date(dateString);
       return {
         day: date.toLocaleDateString('en-US', { weekday: 'short' }),
-        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        dayNumber: date.getDate().toString(),
+        monthShort: date.toLocaleDateString('en-US', { month: 'short' })
       };
     } catch (error) {
-      return { day: 'Invalid', date: 'Date' };
+      return { day: 'Invalid', dayNumber: 'Date', monthShort: '' };
     }
   };
 
@@ -84,7 +85,7 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[80vh] overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 max-h-[80vh] overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-gray-800 to-black p-6 text-center relative">
           <button
@@ -103,7 +104,7 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
         </div>
         
         {/* Content */}
-        <div className="p-6 max-h-96 overflow-y-auto">
+        <div className="p-4 max-h-96 overflow-y-auto">
           {isLoading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -114,11 +115,11 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
               <p className="text-gray-600">No archive puzzles available</p>
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2">
               {/* Today's Game */}
               <button
                 onClick={() => handleDateSelect(new Date().toLocaleDateString('en-CA'))}
-                className="relative p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-center border-2 border-blue-300 hover:border-blue-400"
+                className="relative p-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-center border-2 border-blue-300 hover:border-blue-400"
               >
                 {isDateCompleted(new Date().toLocaleDateString('en-CA')) && (
                   <div className="absolute top-1 right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
@@ -128,23 +129,23 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
                 <div className="text-xs font-medium text-blue-800 mb-1">
                   Today
                 </div>
-                <div className="text-sm font-semibold text-blue-900 mb-2">
+                <div className="text-xs font-semibold text-blue-900 mb-1">
                   {(() => {
                     const today = new Date();
-                    const { date } = formatDate(today.toLocaleDateString('en-CA'));
-                    return date;
+                    const { dayNumber, monthShort } = formatDate(today.toLocaleDateString('en-CA'));
+                    return `${dayNumber} ${monthShort}`;
                   })()}
                 </div>
               </button>
               
               {availablePuzzles.map((puzzle) => {
-                const { day, date } = formatDate(puzzle.date);
+                const { day, dayNumber, monthShort } = formatDate(puzzle.date);
                 const isCompleted = isDateCompleted(puzzle.date);
                 return (
                 <button
                   key={puzzle.date}
                   onClick={() => handleDateSelect(puzzle.date)}
-                  className="relative p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors text-center border border-gray-200 hover:border-gray-300"
+                  className="relative p-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors text-center border border-gray-200 hover:border-gray-300"
                 >
                   {isCompleted && (
                     <div className="absolute top-1 right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
@@ -154,8 +155,8 @@ const ArchivePopup: React.FC<ArchivePopupProps> = ({ onClose, onSelectDate, avai
                   <div className="text-xs font-medium text-gray-800 mb-1">
                     {day}
                   </div>
-                  <div className="text-sm font-semibold text-gray-900 mb-2">
-                    {date}
+                  <div className="text-xs font-semibold text-gray-900 mb-1">
+                    {dayNumber} {monthShort}
                   </div>
                 </button>
                 );
