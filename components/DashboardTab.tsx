@@ -216,7 +216,7 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
                         trackPendingGamesClick(pendingGamesCount, totalAvailableGames);
                         setShowArchivePopup(true);
                       }}
-                      className="w-full max-w-xs p-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 shadow-lg"
+                      className="w-full max-w-xs p-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 shadow-lg border-0"
                     >
                       <div className="flex items-center justify-center gap-3">
                         <Archive className="w-6 h-6" />
@@ -240,7 +240,7 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
                       <h4 className="font-semibold text-gray-800">
                         Best Rank
                         {userStats.bestRankDate && (
-                          <span className="text-xs text-gray-500 ml-2 font-normal">
+                          <span className="text-xs text-gray-500 ml-2 md:ml-0 md:block font-normal">
                             {new Date(userStats.bestRankDate).toLocaleDateString('en-US', { 
                               month: 'short', 
                               day: 'numeric',
@@ -271,7 +271,7 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
                       <h4 className="font-semibold text-gray-800">
                         Fastest Time
                         {userStats.bestTimeDate && (
-                          <span className="text-xs text-gray-500 ml-2 font-normal">
+                          <span className="text-xs text-gray-500 ml-2 md:ml-0 md:block font-normal">
                             {new Date(userStats.bestTimeDate).toLocaleDateString('en-US', { 
                               month: 'short', 
                               day: 'numeric',
