@@ -238,18 +238,18 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
                   <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-lg p-4">
                     <div className="flex items-center gap-3 mb-3">
                       <Trophy className="w-6 h-6 text-yellow-600" />
-                      <h4 className="font-semibold text-gray-800">
-                        Best Rank
+                      <div>
+                        <h4 className="font-semibold text-gray-800">Best Rank</h4>
                         {userStats.bestRankDate && (
-                          <span className="text-xs text-gray-500 ml-2 md:ml-0 md:block font-normal">
+                          <div className="text-xs text-gray-500 font-normal mt-1">
                             {new Date(userStats.bestRankDate).toLocaleDateString('en-US', { 
                               month: 'short', 
                               day: 'numeric',
                               year: 'numeric'
                             })}
-                          </span>
+                          </div>
                         )}
-                      </h4>
+                      </div>
                     </div>
                     <div className="text-3xl font-bold text-yellow-600 mb-1">#{userStats.bestRank}</div>
                     <div className="text-sm text-gray-600">Highest position achieved</div>
@@ -269,18 +269,18 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
                   <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-lg p-4">
                     <div className="flex items-center gap-3 mb-3">
                       <Clock className="w-6 h-6 text-blue-600" />
-                      <h4 className="font-semibold text-gray-800">
-                        Fastest Time
+                      <div>
+                        <h4 className="font-semibold text-gray-800">Fastest Time</h4>
                         {userStats.bestTimeDate && (
-                          <span className="text-xs text-gray-500 ml-2 md:ml-0 md:block font-normal">
+                          <div className="text-xs text-gray-500 font-normal mt-1">
                             {new Date(userStats.bestTimeDate).toLocaleDateString('en-US', { 
                               month: 'short', 
                               day: 'numeric',
                               year: 'numeric'
                             })}
-                          </span>
+                          </div>
                         )}
-                      </h4>
+                      </div>
                     </div>
                     <div className="text-3xl font-bold text-blue-600 mb-1">{formatTime(userStats.bestTime)}</div>
                     <div className="text-sm text-gray-600">Personal best</div>
