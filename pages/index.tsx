@@ -723,7 +723,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         {showArchive && (
           <ArchiveScreen
             availablePuzzles={availableDates.map(date => ({ date, difficulty: 'medium' }))}
-            onDateSelect={handleArchiveDateSelect}
+            onSelectDate={handleArchiveDateSelect}
             onClose={handleArchiveToggle}
             userId={user?.uid}
           />
