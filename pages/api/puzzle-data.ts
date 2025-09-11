@@ -173,7 +173,8 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
           console.log(`✅ [fetchPuzzleData] Successfully added puzzle for date:`, row[dateIndex])
         } catch (parseError) {
           console.error(`❌ [fetchPuzzleData] Error parsing puzzle data for date ${row[dateIndex]}:`, parseError)
-          throw new Error(`Failed to parse puzzle data for date ${row[dateIndex]}: ${parseError.message}`)
+          const errorMessage = parseError instanceof Error ? parseError.message : String(parseError)
+          throw new Error(`Failed to parse puzzle data for date ${row[dateIndex]}: ${errorMessage}`)
         }
       }
     }
