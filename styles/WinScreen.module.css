@@ -176,7 +176,20 @@
 
 .winActions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.primaryAction {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.secondaryActions {
+  display: flex;
+  gap: 8px;
   justify-content: center;
 }
 
@@ -188,8 +201,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  flex: 1;
-  max-width: 140px;
+  min-width: 120px;
 }
 
 .winBtn.primary {
@@ -221,6 +233,33 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+.winBtn.leaderboard {
+  background: linear-gradient(to right, #2563eb, #1d4ed8);
+  color: white;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.winBtn.leaderboard:hover {
+  background: linear-gradient(to right, #1d4ed8, #1e40af);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.winBtn.leaderboard.loggedIn {
+  background: linear-gradient(to right, #059669, #047857);
+}
+
+.winBtn.leaderboard.loggedIn:hover {
+  background: linear-gradient(to right, #047857, #065f46);
+}
+
 .winBtn.archive {
   background: linear-gradient(to right, #1f2937, #000000);
   color: white;
@@ -232,6 +271,7 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
   white-space: nowrap;
+  font-size: 0.85rem;
 }
 
 .winBtn.archive:hover {
@@ -263,8 +303,13 @@
     gap: 8px;
   }
   
+  .secondaryActions {
+    margin-top: 10px;
+  }
+  
   .winBtn {
     font-size: 0.85rem;
     padding: 8px 16px;
+    min-width: 100px;
   }
 }

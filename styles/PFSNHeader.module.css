@@ -15,7 +15,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  height: 60px;
+  height: 40px;
 }
 
 .mobileMenuToggle {
@@ -42,7 +42,7 @@
 }
 
 .pfsnLogo {
-  height: 40px;
+  height: 32px;
   width: auto;
 }
 
@@ -75,9 +75,9 @@
 .navMenu li a {
   color: #ccc;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 4px;
   transition: all 0.3s ease;
 }
@@ -121,18 +121,18 @@
   }
 
   .pfsnLogo {
-    height: 24px;
+    height: 20px;
   }
 
   .pfsnMainNav {
     position: fixed;
-    top: 60px;
+    top: 40px;
     left: -100%;
-    width: 280px;
-    height: calc(100vh - 60px);
+    width: 100px;
+    height: calc(100vh - 40px);
     background: #000000;
     transition: left 0.3s ease;
-    z-index: 99;
+    z-index: 9999;
     overflow-y: auto;
   }
 
@@ -148,7 +148,7 @@
 
   .navMenu li a {
     display: block;
-    padding: 15px 25px;
+    padding: 12px 20px;
     border-radius: 0;
     border-bottom: 1px solid #333;
   }

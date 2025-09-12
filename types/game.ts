@@ -55,4 +55,25 @@ export interface WinStats {
   time: string;
   displayTime: string;
   calculation: string;
+  score: number;
+}
+
+export interface UserStats {
+  totalGames: number;
+  totalMoves: number;
+  totalHints: number;
+  totalTimeSpent: number;
+  unassistedGamesCount: number;
+  bestUnassistedTime: number | null;
+  bestTime: number;
+  bestRank: number;
+  averageMoves: number;
+  averageHints: number;
+  averageTime: number;
+  gamesThisWeek: number;
+  currentStreak: number;
+  bestUnassistedTimeDate?: string;
+  bestTimeDate?: string;
+  bestRankDate?: string;
+  completedDates?: string[];
 }

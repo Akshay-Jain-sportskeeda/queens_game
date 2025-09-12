@@ -8,3 +8,11 @@
   max-width: 400px;
   aspect-ratio: 1;
 }
+
+@media (max-width: 480px) {
+  .gameBoard {
+    max-width: 280px;
+    gap: 1px;
+    border: 2px solid #333;
+  }
+}

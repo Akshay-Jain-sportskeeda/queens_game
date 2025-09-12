@@ -26,11 +26,19 @@ const WinScreen: React.FC<WinScreenProps> = ({
     if (!user) {
       onLoginClick()
     } else {
-      // TODO: Add leaderboard functionality later
-      console.log('View leaderboard clicked')
+      // Close the win screen first
+      onClose()
+      // Small delay to ensure win screen closes, then navigate
+      setTimeout(() => {
+        // This will be handled by the parent component
+        window.dispatchEvent(new CustomEvent('navigateToLeaderboard'))
+      }, 100)
     }
   }
 
+  const handleArchiveClick = () => {
+    onArchive()
+  }
   return (
     <div className={`${styles.winScreen} ${show ? styles.show : ''}`}>
       <div className={styles.winContent}>
@@ -90,7 +98,7 @@ const WinScreen: React.FC<WinScreenProps> = ({
             </svg>
             Share
           </button>
-          <button className={`${styles.winBtn} ${styles.archive}`} onClick={onArchive}>
+          <button className={`${styles.winBtn} ${styles.archive}`} onClick={handleArchiveClick}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="21,8 21,21 3,21 3,8"/>
               <rect x="1" y="3" width="22" height="5"/>
