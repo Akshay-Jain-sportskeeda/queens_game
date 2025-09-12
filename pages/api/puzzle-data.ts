@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PuzzleData } from '../../types/game'
 
-// Direct Google Sheet CSV URL - no CORS proxy needed for server-side requests
+// Hardcoded Google Sheet URL - the only data source
 const PUZZLE_DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7zVz3B8XRn-mIHVTBSLJ6JBp7liPx9micD9t3KOiMFAMpqqnJT1wpXbZl8KrZQ9WtGtMn0gM9Hvu9/pub?gid=0&single=true&output=csv'
 
 function validateRegionsData(regions: any, gridSize: number): boolean {
@@ -96,22 +96,15 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
   console.log('🌐 [fetchPuzzleData] Google Sheet URL:', PUZZLE_DATA_URL)
 
   try {
-    const response = await fetch(PUZZLE_DATA_URL, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; NFL-Field-Puzzle/1.0)',
-        'Accept': 'text/csv,text/plain,*/*',
-      },
-    })
+    const response = await fetch(PUZZLE_DATA_URL)
     
     if (!response.ok) {
-      console.error('❌ [fetchPuzzleData] HTTP error:', response.status, response.statusText)
-      throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`)
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
     
     const csvText = await response.text()
     console.log('✅ [fetchPuzzleData] Successfully fetched data from Google Sheet')
     console.log('📄 [fetchPuzzleData] CSV data length:', csvText?.length || 0, 'characters')
-    console.log('📄 [fetchPuzzleData] First 200 characters:', csvText?.substring(0, 200))
     
     if (!csvText || csvText.trim().length === 0) {
       throw new Error('Empty CSV data received from Google Sheet')
@@ -135,8 +128,7 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     const prefillsIndex = headers.indexOf('prefills')
     
     if (dateIndex === -1 || gridSizeIndex === -1 || regionsIndex === -1 || queensIndex === -1 || prefillsIndex === -1) {
-      console.error('❌ [fetchPuzzleData] Missing columns. Found headers:', headers)
-      throw new Error('Invalid CSV format: missing required columns (date, grid_size, regions, queens, prefills)')
+      throw new Error('Invalid CSV format: missing required columns')
     }
     
     console.log('🎯 [fetchPuzzleData] Column indices - date:', dateIndex, 'gridSize:', gridSizeIndex, 'regions:', regionsIndex, 'queens:', queensIndex, 'prefills:', prefillsIndex)
@@ -206,12 +198,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  // Debug: Log today's date and timezone info
+  // Debug: Log today's date
   const today = new Date()
-  const todayUTC = today.toISOString().split('T')[0]
-  const todayLocal = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0]
-  console.log('🗓️ [API] Today\'s date (UTC):', todayUTC)
-  console.log('🗓️ [API] Today\'s date (Local):', todayLocal)
+  const todayString = today.toISOString().split('T')[0]
+  console.log('🗓️ [API] Today\'s date:', todayString)
 
   try {
     const { date } = req.query
@@ -220,11 +210,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const puzzles = await fetchPuzzleData()
     console.log('📊 [API] Available puzzle dates:', Object.keys(puzzles))
     console.log('📊 [API] Total puzzles loaded:', Object.keys(puzzles).length)
-    
-    // Debug: Check if today's date exists in different formats
-    console.log('🔍 [API] Checking for today\'s puzzle:')
-    console.log('  - UTC format exists:', !!puzzles[todayUTC])
-    console.log('  - Local format exists:', !!puzzles[todayLocal])
     
     if (date && typeof date === 'string') {
       console.log('🎯 [API] Looking for specific date:', date)

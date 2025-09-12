@@ -873,7 +873,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    console.log('🚀 [SSR] Starting getServerSideProps - fetching puzzle data...')
+    console.log('🚀 [SSR] Starting getServerSideProps - fetching from Google Sheet only...')
     
     const baseUrl = context.req.headers.host
     const protocol = context.req.headers['x-forwarded-proto'] || 'http'
@@ -895,18 +895,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     console.log('📊 [SSR] Total puzzles received:', Object.keys(puzzles).length)
     
     // Get today's puzzle
-    const todayUTC = new Date().toISOString().split('T')[0]
-    const todayLocal = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().split('T')[0]
-    console.log('🗓️ [SSR] Today\'s date (UTC):', todayUTC)
-    console.log('🗓️ [SSR] Today\'s date (Local):', todayLocal)
+    const today = new Date().toISOString().split('T')[0]
+    console.log('🗓️ [SSR] Today\'s date:', today)
     
-    // Check if today's puzzle exists in either format
-    const todaysPuzzle = puzzles[todayUTC] || puzzles[todayLocal]
+    // Check if today's puzzle exists
+    const todaysPuzzle = puzzles[today]
     if (todaysPuzzle) {
-      console.log('✅ [SSR] Found today\'s puzzle for', todaysPuzzle.date)
+      console.log('✅ [SSR] Found today\'s puzzle for', today)
     } else {
-      console.log('❌ [SSR] No puzzle found for today\'s date. Tried:', todayUTC, 'and', todayLocal)
-      console.log('📋 [SSR] Available dates:', Object.keys(puzzles))
+      console.log('❌ [SSR] No puzzle found for today\'s date:', today)
     }
     
     // Use today's puzzle if available, otherwise use the first available puzzle, otherwise null
@@ -916,7 +913,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     
     if (puzzleData) {
       console.log('🎯 [SSR] Selected puzzle date for display:', puzzleData.date)
-      if (puzzleData.date !== todayUTC && puzzleData.date !== todayLocal) {
+      if (puzzleData.date !== today) {
         console.log('⚠️ [SSR] Using different date puzzle because today\'s not available')
       }
     } else {
