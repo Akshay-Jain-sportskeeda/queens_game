@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { PuzzleData, GameState, WinStats } from '../types/game'
 import { useAuth } from '../hooks/useAuth'
 import GameBoard from '../components/GameBoard'
@@ -26,6 +26,9 @@ interface HomeProps {
 
 export default function Home({ puzzleData, availableDates }: HomeProps) {
   const { user, logout } = useAuth()
+  
+  // Timer ref for win condition timeout
+  const winTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   
   // If no puzzle data is available, show error message
   if (!puzzleData) {
@@ -194,13 +197,19 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
   // Check for win condition
   useEffect(() => {
+    // Clear any existing timeout
+    if (winTimeoutRef.current) {
+      clearTimeout(winTimeoutRef.current)
+      winTimeoutRef.current = null
+    }
+    
     if (gameState.gameCompleted && !showWinScreen && !hasShownWinScreen && gameState.moveCount > 0) {
       console.log('🎮 [Game] Win condition detected, calculating stats...')
       
       console.log('🎮 [Game] Win condition detected, calculating stats...')
       
       // Wait for all animations to complete before showing win screen
-      setTimeout(() => {
+      winTimeoutRef.current = setTimeout(() => {
         const endTime = Date.now()
         const baseTime = Math.floor((endTime - gameState.startTime) / 1000)
         const hintPenalty = gameState.hintCount * 15 // 15 seconds per hint
@@ -287,7 +296,16 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         
         setShowWinScreen(true)
         setHasShownWinScreen(true)
+        winTimeoutRef.current = null
       }, 2500) // Wait for all row animations (2s) + 0.5s delay = 2.5s
+    }
+    
+    // Cleanup function to clear timeout if component unmounts or dependencies change
+    return () => {
+      if (winTimeoutRef.current) {
+        clearTimeout(winTimeoutRef.current)
+        winTimeoutRef.current = null
+      }
     }
   }, [gameState.gameCompleted, gameState.startTime, gameState.moveCount, gameState.hintCount, showWinScreen, hasShownWinScreen, user, currentPuzzleData.date])
 
