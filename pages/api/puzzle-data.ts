@@ -96,7 +96,11 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
   console.log('🌐 [fetchPuzzleData] Google Sheet URL:', PUZZLE_DATA_URL)
 
   try {
-    const response = await fetch(PUZZLE_DATA_URL)
+    const response = await fetch(PUZZLE_DATA_URL, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; NFL-Field-Puzzle/1.0)',
+      },
+    })
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
