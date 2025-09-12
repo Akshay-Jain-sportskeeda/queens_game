@@ -198,10 +198,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  // Debug: Log today's date
+  // Debug: Log today's date and timezone info
   const today = new Date()
   const todayString = today.toISOString().split('T')[0]
-  console.log('🗓️ [API] Today\'s date:', todayString)
+  const todayLocal = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0]
+  console.log('🗓️ [API] Today\'s date (UTC):', todayString)
+  console.log('🗓️ [API] Today\'s date (Local):', todayLocal)
 
   try {
     const { date } = req.query
@@ -210,6 +212,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const puzzles = await fetchPuzzleData()
     console.log('📊 [API] Available puzzle dates:', Object.keys(puzzles))
     console.log('📊 [API] Total puzzles loaded:', Object.keys(puzzles).length)
+    
+    // Debug: Check if today's date exists in different formats
+    console.log('🔍 [API] Checking for today\'s puzzle:')
+    console.log('  - UTC format exists:', !!puzzles[todayString])
+    console.log('  - Local format exists:', !!puzzles[todayLocal])
     
     if (date && typeof date === 'string') {
       console.log('🎯 [API] Looking for specific date:', date)
