@@ -102,8 +102,7 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
         'User-Agent': 'Mozilla/5.0 (compatible; NextJS-App/1.0)',
         'Accept': 'text/csv,text/plain,*/*',
         'Cache-Control': 'no-cache'
-      },
-      timeout: 10000 // 10 second timeout
+      }
     })
     
     if (!response.ok) {
