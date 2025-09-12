@@ -694,9 +694,12 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     const uniqueRegions = new Set(currentPuzzleData.regions.flat())
     const hintCandidates: { region: number, emptyCellCount: number, regionCells: number[][] }[] = []
 
+    const hintCandidates: { region: number, emptyCellCount: number, regionCells: number[][] }[] = []
+
     for (let targetRegion of uniqueRegions) {
       let hasCorrectFootball = false
       let emptyCellsInRegionCount = 0
+      const allCellsInRegion: number[][] = []
       const allCellsInRegion: number[][] = []
       
       for (let row = 0; row < currentPuzzleData.gridSize; row++) {
@@ -711,6 +714,8 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
               }
             } else if (board[row][col] === '') {
               emptyCellsInRegionCount++
+            } else if (board[row][col] === '') {
+              emptyCellsInRegionCount++
             }
           }
         }
@@ -723,6 +728,22 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
           emptyCellCount: emptyCellsInRegionCount,
           regionCells: allCellsInRegion // All cells in the region for highlighting
         })
+        hintCandidates.push({
+          region: targetRegion,
+          emptyCellCount: emptyCellsInRegionCount,
+          regionCells: allCellsInRegion // All cells in the region for highlighting
+        })
+      }
+    }
+
+    // Sort candidates by the number of empty cells, ascending
+    hintCandidates.sort((a, b) => a.emptyCellCount - b.emptyCellCount)
+
+    if (hintCandidates.length > 0) {
+      // Return the region with the minimum empty cells
+      return {
+        region: hintCandidates[0].region,
+        regionCells: hintCandidates[0].regionCells
       }
     }
 
