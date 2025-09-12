@@ -122,9 +122,9 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     for (let col = 0; col < puzzleData.gridSize; col++) {
       let colFootballs = 0
       for (let row = 0; row < puzzleData.gridSize; row++) {
-        if (board[row][col] === '
-        )
+        if (board[row][col] === '🏈') colFootballs++
       }
+      if (colFootballs !== 1) return false
     }
   }
   )
@@ -911,6 +911,3 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     shareResults,
     loadPuzzleForDate,
     showInfoMessage,
-    resetWinAnimation
-  }
-}
