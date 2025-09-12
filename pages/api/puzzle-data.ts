@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { PuzzleData } from '../../types/game'
 
 // Hardcoded Google Sheet URL - the only data source
-const PUZZLE_DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7zVz3B8XRn-mIHVTBSLJ6JBp7liPx9micD9t3KOiMFAMpqqnJT1wpXbZl8KrZQ9WtGtMn0gM9Hvu9/pub?gid=0&single=true&output=csv'
+const PUZZLE_DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7zVz3B8XRn-mIHVTBSLJ6JBp7liPx9micD9t3KOiMFAMpqqnJT1wpXbZl8KrZQ9WtGtMn0gM9Hvu9/pub?output=csv&gid=0'
 
 function validateRegionsData(regions: any, gridSize: number): boolean {
   // Check if regions is an array
@@ -96,10 +96,23 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
   console.log('🌐 [fetchPuzzleData] Google Sheet URL:', PUZZLE_DATA_URL)
 
   try {
-    const response = await fetch(PUZZLE_DATA_URL)
+    const response = await fetch(PUZZLE_DATA_URL, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; NextJS-App/1.0)',
+        'Accept': 'text/csv,text/plain,*/*',
+        'Cache-Control': 'no-cache'
+      },
+      timeout: 10000 // 10 second timeout
+    })
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      console.error('❌ [fetchPuzzleData] HTTP error response:', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries())
+      })
+      throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`)
     }
     
     const csvText = await response.text()
@@ -189,6 +202,17 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     return puzzles
   } catch (error) {
     console.error('❌ [fetchPuzzleData] Error fetching/parsing Google Sheet data:', error)
+    
+    // Provide more specific error information
+    if (error instanceof TypeError && error.message.includes('fetch failed')) {
+      console.error('❌ [fetchPuzzleData] Network error - Google Sheets may be inaccessible')
+      console.error('❌ [fetchPuzzleData] Please verify:')
+      console.error('   1. Google Sheet is published to web as CSV')
+      console.error('   2. Google Sheet has public access permissions')
+      console.error('   3. URL is correct:', PUZZLE_DATA_URL)
+      throw new Error('Unable to connect to Google Sheets. Please check sheet permissions and URL.')
+    }
+    
     throw error
   }
 }

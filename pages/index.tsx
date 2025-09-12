@@ -881,13 +881,31 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     
     console.log('🌐 [SSR] Calling internal API:', apiUrl)
     
-    const response = await fetch(apiUrl)
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'NextJS-SSR/1.0'
+      }
+    })
     
     if (!response.ok) {
       console.error('❌ [SSR] API call failed with status:', response.status)
-      const errorData = await response.json()
+      let errorData
+      try {
+        errorData = await response.json()
+      } catch (parseError) {
+        errorData = { error: 'Failed to parse error response', details: await response.text() }
+      }
       console.error('❌ [SSR] Error details:', errorData)
-      throw new Error(`API call failed: ${response.status} - ${errorData.error}`)
+      
+      // Don't throw error, return null puzzle data to show error page
+      console.log('🚫 [SSR] Returning null puzzle data due to API error')
+      return {
+        props: {
+          puzzleData: null,
+          availableDates: []
+        }
+      }
     }
     
     const puzzles = await response.json()
@@ -929,7 +947,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (error) {
     console.error('❌ [SSR] Error in getServerSideProps:', error)
     
-    // No fallback - return null to show error page
+    // Return null to show error page instead of crashing
     console.log('🚫 [SSR] No fallback available - returning null puzzle data')
     
     return {
