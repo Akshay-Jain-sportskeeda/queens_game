@@ -126,12 +126,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       }
       if (colFootballs !== 1) return false
     }
-  }
-  )
-}🏈') colFootballs++
-      }
-      if (colFootballs !== 1) return false
-    }
     
     // Check regions
     const regionFootballs: { [key: number]: number } = {}
@@ -697,50 +691,31 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   };
 
   const getEmptyRegionHint = (board: string[][], currentPuzzleData: PuzzleData) => {
-    const uniqueRegions = new Set(currentPuzzleData.regions.flat())
-    const hintCandidates: { region: number, emptyCellCount: number, regionCells: number[][] }[] = []
-
+    const uniqueRegions = new Set(currentPuzzleData.regions.flat());
     for (let targetRegion of uniqueRegions) {
-      let hasCorrectFootball = false
-      let emptyCellsInRegionCount = 0
-      const allCellsInRegion: number[][] = []
+      let hasValidFootball = false;
+      let regionCells: number[][] = [];
       
       for (let row = 0; row < currentPuzzleData.gridSize; row++) {
         for (let col = 0; col < currentPuzzleData.gridSize; col++) {
           if (currentPuzzleData.regions[row][col] === targetRegion) {
-            allCellsInRegion.push([row, col])
+            regionCells.push([row, col]);
             if (board[row][col] === '🏈') {
-              // Check if this football is part of the solution (correctly placed)
-              const isInSolution = currentPuzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col)
-              if (isInSolution) {
-                hasCorrectFootball = true
+              const isPrefilled = currentPuzzleData.prefills.some(([r, c]) => r === row && c === col);
+              const isInSolution = currentPuzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col);
+              if (isPrefilled || isInSolution) {
+                hasValidFootball = true;
               }
             }
-              emptyCellsInRegionCount++
+          }
         }
       }
       
-      if (!hasCorrectFootball) {
-        // This region needs a football. Add it as a candidate.
-        hintCandidates.push({
-          region: targetRegion,
-          emptyCellCount: emptyCellsInRegionCount,
-          regionCells: allCellsInRegion // All cells in the region for highlighting
-        })
+      if (!hasValidFootball) {
+        return { region: targetRegion, regionCells };
       }
     }
-
-    // Sort candidates by the number of empty cells, ascending
-    hintCandidates.sort((a, b) => a.emptyCellCount - b.emptyCellCount)
-
-    if (hintCandidates.length > 0) {
-      // Return the region with the minimum empty cells
-      return {
-        region: hintCandidates[0].region,
-        regionCells: hintCandidates[0].regionCells
-      }
-    }
-    return null
+    return null;
   };
 
   const getEmptyRowHint = (board: string[][], currentPuzzleData: PuzzleData) => {
@@ -911,3 +886,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     shareResults,
     loadPuzzleForDate,
     showInfoMessage,
+    resetWinAnimation
+  }
+}
