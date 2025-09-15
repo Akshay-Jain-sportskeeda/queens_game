@@ -76,6 +76,9 @@ const ArchiveScreen: React.FC<ArchiveScreenProps> = ({
 
   const isDateCompleted = (date: string) => completedDates.includes(date);
 
+  // Filter out future dates - only show today and past dates
+  const today = new Date().toISOString().split('T')[0];
+  const filteredPuzzles = availablePuzzles.filter(puzzle => puzzle.date <= today);
   return (
     <div className={`${styles.archiveScreen} ${show ? styles.show : ''}`}>
       <div className={styles.archiveContent}>
@@ -97,7 +100,7 @@ const ArchiveScreen: React.FC<ArchiveScreenProps> = ({
               <div className={styles.spinner}></div>
               <p className={styles.loadingText}>Loading available puzzles...</p>
             </div>
-          ) : availablePuzzles.length === 0 ? (
+          ) : filteredPuzzles.length === 0 ? (
             <div className={styles.emptyContainer}>
               <p className={styles.emptyText}>No archive puzzles available</p>
             </div>
@@ -125,10 +128,10 @@ const ArchiveScreen: React.FC<ArchiveScreenProps> = ({
                 </div>
               </button>
               
-              {availablePuzzles.map((puzzle) => {
+              {filteredPuzzles.map((puzzle) => {
                 const { dayOfWeek, dayMonth } = formatDate(puzzle.date);
                 const isCompleted = isDateCompleted(puzzle.date);
-                const isToday = puzzle.date === new Date().toISOString().split('T')[0];
+                const isToday = puzzle.date === today;
                 
                 // Skip today's puzzle since we show it separately
                 if (isToday) return null;
