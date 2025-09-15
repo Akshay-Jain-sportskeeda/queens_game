@@ -109,6 +109,31 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   const checkWinCondition = useCallback((board: string[][], footballCount: number): boolean => {
     if (footballCount !== puzzleData.gridSize) return false
     
+    // First, collect all user-placed football positions
+    const userFootballPositions: string[] = []
+    for (let row = 0; row < puzzleData.gridSize; row++) {
+      for (let col = 0; col < puzzleData.gridSize; col++) {
+        if (board[row][col] === '🏈') {
+          userFootballPositions.push(`${row},${col}`)
+        }
+      }
+    }
+    
+    // Check if user's football positions exactly match the puzzle solution
+    const solutionPositions = puzzleData.queens.map(([row, col]) => `${row},${col}`)
+    if (userFootballPositions.length !== solutionPositions.length) return false
+    
+    // Sort both arrays to ensure order doesn't matter
+    userFootballPositions.sort()
+    solutionPositions.sort()
+    
+    // Check if every position matches
+    for (let i = 0; i < userFootballPositions.length; i++) {
+      if (userFootballPositions[i] !== solutionPositions[i]) {
+        return false
+      }
+    }
+    
     // Check rows
     for (let row = 0; row < puzzleData.gridSize; row++) {
       let rowFootballs = 0
@@ -145,7 +170,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     }
     
     return true
-  }, [puzzleData.gridSize, puzzleData.regions])
+  }, [puzzleData.gridSize, puzzleData.regions, puzzleData.queens])
 
   const validateAndHighlight = useCallback(() => {
     setGameState(prev => {
@@ -212,6 +237,9 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       // Check win condition
       const isWin = checkWinCondition(prev.board, footballs.length)
       
+      // Game is only completed if win condition is met AND there are no violations
+      const gameCompleted = isWin && violations.size === 0
+      
       // Update info message based on violations
       if (violations.size > 0) {
         const conflictTypesList = Array.from(new Set(conflictTypes.values()))
@@ -230,7 +258,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         }
         const message = messages.join('\n')
         showInfoMessage(message, 'conflict')
-      } else if (!isWin) {
+      } else if (!gameCompleted) {
         resetInfoMessage()
       }
       
@@ -238,7 +266,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         ...prev,
         violations,
         conflictTypes,
-        gameCompleted: isWin,
+        gameCompleted: gameCompleted,
       }
     })
   }, [puzzleData.gridSize, puzzleData.regions, checkWinCondition, showInfoMessage, resetInfoMessage])
