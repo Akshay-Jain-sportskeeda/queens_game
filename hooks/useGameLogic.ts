@@ -109,31 +109,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   const checkWinCondition = useCallback((board: string[][], footballCount: number): boolean => {
     if (footballCount !== puzzleData.gridSize) return false
     
-    // First, collect all user-placed football positions
-    const userFootballPositions: string[] = []
-    for (let row = 0; row < puzzleData.gridSize; row++) {
-      for (let col = 0; col < puzzleData.gridSize; col++) {
-        if (board[row][col] === '🏈') {
-          userFootballPositions.push(`${row},${col}`)
-        }
-      }
-    }
-    
-    // Check if user's football positions exactly match the puzzle solution
-    const solutionPositions = puzzleData.queens.map(([row, col]) => `${row},${col}`)
-    if (userFootballPositions.length !== solutionPositions.length) return false
-    
-    // Sort both arrays to ensure order doesn't matter
-    userFootballPositions.sort()
-    solutionPositions.sort()
-    
-    // Check if every position matches
-    for (let i = 0; i < userFootballPositions.length; i++) {
-      if (userFootballPositions[i] !== solutionPositions[i]) {
-        return false
-      }
-    }
-    
     // Check rows
     for (let row = 0; row < puzzleData.gridSize; row++) {
       let rowFootballs = 0
@@ -170,7 +145,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     }
     
     return true
-  }, [puzzleData.gridSize, puzzleData.regions, puzzleData.queens])
+  }, [puzzleData.gridSize, puzzleData.regions])
 
   const validateAndHighlight = useCallback(() => {
     setGameState(prev => {
