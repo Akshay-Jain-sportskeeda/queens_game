@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { PuzzleData, GameState, HintData } from '../types/game'
+import { trackGameStart, trackGameComplete, trackHintUsed, trackGameReset, trackShareClick } from '../utils/analytics'
 
 export function useGameLogic(initialPuzzleData: PuzzleData) {
   const [gameState, setGameState] = useState<GameState>(() => ({
@@ -62,6 +63,9 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
         newBoard[row][col] = '🏈'
       }
     })
+    
+    // Track game start
+    trackGameStart(puzzleData.date)
     
     setGameState(prev => ({
       ...prev,
@@ -237,6 +241,11 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   // Trigger win animation and then show modal
   useEffect(() => {
     if (gameState.gameCompleted) {
+      // Track game completion
+      const endTime = Date.now()
+      const totalTimeMs = endTime - gameState.startTime
+      trackGameComplete(puzzleData.date, gameState.moveCount, gameState.hintCount, totalTimeMs)
+      
       // Trigger the row-wise animation
       setGameState(prev => ({
         ...prev,
@@ -402,6 +411,9 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   const getHint = useCallback(() => {
     setGameState(prev => {
       if (prev.gameCompleted) return prev;
+      
+      // Track hint usage
+      trackHintUsed(puzzleData.date, prev.hintCount + 1);
       
       return {
         ...prev,
@@ -733,6 +745,10 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   const reset = useCallback(() => {
     clearHintHighlights()
+    
+    // Track game reset
+    trackGameReset(puzzleData.date)
+    
     const newBoard = Array(puzzleData.gridSize).fill(undefined).map(() => Array(puzzleData.gridSize).fill(''))
     puzzleData.prefills.forEach(([row, col]) => {
       if (row < puzzleData.gridSize && col < puzzleData.gridSize) {
@@ -756,6 +772,9 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   }, [puzzleData, clearHintHighlights])
 
   const shareResults = useCallback(() => {
+    // Track share click
+    trackShareClick(puzzleData.date)
+    
     const endTime = Date.now()
     const baseTime = Math.floor((endTime - gameState.startTime) / 1000)
     const hintPenalty = gameState.hintCount * 15 // 15 seconds per hint

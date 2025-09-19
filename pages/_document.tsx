@@ -26,6 +26,42 @@ export default function Document() {
         {/* Font Awesome for social icons */}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
+        {/* Google Analytics GA4 */}
+        <script async defer src="https://www.googletagmanager.com/gtag/js?id=G-94BYBHMYCW"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-94BYBHMYCW');
+            `
+          }}
+        />
+        
+        {/* Raptive (AdThrive) Script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w, d) {
+                w.adthrive = w.adthrive || {};
+                w.adthrive.cmd = w.adthrive.cmd || [];
+                w.adthrive.plugin = 'adthrive-ads-manual';
+                w.adthrive.host = 'ads.adthrive.com';
+                var s = d.createElement('script');
+                s.async = true;
+                s.referrerpolicy = 'no-referrer-when-downgrade';
+                s.src = 'https://' + w.adthrive.host + '/sites/5e163f2211916d4860b8f332/ads.min.js?referrer=' + w.encodeURIComponent(w.location.href) + '&cb=' + (Math.floor(Math.random() * 100) + 1);
+                var n = d.getElementsByTagName('script')[0];
+                n.parentNode.insertBefore(s, n);
+              })(window, document);
+            `
+          }}
+        />
+        
+        {/* Visibl Tracking Script */}
+        <script async defer src="https://assets.govisibl.io/scripts/dist/v1/sk.min.js?s=1&t=6008c3a6-0ddf-47a3-9146-2c4a38a74751"></script>
+
         {/* Structured Data */}
         <script
           type="application/ld+json"
