@@ -14,14 +14,14 @@ export default function Document() {
         <meta property="og:url" content="https://nfl-octobox.vercel.app/" />
         <meta property="og:title" content="NFL Octobox: Daily Logic Game | PFSN" />
         <meta property="og:description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
-        <meta property="og:image" content="https://nfl-octobox.vercel.app/og-image.png" />
+        <meta property="og:image" content="https://statico.profootballnetwork.com/wp-content/uploads/2025/09/19060049/NFL-OCTOBOX.png" />
 
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://nfl-octobox.vercel.app/" />
         <meta property="twitter:title" content="NFL Octobox: Daily Logic Game | PFSN" />
         <meta property="twitter:description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
-        <meta property="twitter:image" content="https://nfl-octobox.vercel.app/og-image.png" />
+        <meta property="twitter:image" content="https://statico.profootballnetwork.com/wp-content/uploads/2025/09/19060049/NFL-OCTOBOX.png" />
 
         {/* Font Awesome for social icons */}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
