@@ -38,11 +38,11 @@
 .pfsnLogoSection {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 8px;
 }
 
 .pfsnLogo {
-  height: 32px;
+  height: 40px;
   width: auto;
 }
 
@@ -75,7 +75,7 @@
 .navMenu li a {
   color: #ccc;
   text-decoration: none;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 500;
   padding: 6px 10px;
   border-radius: 4px;
