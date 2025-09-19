@@ -41,6 +41,8 @@ export default function Document() {
         
         {/* Raptive (AdThrive) Script */}
         <script
+          data-no-optimize="1"
+          data-cfasync="false"
           dangerouslySetInnerHTML={{
             __html: `
               (function(w, d) {
@@ -50,6 +52,7 @@ export default function Document() {
                 w.adthrive.host = 'ads.adthrive.com';
                 var s = d.createElement('script');
                 s.async = true;
+                s.defer = true;
                 s.referrerpolicy = 'no-referrer-when-downgrade';
                 s.src = 'https://' + w.adthrive.host + '/sites/5e163f2211916d4860b8f332/ads.min.js?referrer=' + w.encodeURIComponent(w.location.href) + '&cb=' + (Math.floor(Math.random() * 100) + 1);
                 var n = d.getElementsByTagName('script')[0];
