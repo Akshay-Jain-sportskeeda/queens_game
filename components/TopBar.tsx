@@ -142,6 +142,7 @@ const TopBar: React.FC<TopBarProps> = ({
                   </div>
                 )}
               </div>
+            </div>
             <h1 className={styles.gameTitle}>NFL Octobox</h1>
           </div>
         </div>
