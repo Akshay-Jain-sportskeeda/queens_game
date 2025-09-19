@@ -44,7 +44,7 @@ const PFSNFooter: React.FC<FooterProps> = ({ currentPage = 'NHL' }) => {
 
               <h3 className={`${styles.footerColumnTitle} ${styles.footerSubheading}`}>NFL Games</h3>
               <ul className={styles.footerLinks}>
-                <li className={styles.currentPage}><a href="/">NFL Field Puzzle</a></li>
+                <li className={styles.currentPage}><a href="/">NFL Octobox</a></li>
                 <li><a href="https://www.profootballnetwork.com/nfl-player-guessing-game/">NFL Player Guessing Game</a></li>
                 <li><a href="https://www.profootballnetwork.com/cta-guess-nfl-prospects-tools/">NFL Draft Guessing Game</a></li>
                 <li><a href="https://www.profootballnetwork.com/nfl-word-fumble-cta/">NFL Word Fumble</a></li>

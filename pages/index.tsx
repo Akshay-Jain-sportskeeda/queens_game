@@ -788,15 +788,15 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   return (
     <>
       <Head>
-        <title>NFL Field Puzzle - Daily Logic Game</title>
-        <meta name="description" content="A challenging logic puzzle game where you place exactly one football in each row, column, and color region. Play daily puzzles with hints and archive access." />
-        <meta name="keywords" content="puzzle, game, nfl, football, logic, brain teaser, daily puzzle" />
-        <meta property="og:title" content="NFL Field Puzzle - Daily Logic Game" />
-        <meta property="og:description" content="A challenging logic puzzle game where you place exactly one football in each row, column, and color region. Play daily puzzles with hints and archive access." />
+        <title>NFL Octobox: Daily Logic Game | PFSN</title>
+        <meta name="description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
+        <meta name="keywords" content="NFL Octobox, football puzzle, daily logic game, NFL games, football brain games, puzzle for football fans, sports puzzles" />
+        <meta property="og:title" content="NFL Octobox: Daily Logic Game | PFSN" />
+        <meta property="og:description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="NFL Field Puzzle - Daily Logic Game" />
-        <meta name="twitter:description" content="A challenging logic puzzle game where you place exactly one football in each row, column, and color region. Play daily puzzles with hints and archive access." />
+        <meta name="twitter:title" content="NFL Octobox: Daily Logic Game | PFSN" />
+        <meta name="twitter:description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
       </Head>
 
       <PFSNHeader currentPage="NFL" />

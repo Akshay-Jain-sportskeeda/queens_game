@@ -74,7 +74,7 @@ const PFSNHeader: React.FC<HeaderProps> = ({
                 height="124"
               />
             </a>
-            <span className={styles.mobileGameTitle}>NFL Field Puzzle</span>
+            <span className={styles.mobileGameTitle}>NFL Octobox</span>
           </div>
           
           <div className={styles.pfsnTagline}>

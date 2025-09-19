@@ -5,23 +5,23 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <meta charSet="UTF-8" />
-        <meta name="description" content="NFL Field Puzzle - A challenging logic puzzle game where you place exactly one football in each row, column, and color region. Play daily puzzles with hints and archive access." />
-        <meta name="keywords" content="puzzle, game, nfl, football, logic, brain teaser, daily puzzle" />
-        <meta name="author" content="NFL Field Puzzle" />
+        <meta name="description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
+        <meta name="keywords" content="NFL Octobox, football puzzle, daily logic game, NFL games, football brain games, puzzle for football fans, sports puzzles" />
+        <meta name="author" content="Pro Football Network" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://nfl-field-puzzle.vercel.app/" />
-        <meta property="og:title" content="NFL Field Puzzle - Daily Logic Game" />
-        <meta property="og:description" content="A challenging logic puzzle game where you place exactly one football in each row, column, and color region. Play daily puzzles with hints and archive access." />
-        <meta property="og:image" content="https://nfl-field-puzzle.vercel.app/og-image.png" />
+        <meta property="og:url" content="https://nfl-octobox.vercel.app/" />
+        <meta property="og:title" content="NFL Octobox: Daily Logic Game | PFSN" />
+        <meta property="og:description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
+        <meta property="og:image" content="https://nfl-octobox.vercel.app/og-image.png" />
 
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://nfl-field-puzzle.vercel.app/" />
-        <meta property="twitter:title" content="NFL Field Puzzle - Daily Logic Game" />
-        <meta property="twitter:description" content="A challenging logic puzzle game where you place exactly one football in each row, column, and color region. Play daily puzzles with hints and archive access." />
-        <meta property="twitter:image" content="https://nfl-field-puzzle.vercel.app/og-image.png" />
+        <meta property="twitter:url" content="https://nfl-octobox.vercel.app/" />
+        <meta property="twitter:title" content="NFL Octobox: Daily Logic Game | PFSN" />
+        <meta property="twitter:description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
+        <meta property="twitter:image" content="https://nfl-octobox.vercel.app/og-image.png" />
 
         {/* Font Awesome for social icons */}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
@@ -33,8 +33,8 @@ export default function Document() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Game",
-              "name": "NFL Field Puzzle",
-              "description": "A challenging logic puzzle game where you place exactly one football in each row, column, and color region.",
+              "name": "NFL Octobox",
+              "description": "Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle.",
               "genre": "Puzzle",
               "gamePlatform": "Web Browser",
               "operatingSystem": "Any",
@@ -45,7 +45,7 @@ export default function Document() {
               },
               "author": {
                 "@type": "Organization",
-                "name": "NFL Field Puzzle"
+                "name": "Pro Football Network"
               }
             })
           }}
