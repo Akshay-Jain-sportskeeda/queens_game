@@ -30,7 +30,6 @@
   font-weight: 600;
   margin-bottom: 15px;
   padding-bottom: 8px;
-  border-bottom: 2px solid white;
 }
 
 .footerSubheading {
@@ -68,7 +67,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 20px;
+  padding-top: 0;
   flex-wrap: wrap;
   gap: 20px;
 }
