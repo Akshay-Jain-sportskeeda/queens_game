@@ -1,6 +1,6 @@
-# NFL Field Puzzle - Next.js Edition
+# NFL Octobox - Next.js Edition
 
-A challenging logic puzzle game converted to Next.js for better SEO and server-side rendering. Place exactly one football in each row, column, and color region without any footballs touching each other.
+Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle converted to Next.js for better SEO and server-side rendering.
 
 ## 🚀 Features
 
@@ -27,7 +27,7 @@ A challenging logic puzzle game converted to Next.js for better SEO and server-s
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd nfl-field-puzzle-nextjs
+   cd nfl-octobox-nextjs
    ```
 
 2. **Install dependencies**
@@ -188,4 +188,4 @@ If you encounter any issues or have questions:
 
 ---
 
-**Enjoy playing the NFL Field Puzzle! 🏈**
+**Enjoy playing the NFL Octobox! 🏈**
