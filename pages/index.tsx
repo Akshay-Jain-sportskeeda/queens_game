@@ -35,7 +35,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     return (
       <>
         <Head>
-          <title>NFL Field Puzzle - No Puzzle Available</title>
+          <title>NFL Octobox - No Puzzle Available</title>
         </Head>
         <PFSNHeader currentPage="NFL" />
         <div style={{
