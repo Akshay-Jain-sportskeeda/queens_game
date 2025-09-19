@@ -70,7 +70,6 @@ const ArchiveScreen: React.FC<ArchiveScreenProps> = ({
   const handleDateSelect = (date: string) => {
     // Track archive puzzle selection
     trackArchivePuzzleLoad(date, true);
-    console.log('🎯 [Archive] Date selected:', date);
     onSelectDate(date);
   };
 

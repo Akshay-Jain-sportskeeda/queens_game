@@ -92,9 +92,6 @@ function parseCSVLine(line: string): string[] {
 }
 
 async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
-  console.log('🚀 [fetchPuzzleData] Starting data fetch from Google Sheet...')
-  console.log('🌐 [fetchPuzzleData] Google Sheet URL:', PUZZLE_DATA_URL)
-
   try {
     const response = await fetch(PUZZLE_DATA_URL, {
       method: 'GET',
@@ -106,25 +103,16 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     })
     
     if (!response.ok) {
-      console.error('❌ [fetchPuzzleData] HTTP error response:', {
-        status: response.status,
-        statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries())
-      })
       throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`)
     }
     
     const csvText = await response.text()
-    console.log('✅ [fetchPuzzleData] Successfully fetched data from Google Sheet')
-    console.log('📄 [fetchPuzzleData] CSV data length:', csvText?.length || 0, 'characters')
     
     if (!csvText || csvText.trim().length === 0) {
       throw new Error('Empty CSV data received from Google Sheet')
     }
 
-    console.log('🔍 [fetchPuzzleData] Parsing CSV data...')
     const lines = csvText.trim().split('\n')
-    console.log('📊 [fetchPuzzleData] CSV has', lines.length, 'lines')
     
     if (lines.length < 2) {
       throw new Error('Invalid CSV format: insufficient data')
@@ -132,7 +120,6 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     
     // Parse header to find column indices
     const headers = parseCSVLine(lines[0])
-    console.log('📋 [fetchPuzzleData] CSV headers:', headers)
     const dateIndex = headers.indexOf('date')
     const gridSizeIndex = headers.indexOf('grid_size')
     const regionsIndex = headers.indexOf('regions')
@@ -143,30 +130,18 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
       throw new Error('Invalid CSV format: missing required columns')
     }
     
-    console.log('🎯 [fetchPuzzleData] Column indices - date:', dateIndex, 'gridSize:', gridSizeIndex, 'regions:', regionsIndex, 'queens:', queensIndex, 'prefills:', prefillsIndex)
-    
     const puzzles: { [key: string]: PuzzleData } = {}
     
     // Parse all puzzle data
     for (let i = 1; i < lines.length; i++) {
       const row = parseCSVLine(lines[i])
-      console.log(`📝 [fetchPuzzleData] Processing CSV row ${i}:`, row)
       
       if (row[dateIndex] && row[dateIndex] !== '') {
-        console.log(`🗓️ [fetchPuzzleData] Found date in row ${i}:`, row[dateIndex])
-        
         try {
           const regions = JSON.parse(row[regionsIndex].replace(/^"|"$/g, ''))
           const queens = JSON.parse(row[queensIndex].replace(/^"|"$/g, ''))
           const prefills = JSON.parse(row[prefillsIndex].replace(/^"|"$/g, ''))
           const gridSize = parseInt(row[gridSizeIndex])
-          
-          console.log(`🎯 [fetchPuzzleData] Parsed data for ${row[dateIndex]}:`, {
-            gridSize,
-            regionsLength: regions.length,
-            queensCount: queens.length,
-            prefillsCount: prefills.length
-          })
           
           const puzzleData: PuzzleData = {
             date: row[dateIndex],
@@ -182,16 +157,12 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
           }
           
           puzzles[row[dateIndex]] = puzzleData
-          console.log(`✅ [fetchPuzzleData] Successfully added puzzle for date:`, row[dateIndex])
         } catch (parseError) {
-          console.error(`❌ [fetchPuzzleData] Error parsing puzzle data for date ${row[dateIndex]}:`, parseError)
           const errorMessage = parseError instanceof Error ? parseError.message : String(parseError)
           throw new Error(`Failed to parse puzzle data for date ${row[dateIndex]}: ${errorMessage}`)
         }
       }
     }
-    
-    console.log('📊 [fetchPuzzleData] Successfully parsed puzzles for dates:', Object.keys(puzzles))
     
     // If no valid puzzles were parsed, throw error
     if (Object.keys(puzzles).length === 0) {
@@ -200,15 +171,8 @@ async function fetchPuzzleData(): Promise<{ [key: string]: PuzzleData }> {
     
     return puzzles
   } catch (error) {
-    console.error('❌ [fetchPuzzleData] Error fetching/parsing Google Sheet data:', error)
-    
     // Provide more specific error information
     if (error instanceof TypeError && error.message.includes('fetch failed')) {
-      console.error('❌ [fetchPuzzleData] Network error - Google Sheets may be inaccessible')
-      console.error('❌ [fetchPuzzleData] Please verify:')
-      console.error('   1. Google Sheet is published to web as CSV')
-      console.error('   2. Google Sheet has public access permissions')
-      console.error('   3. URL is correct:', PUZZLE_DATA_URL)
       throw new Error('Unable to connect to Google Sheets. Please check sheet permissions and URL.')
     }
     
@@ -221,36 +185,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  // Debug: Log today's date
-  const today = new Date()
-  const todayString = today.toISOString().split('T')[0]
-  console.log('🗓️ [API] Today\'s date:', todayString)
-
   try {
     const { date } = req.query
-    console.log('🔍 [API] Requested date from query:', date)
     
     const puzzles = await fetchPuzzleData()
-    console.log('📊 [API] Available puzzle dates:', Object.keys(puzzles))
-    console.log('📊 [API] Total puzzles loaded:', Object.keys(puzzles).length)
     
     if (date && typeof date === 'string') {
-      console.log('🎯 [API] Looking for specific date:', date)
       // Return specific date's puzzle
       const puzzle = puzzles[date]
       if (!puzzle) {
-        console.log('❌ [API] Specific date not found')
         return res.status(404).json({ error: `No puzzle found for date: ${date}` })
       }
-      console.log('✅ [API] Found specific date puzzle:', puzzle.date)
       return res.status(200).json(puzzle)
     } else {
-      console.log('📋 [API] No specific date requested, returning all puzzles')
       // Return all puzzles
       return res.status(200).json(puzzles)
     }
   } catch (error) {
-    console.error('❌ [API] Error:', error)
     const errorMessage = error instanceof Error ? error.message : String(error)
     return res.status(500).json({ 
       error: 'Failed to fetch puzzle data from Google Sheet',

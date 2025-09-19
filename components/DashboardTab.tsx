@@ -75,15 +75,6 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
   const totalAvailableGames = todayInAvailable ? availablePuzzles.length : availablePuzzles.length + 1;
   const pendingGamesCount = totalAvailableGames - (completedDates.length || 0);
 
-  console.log('📊 [Dashboard] Pending games calculation:', {
-    today,
-    todayInAvailable,
-    availablePuzzlesCount: availablePuzzles.length,
-    totalAvailableGames,
-    completedDatesCount: completedDates.length,
-    pendingGamesCount
-  });
-
   const formatTime = (milliseconds: number): string => {
     const seconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(seconds / 60);

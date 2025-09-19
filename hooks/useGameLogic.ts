@@ -32,14 +32,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     }
   }, [])
 
-  // Debug function to log board state
-  const logBoardState = useCallback((context: string, board: string[][]) => {
-    console.log(`=== BOARD STATE: ${context} ===`);
-    board.forEach((row, i) => {
-      console.log(`Row ${i}:`, row);
-    });
-  }, []);
-
   const showInfoMessage = useCallback((text: string, type: string) => {
     setInfoMessage({ text, type })
   }, [])
@@ -63,27 +55,13 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
   // Initialize board with prefills only when puzzleData changes
   useEffect(() => {
-    console.log('=== BOARD INITIALIZATION ===');
-    console.log('Puzzle data changed, initializing board...');
-    console.log('Grid size:', puzzleData.gridSize);
-    console.log('Prefills:', puzzleData.prefills);
-    
     const newBoard = Array(puzzleData.gridSize).fill(undefined).map(() => Array(puzzleData.gridSize).fill(''))
-    console.log('Empty board created:', newBoard);
     
     puzzleData.prefills.forEach(([row, col]) => {
       if (row < puzzleData.gridSize && col < puzzleData.gridSize) {
-        console.log(`Placing prefilled football at (${row}, ${col})`);
         newBoard[row][col] = '🏈'
-        console.log(`Board after placing at (${row}, ${col}):`, newBoard[row][col]);
       }
     })
-    
-    console.log('Initialized board:', newBoard);
-    console.log('Board state after prefills:');
-    newBoard.forEach((row, i) => {
-      console.log(`Row ${i}:`, row);
-    });
     
     setGameState(prev => ({
       ...prev,
@@ -259,8 +237,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   // Trigger win animation and then show modal
   useEffect(() => {
     if (gameState.gameCompleted) {
-      console.log('Game completed! Triggering win animation...')
-      
       // Trigger the row-wise animation
       setGameState(prev => ({
         ...prev,
@@ -275,10 +251,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   const handleCellClick = useCallback((row: number, col: number) => {
     // Clear any existing hint highlights when user makes a move
     clearHintHighlights()
-    
-    console.log('=== CELL CLICK DEBUG ===');
-    console.log('Before cell click - current board state:');
-    logBoardState('BEFORE CELL CLICK', gameState.board);
     
     setGameState(prev => {
       if (prev.gameCompleted) return prev
@@ -304,9 +276,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
 
       newBoard[row][col] = newValue
 
-      console.log('After cell click - new board state:');
-      logBoardState('AFTER CELL CLICK', newBoard);
-
       return {
         ...prev,
         board: newBoard,
@@ -316,7 +285,7 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     })
 
     debouncedValidation()
-  }, [puzzleData.prefills, saveState, debouncedValidation, clearHintHighlights, logBoardState, gameState.board])
+  }, [puzzleData.prefills, saveState, debouncedValidation, clearHintHighlights])
 
   const undo = useCallback(() => {
     setGameState(prev => {
@@ -431,15 +400,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   };
 
   const getHint = useCallback(() => {
-    console.log('=== HINT SYSTEM DEBUG ===');
-    console.log('Current gameState.board at hint start:');
-    logBoardState('HINT START', gameState.board);
-    console.log('Current board state:', gameState.board);
-    console.log('Current puzzle date:', puzzleData.date);
-    console.log('Current puzzle prefills:', puzzleData.prefills);
-    console.log('Current puzzle solution:', puzzleData.queens);
-    console.log('Current puzzle regions:', puzzleData.regions);
-    
     setGameState(prev => {
       if (prev.gameCompleted) return prev;
       
@@ -454,106 +414,66 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
     const currentBoard = gameState.board;
     
     // Progressive hint system - X placement first, then suggestions
-    console.log('Step 1: Checking for wrong footballs...');
     const wrongFootball = getWrongFootballHint(currentBoard, currentPuzzleData);
     if (wrongFootball) {
-      console.log('Found wrong football:', wrongFootball);
       showWrongFootballHint(wrongFootball);
       return;
-    } else {
-      console.log('No wrong footballs found');
     }
     
-    console.log('Step 2: Checking for region X hints...');
     const regionHint = getRegionXHint(currentBoard, currentPuzzleData);
     if (regionHint) {
-      console.log('Found region X hint:', regionHint);
       showRegionXHint(regionHint);
       return;
-    } else {
-      console.log('No region X hints found');
     }
     
-    console.log('Step 3: Checking for row X hints...');
     const rowHint = getRowXHint(currentBoard, currentPuzzleData);
     if (rowHint) {
-      console.log('Found row X hint:', rowHint);
       showRowXHint(rowHint);
       return;
-    } else {
-      console.log('No row X hints found');
     }
     
-    console.log('Step 4: Checking for column X hints...');
     const columnHint = getColumnXHint(currentBoard, currentPuzzleData);
     if (columnHint) {
-      console.log('Found column X hint:', columnHint);
       showColumnXHint(columnHint);
       return;
-    } else {
-      console.log('No column X hints found');
     }
     
-    console.log('Step 5: Checking for adjacent X hints...');
     const adjacentHint = getAdjacentXHint(currentBoard, currentPuzzleData);
     if (adjacentHint) {
-      console.log('Found adjacent X hint:', adjacentHint);
       showAdjacentXHint(adjacentHint);
       return;
-    } else {
-      console.log('No adjacent X hints found');
     }
     
-    console.log('Step 6: Checking for empty region hints...');
     const emptyRegionHint = getEmptyRegionHint(currentBoard, currentPuzzleData);
     if (emptyRegionHint) {
-      console.log('Found empty region hint:', emptyRegionHint);
       showEmptyRegionHint(emptyRegionHint);
       return;
-    } else {
-      console.log('No empty region hints found');
     }
     
-    console.log('Step 7: Checking for empty row hints...');
     const emptyRowHint = getEmptyRowHint(currentBoard, currentPuzzleData);
     if (emptyRowHint) {
-      console.log('Found empty row hint:', emptyRowHint);
       showEmptyRowHint(emptyRowHint);
       return;
-    } else {
-      console.log('No empty row hints found');
     }
     
-    console.log('Step 8: Checking for empty column hints...');
     const emptyColumnHint = getEmptyColumnHint(currentBoard, currentPuzzleData);
     if (emptyColumnHint) {
-      console.log('Found empty column hint:', emptyColumnHint);
       showEmptyColumnHint(emptyColumnHint);
       return;
-    } else {
-      console.log('No empty column hints found');
     }
     
-    console.log('Step 9: Checking for wrong X hints...');
     const wrongXHint = getWrongXHint(currentBoard, currentPuzzleData);
     if (wrongXHint) {
-      console.log('Found wrong X hint:', wrongXHint);
       showWrongXHint(wrongXHint);
       return;
-    } else {
-      console.log('No wrong X hints found');
     }
     
-    console.log('Step 10: Checking for valid football placement hints...');
     const validPlacement = getValidFootballHint(currentBoard, currentPuzzleData);
     if (validPlacement) {
-      console.log('Found valid placement hint:', validPlacement);
       showValidFootballHint(validPlacement);
       return;
-    } else {
-      console.log('No valid placement hints found');
     }
-  }, [gameState.board, puzzleData, logBoardState, showWrongFootballHint, showRegionXHint, showRowXHint, showColumnXHint, showAdjacentXHint, showEmptyRegionHint, showEmptyRowHint, showEmptyColumnHint, showWrongXHint, showValidFootballHint]);
+  }, [gameState.board, puzzleData, showWrongFootballHint, showRegionXHint, showRowXHint, showColumnXHint, showAdjacentXHint, showEmptyRegionHint, showEmptyRowHint, showEmptyColumnHint, showWrongXHint, showValidFootballHint]);
 
   // Helper functions for hint system
   const getWrongFootballHint = (board: string[][], currentPuzzleData: PuzzleData) => {
@@ -573,14 +493,9 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   };
 
   const getRegionXHint = (board: string[][], currentPuzzleData: PuzzleData) => {
-    console.log('  Analyzing regions for X hints...');
-    console.log('  Using puzzle data for date:', currentPuzzleData.date);
-    console.log('  Current regions data:', currentPuzzleData.regions);
     const uniqueRegions = new Set(currentPuzzleData.regions.flat());
-    console.log('  Unique regions:', Array.from(uniqueRegions));
     
     for (let targetRegion of uniqueRegions) {
-      console.log(`  Checking region ${targetRegion}:`);
       let hasValidFootball = false;
       let emptyCells: number[][] = [];
       
@@ -592,23 +507,18 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
               const isInSolution = currentPuzzleData.queens.some(([qRow, qCol]) => qRow === row && qCol === col);
               if (isPrefilled || isInSolution) {
                 hasValidFootball = true;
-                console.log(`    Region ${targetRegion} has valid football at (${row}, ${col})`);
               }
             } else if (board[row][col] === '') {
-              console.log(`    Region ${targetRegion} has empty cell at (${row}, ${col})`);
               emptyCells.push([row, col]);
             }
           }
         }
       }
       
-      console.log(`    Region ${targetRegion}: hasValidFootball=${hasValidFootball}, emptyCells=${emptyCells.length}`);
       if (hasValidFootball && emptyCells.length > 0) {
-        console.log(`    Returning region X hint for region ${targetRegion}`);
         return { region: targetRegion, emptyCells };
       }
     }
-    console.log('  No region X hints found');
     return null;
   };
 
@@ -872,14 +782,12 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
   }, [gameState])
 
   const loadPuzzleForDate = useCallback(async (date: string) => {
-    console.log('🎯 [useGameLogic] Loading puzzle for date:', date);
     try {
       const response = await fetch(`/api/puzzle-data?date=${date}`)
       if (!response.ok) {
         throw new Error(`Failed to fetch puzzle: ${response.status} ${response.statusText}`);
       }
       const newPuzzleData = await response.json()
-      console.log('✅ [useGameLogic] Successfully fetched puzzle data for:', date);
       
       // Clear all hints and info messages when loading new puzzle
       clearHintHighlights();
@@ -887,7 +795,6 @@ export function useGameLogic(initialPuzzleData: PuzzleData) {
       
       setPuzzleData(newPuzzleData)
     } catch (error) {
-      console.error('❌ [useGameLogic] Error loading puzzle for date:', date, error);
       throw error; // Re-throw so calling code can handle it
     }
   }, [clearHintHighlights])

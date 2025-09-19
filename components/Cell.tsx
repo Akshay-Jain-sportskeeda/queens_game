@@ -27,11 +27,6 @@ const Cell: React.FC<CellProps> = ({
   borderLeft,
   isWinAnimated
 }) => {
-  // Debug log for animation state
-  if (isWinAnimated) {
-    console.log(`Cell (${row}, ${col}) received isWinAnimated: ${isWinAnimated}, delay: ${animationDelay}ms`)
-  }
-
   const handleClick = () => {
     onClick(row, col)
   }

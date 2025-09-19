@@ -39,36 +39,11 @@ export async function saveGameResult(
   score: number
 ): Promise<boolean> {
   if (!db) {
-    console.error('❌ [saveGameResult] Firestore is not initialized')
-    console.error('❌ [saveGameResult] Firestore is not initialized')
     return false
   }
 
-  console.log('🎯 [saveGameResult] Starting save operation:', {
-    userId: user.uid,
-    displayName: user.displayName || user.email?.split('@')[0] || 'Anonymous',
-    puzzleDate,
-    moves,
-    hintsUsed,
-    totalTime,
-    score
-  })
-  console.log('🎯 [saveGameResult] Starting save operation:', {
-    userId: user.uid,
-    displayName: user.displayName || user.email?.split('@')[0] || 'Anonymous',
-    puzzleDate,
-    moves,
-    hintsUsed,
-    totalTime,
-    score
-  })
-
   try {
     const result = await runTransaction(db, async (transaction) => {
-      console.log('🔄 [saveGameResult] Starting transaction...')
-      
-      console.log('🔄 [saveGameResult] Starting transaction...')
-      
       // Check if a record already exists for this user and puzzle date
       const existingQuery = query(
         collection(db!, COLLECTION_NAME),
@@ -76,22 +51,12 @@ export async function saveGameResult(
         where('puzzleDate', '==', puzzleDate)
       )
       
-      console.log('🔍 [saveGameResult] Checking for existing records...')
-      console.log('🔍 [saveGameResult] Checking for existing records...')
       const existingDocs = await getDocs(existingQuery)
       
       if (!existingDocs.empty) {
-        console.log('⚠️ [saveGameResult] Game result already exists for this user and date, not overwriting')
-        console.log('📄 [saveGameResult] Existing document ID:', existingDocs.docs[0].id)
-        console.log('⚠️ [saveGameResult] Game result already exists for this user and date, not overwriting')
-        console.log('📄 [saveGameResult] Existing document ID:', existingDocs.docs[0].id)
         return false
       }
 
-      console.log('✅ [saveGameResult] No existing record found, creating new document...')
-      
-      console.log('✅ [saveGameResult] No existing record found, creating new document...')
-      
       // Create new document
       const gameResult: Omit<GameResult, 'id'> = {
         userId: user.uid,
@@ -104,44 +69,12 @@ export async function saveGameResult(
         completedAt: new Date()
       }
 
-      console.log('📝 [saveGameResult] Document data to save:', gameResult)
-      
-      console.log('📝 [saveGameResult] Document data to save:', gameResult)
-      
       await addDoc(collection(db!, COLLECTION_NAME), gameResult)
-      console.log('💾 [saveGameResult] Document successfully added to Firestore')
-      console.log('💾 [saveGameResult] Document successfully added to Firestore')
       return true
     })
 
-    if (result) {
-      console.log('🎉 [saveGameResult] Game result saved successfully')
-    } else {
-      console.log('ℹ️ [saveGameResult] Game result not saved (already exists)')
-    }
-    if (result) {
-      console.log('🎉 [saveGameResult] Game result saved successfully')
-    } else {
-      console.log('ℹ️ [saveGameResult] Game result not saved (already exists)')
-    }
     return result
   } catch (error) {
-    console.error('❌ [saveGameResult] Error saving game result:', error)
-    if (error instanceof Error) {
-      console.error('❌ [saveGameResult] Error details:', {
-        message: error.message,
-        code: (error as any).code,
-        stack: error.stack
-      })
-    }
-    console.error('❌ [saveGameResult] Error saving game result:', error)
-    if (error instanceof Error) {
-      console.error('❌ [saveGameResult] Error details:', {
-        message: error.message,
-        code: (error as any).code,
-        stack: error.stack
-      })
-    }
     return false
   }
 }
@@ -149,11 +82,8 @@ export async function saveGameResult(
 // Fetch leaderboard for a specific date
 export async function fetchLeaderboard(puzzleDate: string): Promise<GameResult[]> {
   if (!db) {
-    console.error('❌ [fetchLeaderboard] Firestore is not initialized')
     return []
   }
-
-  console.log('📊 [fetchLeaderboard] Fetching leaderboard for date:', puzzleDate)
 
   try {
     // Simplified query to avoid composite index requirement
@@ -163,15 +93,12 @@ export async function fetchLeaderboard(puzzleDate: string): Promise<GameResult[]
       where('puzzleDate', '==', puzzleDate)
     )
 
-    console.log('🔍 [fetchLeaderboard] Executing query...')
     const querySnapshot = await getDocs(leaderboardQuery)
-    console.log('📄 [fetchLeaderboard] Query returned', querySnapshot.size, 'documents')
     
     const results: GameResult[] = []
 
     querySnapshot.forEach((doc) => {
       const data = doc.data()
-      console.log('📋 [fetchLeaderboard] Processing document:', doc.id, data)
       results.push({
         id: doc.id,
         userId: data.userId,
@@ -202,17 +129,8 @@ export async function fetchLeaderboard(puzzleDate: string): Promise<GameResult[]
     // Limit to top 20 results
     const topResults = results.slice(0, 20)
 
-    console.log('🏆 [fetchLeaderboard] Final results:', topResults)
     return topResults
   } catch (error) {
-    console.error('❌ [fetchLeaderboard] Error fetching leaderboard:', error)
-    if (error instanceof Error) {
-      console.error('❌ [fetchLeaderboard] Error details:', {
-        message: error.message,
-        code: (error as any).code,
-        stack: error.stack
-      })
-    }
     return []
   }
 }
@@ -220,7 +138,6 @@ export async function fetchLeaderboard(puzzleDate: string): Promise<GameResult[]
 // Get user's rank for a specific puzzle date
 export async function getUserRank(userId: string, puzzleDate: string): Promise<{ rank: number; userEntry: GameResult } | null> {
   if (!db) {
-    console.error('Firestore is not initialized')
     return null
   }
 
@@ -282,7 +199,6 @@ export async function getUserRank(userId: string, puzzleDate: string): Promise<{
 
     return null
   } catch (error) {
-    console.error('Error getting user rank:', error)
     return null
   }
 }
@@ -290,7 +206,6 @@ export async function getUserRank(userId: string, puzzleDate: string): Promise<{
 // Fetch user's game history
 export async function fetchUserGameHistory(userId: string): Promise<GameResult[]> {
   if (!db) {
-    console.error('Firestore is not initialized')
     return []
   }
 
@@ -325,7 +240,6 @@ export async function fetchUserGameHistory(userId: string): Promise<GameResult[]
 
     return results
   } catch (error) {
-    console.error('Error fetching user game history:', error)
     return []
   }
 }
