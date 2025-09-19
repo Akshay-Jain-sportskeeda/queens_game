@@ -128,49 +128,21 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
   // Handle authentication success - save completed game if user was guest
   const handleAuthSuccess = useCallback(() => {
-    console.log('🔐 [Auth] User successfully logged in, checking for completed game...')
-    console.log('🎮 [Auth] Current gameState.gameCompleted:', gameState.gameCompleted)
-    console.log('📊 [Auth] Current winStats:', winStats)
-    console.log('🗓️ [Auth] Current puzzle date:', currentPuzzleData.date)
-    
     // Check if game is completed and we have win stats
     if (gameState.gameCompleted && winStats.moves > 0) {
-      console.log('🎮 [Auth] Found completed game as guest, saving to database...')
       setPendingGameSave(true)
-    } else {
-      console.log('🚫 [Auth] No completed game found or game not completed:', {
-        gameCompleted: gameState.gameCompleted,
-        winStatsMoves: winStats.moves,
-        hasWinStats: winStats.moves > 0
-      })
     }
   }, [gameState.gameCompleted, winStats, currentPuzzleData.date])
 
   // Save game result when user becomes available after login
   useEffect(() => {
     if (user && pendingGameSave && gameState.gameCompleted && winStats.moves > 0) {
-      console.log('💾 [Auth] User object now available, saving guest game result...')
-      console.log('👤 [Auth] User details:', {
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email
-      })
-      console.log('📊 [Auth] Win stats to save:', winStats)
-      
       // Calculate total time in milliseconds (same logic as in win condition)
       const endTime = Date.now()
       const baseTime = Math.floor((endTime - gameState.startTime) / 1000)
       const hintPenalty = gameState.hintCount * 15
       const totalTime = baseTime + hintPenalty
       const score = -(totalTime * 1000)
-      
-      console.log('📊 [Auth] Calculated values for save:', {
-        moves: gameState.moveCount,
-        hints: gameState.hintCount,
-        totalTime: totalTime * 1000,
-        score,
-        puzzleDate: currentPuzzleData.date
-      })
       
       saveGameResult(
         user,
@@ -180,17 +152,12 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         totalTime * 1000,
         score
       ).then((saved) => {
-        if (saved) {
-          console.log('✅ [Auth] Guest game result saved successfully after login')
-        } else {
-          console.log('ℹ️ [Auth] Guest game result not saved (already exists or error)')
-        }
+        // Handle save result silently
       }).catch((error) => {
-        console.error('❌ [Auth] Error saving guest game result after login:', error)
+        // Handle error silently
       }).finally(() => {
         // Reset the flag regardless of success or failure
         setPendingGameSave(false)
-        console.log('🔄 [Auth] Reset pending game save flag')
       })
     }
   }, [user, pendingGameSave, gameState.gameCompleted, gameState.startTime, gameState.moveCount, gameState.hintCount, winStats, currentPuzzleData.date])
@@ -204,10 +171,6 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     }
     
     if (gameState.gameCompleted && !showWinScreen && !hasShownWinScreen && gameState.moveCount > 0) {
-      console.log('🎮 [Game] Win condition detected, calculating stats...')
-      
-      console.log('🎮 [Game] Win condition detected, calculating stats...')
-      
       // Wait for all animations to complete before showing win screen
       winTimeoutRef.current = setTimeout(() => {
         const endTime = Date.now()
@@ -225,26 +188,6 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           ? `${baseMinutes}m ${baseSeconds}s + ${gameState.hintCount}×15s`
           : `${baseMinutes}m ${baseSeconds}s`
         
-        console.log('📊 [Game] Calculated win stats:', {
-          moves: gameState.moveCount,
-          hints: gameState.hintCount,
-          totalTime,
-          score,
-          displayTime,
-          calculation,
-          puzzleDate: currentPuzzleData.date
-        })
-        
-        console.log('📊 [Game] Calculated win stats:', {
-          moves: gameState.moveCount,
-          hints: gameState.hintCount,
-          totalTime,
-          score,
-          displayTime,
-          calculation,
-          puzzleDate: currentPuzzleData.date
-        })
-        
         setWinStats({
           moves: gameState.moveCount,
           hints: gameState.hintCount,
@@ -256,20 +199,6 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         
         // Save game result to Firestore if user is logged in
         if (user) {
-          console.log('👤 [Game] User is logged in, attempting to save to Firestore...')
-          console.log('👤 [Game] User details:', {
-            uid: user.uid,
-            displayName: user.displayName,
-            email: user.email
-          })
-          
-          console.log('👤 [Game] User is logged in, attempting to save to Firestore...')
-          console.log('👤 [Game] User details:', {
-            uid: user.uid,
-            displayName: user.displayName,
-            email: user.email
-          })
-          
           saveGameResult(
             user,
             currentPuzzleData.date,
@@ -278,20 +207,10 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
             totalTime * 1000, // Convert to milliseconds for consistency
             score
           ).then((saved) => {
-            if (saved) {
-              console.log('✅ [Game] Game result saved to Firestore successfully')
-              console.log('✅ [Game] Game result saved to Firestore successfully')
-            } else {
-              console.log('ℹ️ [Game] Game result not saved (already exists or error)')
-              console.log('ℹ️ [Game] Game result not saved (already exists or error)')
-            }
+            // Handle save result silently
           }).catch((error) => {
-            console.error('❌ [Game] Error saving game result:', error)
-            console.error('❌ [Game] Error saving game result:', error)
+            // Handle error silently
           })
-        } else {
-          console.log('🚫 [Game] User not logged in, skipping Firestore save')
-          console.log('🚫 [Game] User not logged in, skipping Firestore save')
         }
         
         setShowWinScreen(true)
@@ -331,8 +250,6 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   }, [showArchive, showWinScreen, resetWinAnimation])
 
   const handleArchiveDateSelect = useCallback(async (date: string) => {
-    console.log('🎯 [Game] Archive date selected:', date);
-    
     // Set loading state
     setIsLoadingPuzzle(true);
     
@@ -347,14 +264,13 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
     
     try {
       await loadPuzzleForDate(date);
-      console.log('✅ [Game] Successfully loaded puzzle for date:', date);
       // Switch to game tab and close archive
       setActiveTab('game');
       setShowArchive(false);
       // Scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
-      console.error('❌ [Game] Error loading puzzle for date:', date, error);
+      // Handle error silently
     } finally {
       setIsLoadingPuzzle(false);
     }
@@ -381,10 +297,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   }, [reset])
 
   const handleAuthToggle = () => {
-    console.log('Sign in button clicked!')
-    console.log('Current showAuth state:', showAuth)
     setShowAuth(true)
-    console.log('setShowAuth(true) called')
   }
 
   // Handle navigation to leaderboard from win screen
@@ -406,13 +319,11 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
   
   // Fetch leaderboard data
   const handleFetchLeaderboard = useCallback(async (date: string) => {
-    console.log('🏆 [Leaderboard] Fetching leaderboard for date:', date)
     setLeaderboardLoading(true)
     setLeaderboardError(null)
     
     try {
       const leaderboardData = await fetchLeaderboard(date)
-      console.log('📊 [Leaderboard] Raw leaderboard data:', leaderboardData)
       
       // Convert to the format expected by LeaderboardTab
       const formattedData = leaderboardData.map(entry => ({
@@ -426,10 +337,8 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         puzzleDate: entry.puzzleDate
       }))
       
-      console.log('🎯 [Leaderboard] Formatted data for display:', formattedData)
       setCurrentLeaderboard(formattedData)
     } catch (error) {
-      console.error('❌ [Leaderboard] Error fetching leaderboard:', error)
       setLeaderboardError('Failed to load leaderboard')
     } finally {
       setLeaderboardLoading(false)
@@ -457,7 +366,6 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
       }
       return null
     } catch (error) {
-      console.error('Error getting user rank:', error)
       return null
     }
   }, [])
@@ -880,7 +788,6 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
           onClose={handleRulesToggle}
         />
         
-        {showAuth && <Auth onClose={() => setShowAuth(false)} />}
         {showAuth && <Auth onClose={() => setShowAuth(false)} onAuthSuccess={handleAuthSuccess} />}
       </div>
 
@@ -891,13 +798,9 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    console.log('🚀 [SSR] Starting getServerSideProps - fetching from Google Sheet only...')
-    
     const baseUrl = context.req.headers.host
     const protocol = context.req.headers['x-forwarded-proto'] || 'http'
     const apiUrl = `${protocol}://${baseUrl}/api/puzzle-data`
-    
-    console.log('🌐 [SSR] Calling internal API:', apiUrl)
     
     const response = await fetch(apiUrl, {
       method: 'GET',
@@ -907,17 +810,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     })
     
     if (!response.ok) {
-      console.error('❌ [SSR] API call failed with status:', response.status)
       let errorData
       try {
         errorData = await response.json()
       } catch (parseError) {
         errorData = { error: 'Failed to parse error response', details: await response.text() }
       }
-      console.error('❌ [SSR] Error details:', errorData)
       
       // Don't throw error, return null puzzle data to show error page
-      console.log('🚫 [SSR] Returning null puzzle data due to API error')
       return {
         props: {
           puzzleData: null,
@@ -927,34 +827,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
     
     const puzzles = await response.json()
-    console.log('📊 [SSR] Successfully received puzzles for dates:', Object.keys(puzzles))
-    console.log('📊 [SSR] Total puzzles received:', Object.keys(puzzles).length)
     
     // Get today's puzzle
     const today = new Date().toISOString().split('T')[0]
-    console.log('🗓️ [SSR] Today\'s date:', today)
     
     // Check if today's puzzle exists
     const todaysPuzzle = puzzles[today]
-    if (todaysPuzzle) {
-      console.log('✅ [SSR] Found today\'s puzzle for', today)
-    } else {
-      console.log('❌ [SSR] No puzzle found for today\'s date:', today)
-    }
     
     // Use today's puzzle if available, otherwise use the first available puzzle, otherwise null
     const puzzleData = todaysPuzzle || puzzles[Object.keys(puzzles)[0]] || null
     
     const availableDates = Object.keys(puzzles).sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-    
-    if (puzzleData) {
-      console.log('🎯 [SSR] Selected puzzle date for display:', puzzleData.date)
-      if (puzzleData.date !== today) {
-        console.log('⚠️ [SSR] Using different date puzzle because today\'s not available')
-      }
-    } else {
-      console.log('❌ [SSR] No puzzle data available - will show error page')
-    }
     
     return {
       props: {
@@ -963,11 +846,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   } catch (error) {
-    console.error('❌ [SSR] Error in getServerSideProps:', error)
-    
     // Return null to show error page instead of crashing
-    console.log('🚫 [SSR] No fallback available - returning null puzzle data')
-    
     return {
       props: {
         puzzleData: null,
