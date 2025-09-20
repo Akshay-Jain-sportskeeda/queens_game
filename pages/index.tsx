@@ -18,6 +18,7 @@ import { LeaderboardTab } from '../components/LeaderboardTab'
 import DashboardTab from '../components/DashboardTab'
 import { saveGameResult, fetchLeaderboard, getUserRank } from '../utils/firestore'
 import { useGameLogic } from '../hooks/useGameLogic'
+import { RaptiveOutstreamAd, RaptiveSidebarAd, RaptiveFooterAd, useRaptiveRefresh } from '../components/RaptiveAds'
 
 interface HomeProps {
   puzzleData: PuzzleData | null
@@ -26,6 +27,9 @@ interface HomeProps {
 
 export default function Home({ puzzleData, availableDates }: HomeProps) {
   const { user, logout } = useAuth()
+  
+  // Initialize Raptive ad refresh
+  useRaptiveRefresh()
   
   // Timer ref for win condition timeout
   const winTimeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -758,38 +762,54 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
         </div>
       )}
 
-      <div>
-      {renderTabContent()}
+      <div className="main-game-wrapper">
+        <div className="main-game-content">
+          {renderTabContent()}
+          
+          {/* Outstream Ad - Bottom Left */}
+          <div className="outstream-ad-container">
+            <RaptiveOutstreamAd />
+          </div>
+        </div>
         
-        {showWinScreen && (
-          <WinScreen
-            stats={winStats}
-            onShare={shareResults}
-            onArchive={handleArchiveToggle}
-            onClose={handleWinScreenClose}
-            show={showWinScreen}
-            user={user}
-            onLoginClick={handleAuthToggle}
-          />
-        )}
-        
-        {showArchive && (
-          <ArchiveScreen
-            show={showArchive}
-            availablePuzzles={availableDates.map(date => ({ date, difficulty: 'medium' }))}
-            onSelectDate={handleArchiveDateSelect}
-            onClose={handleArchiveToggle}
-            userId={user?.uid}
-          />
-        )}
-        
-        <RulesPopup
-          show={showRules}
-          onClose={handleRulesToggle}
-        />
-        
-        {showAuth && <Auth onClose={() => setShowAuth(false)} onAuthSuccess={handleAuthSuccess} />}
+        {/* Sidebar Ad - Right Side */}
+        <div className="sidebar-ad-container">
+          <RaptiveSidebarAd />
+        </div>
       </div>
+        
+      {/* Modal Components */}
+      {showWinScreen && (
+        <WinScreen
+          stats={winStats}
+          onShare={shareResults}
+          onArchive={handleArchiveToggle}
+          onClose={handleWinScreenClose}
+          show={showWinScreen}
+          user={user}
+          onLoginClick={handleAuthToggle}
+        />
+      )}
+      
+      {showArchive && (
+        <ArchiveScreen
+          show={showArchive}
+          availablePuzzles={availableDates.map(date => ({ date, difficulty: 'medium' }))}
+          onSelectDate={handleArchiveDateSelect}
+          onClose={handleArchiveToggle}
+          userId={user?.uid}
+        />
+      )}
+      
+      <RulesPopup
+        show={showRules}
+        onClose={handleRulesToggle}
+      />
+      
+      {showAuth && <Auth onClose={() => setShowAuth(false)} onAuthSuccess={handleAuthSuccess} />}
+
+      {/* Footer Sticky Ad */}
+      <RaptiveFooterAd />
 
       <PFSNFooter currentPage="NFL" />
     </>
