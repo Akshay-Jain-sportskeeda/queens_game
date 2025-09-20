@@ -18,7 +18,13 @@ import { LeaderboardTab } from '../components/LeaderboardTab'
 import DashboardTab from '../components/DashboardTab'
 import { saveGameResult, fetchLeaderboard, getUserRank } from '../utils/firestore'
 import { useGameLogic } from '../hooks/useGameLogic'
-import { RaptiveOutstreamAd, RaptiveSidebarAd, RaptiveFooterAd, useRaptiveRefresh } from '../components/RaptiveAds'
+import dynamic from 'next/dynamic'
+
+// Dynamically import ad components to prevent hydration errors
+const RaptiveOutstreamAd = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.RaptiveOutstreamAd })), { ssr: false })
+const RaptiveSidebarAd = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.RaptiveSidebarAd })), { ssr: false })
+const RaptiveFooterAd = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.RaptiveFooterAd })), { ssr: false })
+const useRaptiveRefresh = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.useRaptiveRefresh })), { ssr: false })
 
 interface HomeProps {
   puzzleData: PuzzleData | null
@@ -28,8 +34,12 @@ interface HomeProps {
 export default function Home({ puzzleData, availableDates }: HomeProps) {
   const { user, logout } = useAuth()
   
-  // Initialize Raptive ad refresh
-  useRaptiveRefresh()
+  // Initialize Raptive ad refresh (client-side only)
+  const [isClient, setIsClient] = useState(false)
+  
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
   
   // Timer ref for win condition timeout
   const winTimeoutRef = useRef<NodeJS.Timeout | null>(null)
