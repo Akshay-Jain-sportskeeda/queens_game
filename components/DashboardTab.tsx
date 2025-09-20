@@ -94,7 +94,7 @@ const DashboardTab: React.FC<DashboardTabProps> = ({
   if (!isLoggedIn) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-xs mx-auto">
+        <div className="max-w-lg mx-auto">
           {/* Header */}
           <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
             <div className="text-center">
