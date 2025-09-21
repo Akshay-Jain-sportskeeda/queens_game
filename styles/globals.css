@@ -25,7 +25,7 @@ body {
 
 /* Container and layout styles */
 .container {
-  max-width: 1200px;
+  max-width: 576px;
   margin: 0 auto;
 }
 
@@ -820,7 +820,7 @@ body.raptive-pfn-outstream {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 576px;
   margin: 0 auto;
 }
 
