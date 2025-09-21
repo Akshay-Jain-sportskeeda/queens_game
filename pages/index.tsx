@@ -21,10 +21,28 @@ import { useGameLogic } from '../hooks/useGameLogic'
 import dynamic from 'next/dynamic'
 
 // Dynamically import ad components to prevent hydration errors
-const RaptiveOutstreamAd = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.RaptiveOutstreamAd })), { ssr: false })
-const RaptiveSidebarAd = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.RaptiveSidebarAd })), { ssr: false })
-const RaptiveFooterAd = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.RaptiveFooterAd })), { ssr: false })
-const useRaptiveRefresh = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.useRaptiveRefresh })), { ssr: false })
+//const RaptiveOutstreamAd = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.RaptiveOutstreamAd })), { ssr: false })
+//const RaptiveSidebarAd = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.RaptiveSidebarAd })), { ssr: false })
+//const RaptiveFooterAd = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.RaptiveFooterAd })), { ssr: false })
+//const useRaptiveRefresh = dynamic(() => import('../components/RaptiveAds').then(mod => ({ default: mod.useRaptiveRefresh })), { ssr: false })
+
+import { useRaptiveRefresh } from "../components/RaptiveAds";
+
+// Dynamically import ad components to prevent hydration errors
+const RaptiveOutstreamAd = dynamic(
+  () => import("../components/RaptiveAds").then(mod => mod.RaptiveOutstreamAd),
+  { ssr: false }
+);
+
+const RaptiveSidebarAd = dynamic(
+  () => import("../components/RaptiveAds").then(mod => mod.RaptiveSidebarAd),
+  { ssr: false }
+);
+
+const RaptiveFooterAd = dynamic(
+  () => import("../components/RaptiveAds").then(mod => mod.RaptiveFooterAd),
+  { ssr: false }
+);
 
 interface HomeProps {
   puzzleData: PuzzleData | null

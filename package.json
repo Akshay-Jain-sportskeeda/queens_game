@@ -1,7 +1,7 @@
 {
-  "name": "nfl-field-puzzle-nextjs",
+  "name": "nfl-octobox-nextjs",
   "version": "1.0.0",
-  "description": "NFL Field Puzzle Game with Next.js for better SEO and SSR",
+  "description": "NFL Octobox Game with Next.js for better SEO and SSR",
   "private": true,
   "scripts": {
     "dev": "next dev",
