@@ -27,7 +27,7 @@ export interface GameResult {
   completedAt: Date
 }
 
-export const COLLECTION_NAME = 'nfl-field-puzzle'
+export const COLLECTION_NAME = 'nfl-octobox'
 
 // Save game result to Firestore (with no overwrite protection)
 export async function saveGameResult(
