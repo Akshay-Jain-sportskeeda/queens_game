@@ -64,39 +64,42 @@ export function useLeaderboard() {
       const sortedByDate = gameResults
         .sort((a, b) => new Date(b.puzzleDate).getTime() - new Date(a.puzzleDate).getTime());
       
+      // Calculate current streak (consecutive days from today backwards)
       let currentStreak = 0;
-      const today = new Date().toISOString().split('T')[0];
-      let checkDate = new Date(today);
+      // Get today's date in YYYY-MM-DD format
+      const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD format
       
-      // Check if user played today or yesterday to start streak
-      const hasPlayedToday = sortedByDate.some(game => game.puzzleDate === today);
-      const yesterday = new Date(checkDate);
-      yesterday.setDate(yesterday.getDate() - 1);
-      const hasPlayedYesterday = sortedByDate.some(game => 
-        game.puzzleDate === yesterday.toISOString().split('T')[0]
-      );
-      
-      if (hasPlayedToday) {
-        currentStreak = 1;
-        checkDate.setDate(checkDate.getDate() - 1);
-      } else if (hasPlayedYesterday) {
-        currentStreak = 1;
-        checkDate = yesterday;
-        checkDate.setDate(checkDate.getDate() - 1);
-      }
-      
-      // Count consecutive days backwards
-      if (currentStreak > 0) {
-        while (true) {
-          const dateStr = checkDate.toISOString().split('T')[0];
-          const hasPlayedThisDate = sortedByDate.some(game => game.puzzleDate === dateStr);
-          
-          if (hasPlayedThisDate) {
-            currentStreak++;
-            checkDate.setDate(checkDate.getDate() - 1);
+      // Start from today and go backwards
+      let checkDateStr = todayStr;
+      while (true) {
+        // Find entry where puzzle date matches check date AND completion date matches puzzle date
+        const validEntryForThisDate = gameResults.find(entry => {
+          const completionDateStr = entry.completedAt.toLocaleDateString('en-CA');
+          const puzzleDateMatches = entry.puzzleDate === checkDateStr;
+          const completionDateMatches = completionDateStr === checkDateStr;
+          return puzzleDateMatches && completionDateMatches;
+        });
+        
+        if (validEntryForThisDate) {
+          currentStreak++;
+        } else {
+          // If this is today and no valid entry exists, that's normal (they might not have played yet)
+          if (checkDateStr === todayStr) {
+            // Don't increment streak for today if no valid entry exists yet, but don't break it either
           } else {
             break;
           }
+        }
+        
+        // Move to previous day
+        const currentDate = new Date(checkDateStr);
+        currentDate.setDate(currentDate.getDate() - 1);
+        checkDateStr = currentDate.toLocaleDateString('en-CA');
+        
+        // Safety check: don't go back more than 365 days
+        const daysDiff = Math.floor((Date.now() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (daysDiff > 365) {
+          break;
         }
       }
 
