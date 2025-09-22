@@ -2,9 +2,11 @@ import { Html, Head, Main, NextScript } from 'next/document'
 
 export default function Document() {
   return (
-    <Html lang="en">
+    <Html lang="en-us">
       <Head>
         <meta charSet="UTF-8" />
+        <meta name="robots" content="INDEX, FOLLOW, MAX-IMAGE-PREVIEW:LARGE" />
+        <link rel="canonical" href="https://www.profootballnetwork.com/games/nfl-octobox/" />
         <meta name="description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
         <meta name="keywords" content="NFL Octobox, football puzzle, daily logic game, NFL games, football brain games, puzzle for football fans, sports puzzles" />
         <meta name="author" content="Pro Football Network" />
@@ -71,21 +73,116 @@ export default function Document() {
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Game",
-              "name": "NFL Octobox",
-              "description": "Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle.",
-              "genre": "Puzzle",
-              "gamePlatform": "Web Browser",
-              "operatingSystem": "Any",
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "USD"
-              },
-              "author": {
-                "@type": "Organization",
-                "name": "Pro Football Network"
-              }
+              "@graph": [
+                {
+                  "@type": "WebPage",
+                  "@id": "https://www.profootballnetwork.com/games/nfl-octobox/",
+                  "url": "https://www.profootballnetwork.com/games/nfl-octobox/",
+                  "name": "NFL Octobox: Daily Logic Game | PFSN",
+                  "description": "Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site.",
+                  "isPartOf": {
+                    "@id": "https://www.profootballnetwork.com/#website"
+                  },
+                  "about": {
+                    "@id": "https://www.profootballnetwork.com/games/nfl-octobox/#game"
+                  },
+                  "datePublished": "2025-01-01T00:00:00+00:00",
+                  "dateModified": "2025-01-01T00:00:00+00:00",
+                  "breadcrumb": {
+                    "@id": "https://www.profootballnetwork.com/games/nfl-octobox/#breadcrumb"
+                  }
+                },
+                {
+                  "@type": "Game",
+                  "@id": "https://www.profootballnetwork.com/games/nfl-octobox/#game",
+                  "name": "NFL Octobox",
+                  "description": "Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle.",
+                  "genre": "Puzzle",
+                  "gamePlatform": "Web Browser",
+                  "operatingSystem": "Any",
+                  "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                  },
+                  "author": {
+                    "@id": "https://www.profootballnetwork.com/#organization"
+                  },
+                  "publisher": {
+                    "@id": "https://www.profootballnetwork.com/#organization"
+                  }
+                },
+                {
+                  "@type": "NewsMediaOrganization",
+                  "@id": "https://www.profootballnetwork.com/#organization",
+                  "name": "Pro Football Network",
+                  "alternateName": "PFSN",
+                  "url": "https://www.profootballnetwork.com/",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://statico.profootballnetwork.com/wp-content/uploads/2025/06/12093424/tools-navigation-06-12-25.jpg",
+                    "width": 300,
+                    "height": 124
+                  },
+                  "sameAs": [
+                    "https://facebook.com/PFSN365",
+                    "https://x.com/PFSN365"
+                  ],
+                  "contactPoint": {
+                    "@type": "ContactPoint",
+                    "contactType": "customer service",
+                    "email": "contact@profootballnetwork.com"
+                  }
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://www.profootballnetwork.com/#website",
+                  "url": "https://www.profootballnetwork.com/",
+                  "name": "Pro Football Network",
+                  "description": "Your source for NFL news, analysis, fantasy football tools, and interactive games",
+                  "publisher": {
+                    "@id": "https://www.profootballnetwork.com/#organization"
+                  },
+                  "potentialAction": [
+                    {
+                      "@type": "SearchAction",
+                      "target": {
+                        "@type": "EntryPoint",
+                        "urlTemplate": "https://www.profootballnetwork.com/?s={search_term_string}"
+                      },
+                      "query-input": "required name=search_term_string"
+                    }
+                  ]
+                },
+                {
+                  "@type": "SiteNavigationElement",
+                  "@id": "https://www.profootballnetwork.com/games/nfl-octobox/#breadcrumb",
+                  "name": "NFL Games",
+                  "url": "https://www.profootballnetwork.com/nfl/",
+                  "hasPart": [
+                    {
+                      "@type": "SiteNavigationElement",
+                      "name": "NFL Octobox",
+                      "url": "https://www.profootballnetwork.com/games/nfl-octobox/"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "name": "NFL Player Guessing Game",
+                      "url": "https://www.profootballnetwork.com/nfl-player-guessing-game/"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "name": "NFL Draft Guessing Game",
+                      "url": "https://www.profootballnetwork.com/cta-guess-nfl-prospects-tools/"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "name": "NFL Word Fumble",
+                      "url": "https://www.profootballnetwork.com/nfl-word-fumble-cta/"
+                    }
+                  ]
+                }
+              ]
             })
           }}
         />
