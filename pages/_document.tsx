@@ -7,22 +7,22 @@ export default function Document() {
         <meta charSet="UTF-8" />
         <meta name="robots" content="INDEX, FOLLOW, MAX-IMAGE-PREVIEW:LARGE" />
         <link rel="canonical" href="https://www.profootballnetwork.com/games/nfl-octobox/" />
-        <meta name="description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
+        <meta name="description" content="Challenge yourself with the daily NFL Octobox from PFSN. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
         <meta name="keywords" content="NFL Octobox, football puzzle, daily logic game, NFL games, football brain games, puzzle for football fans, sports puzzles" />
-        <meta name="author" content="Pro Football Network" />
+        <meta name="author" content="PFSN" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://nfl-octobox.vercel.app/" />
         <meta property="og:title" content="NFL Octobox: Daily Logic Game | PFSN" />
-        <meta property="og:description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
+        <meta property="og:description" content="Challenge yourself with the daily NFL Octobox from PFSN. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
         <meta property="og:image" content="https://statico.profootballnetwork.com/wp-content/uploads/2025/09/19060049/NFL-OCTOBOX.png" />
 
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://nfl-octobox.vercel.app/" />
         <meta property="twitter:title" content="NFL Octobox: Daily Logic Game | PFSN" />
-        <meta property="twitter:description" content="Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
+        <meta property="twitter:description" content="Challenge yourself with the daily NFL Octobox from PFSN. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site." />
         <meta property="twitter:image" content="https://statico.profootballnetwork.com/wp-content/uploads/2025/09/19060049/NFL-OCTOBOX.png" />
 
         {/* Font Awesome for social icons */}
@@ -79,15 +79,15 @@ export default function Document() {
                   "@id": "https://www.profootballnetwork.com/games/nfl-octobox/",
                   "url": "https://www.profootballnetwork.com/games/nfl-octobox/",
                   "name": "NFL Octobox: Daily Logic Game | PFSN",
-                  "description": "Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site.",
+                  "description": "Challenge yourself with the daily NFL Octobox from PFSN. A fun logic game for football fans, featuring a grid-based puzzle. Find more NFL games and tools on our site.",
                   "isPartOf": {
                     "@id": "https://www.profootballnetwork.com/#website"
                   },
                   "about": {
                     "@id": "https://www.profootballnetwork.com/games/nfl-octobox/#game"
                   },
-                  "datePublished": "2025-01-01T00:00:00+00:00",
-                  "dateModified": "2025-01-01T00:00:00+00:00",
+                  "datePublished": "2025-09-13T00:00:00+00:00",
+                  "dateModified": "2025-09-13T00:00:00+00:00",
                   "breadcrumb": {
                     "@id": "https://www.profootballnetwork.com/games/nfl-octobox/#breadcrumb"
                   }
@@ -96,7 +96,7 @@ export default function Document() {
                   "@type": "Game",
                   "@id": "https://www.profootballnetwork.com/games/nfl-octobox/#game",
                   "name": "NFL Octobox",
-                  "description": "Challenge yourself with the daily NFL Octobox from Pro Football Network. A fun logic game for football fans, featuring a grid-based puzzle.",
+                  "description": "Challenge yourself with the daily NFL Octobox from PFSN. A fun logic game for football fans, featuring a grid-based puzzle.",
                   "genre": "Puzzle",
                   "gamePlatform": "Web Browser",
                   "operatingSystem": "Any",
@@ -115,7 +115,7 @@ export default function Document() {
                 {
                   "@type": "NewsMediaOrganization",
                   "@id": "https://www.profootballnetwork.com/#organization",
-                  "name": "Pro Football Network",
+                  "name": "Pro Football Sports Network",
                   "alternateName": "PFSN",
                   "url": "https://www.profootballnetwork.com/",
                   "logo": {
@@ -138,7 +138,7 @@ export default function Document() {
                   "@type": "WebSite",
                   "@id": "https://www.profootballnetwork.com/#website",
                   "url": "https://www.profootballnetwork.com/",
-                  "name": "Pro Football Network",
+                  "name": "PFSN",
                   "description": "Your source for NFL news, analysis, fantasy football tools, and interactive games",
                   "publisher": {
                     "@id": "https://www.profootballnetwork.com/#organization"
