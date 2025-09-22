@@ -2,8 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  basePath: '/games/nfl-octobox',
-  assetPrefix: '/games/nfl-octobox/',
+  //basePath: '/games/nfl-octobox',
+  //assetPrefix: '/games/nfl-octobox/',
   images: {
     domains: ['docs.google.com'],
   },
