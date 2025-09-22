@@ -77,7 +77,6 @@ const TopBar: React.FC<TopBarProps> = ({
               </div>
             </div>
 
-            {/* User Profile - only show for logged in users */}
             {/* User Profile - show for both logged in and guest users */}
             <div className={styles.userSection}>
               <div className={styles.userDropdown}>

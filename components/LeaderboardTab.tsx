@@ -28,22 +28,30 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
 }) => {
   const [userRankInfo, setUserRankInfo] = React.useState<{ rank: number; userEntry: LeaderboardEntry } | null>(null);
   const [userRankLoading, setUserRankLoading] = React.useState(false);
+  const [selectedDate, setSelectedDate] = React.useState<string>(currentPuzzleDate || new Date().toISOString().split('T')[0]);
+
+  // Update selected date when currentPuzzleDate changes
+  React.useEffect(() => {
+    if (currentPuzzleDate) {
+      setSelectedDate(currentPuzzleDate);
+    }
+  }, [currentPuzzleDate]);
 
   // Fetch leaderboard when tab is active
   React.useEffect(() => {
-    if (currentPuzzleDate && onFetchLeaderboard) {
-      trackLeaderboardView(currentPuzzleDate, isLoggedIn);
-      onFetchLeaderboard(currentPuzzleDate);
+    if (selectedDate && onFetchLeaderboard) {
+      trackLeaderboardView(selectedDate, isLoggedIn);
+      onFetchLeaderboard(selectedDate);
     }
-  }, [currentPuzzleDate, onFetchLeaderboard, isLoggedIn]);
+  }, [selectedDate, onFetchLeaderboard, isLoggedIn]);
 
   // Fetch user rank when we have user data
   React.useEffect(() => {
     const fetchUserRank = async () => {
-      if (userId && currentPuzzleDate && onGetUserRank) {
+      if (userId && selectedDate && onGetUserRank) {
         setUserRankLoading(true);
         try {
-          const rankInfo = await onGetUserRank(userId, currentPuzzleDate);
+          const rankInfo = await onGetUserRank(userId, selectedDate);
           setUserRankInfo(rankInfo);
           if (rankInfo) {
             trackLeaderboardRankView(rankInfo.rank, currentLeaderboard.length);
@@ -56,7 +64,7 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
     };
     
     fetchUserRank();
-  }, [userId, currentPuzzleDate, onGetUserRank, currentLeaderboard.length]);
+  }, [userId, selectedDate, onGetUserRank, currentLeaderboard.length]);
 
   const formatTime = (milliseconds: number): string => {
     const seconds = Math.floor(milliseconds / 1000);
@@ -142,25 +150,88 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
       </div>
     );
   }
+
+  const handleDateChange = (direction: 'prev' | 'next') => {
+    const currentDate = new Date(selectedDate);
+    if (direction === 'prev') {
+      currentDate.setDate(currentDate.getDate() - 1);
+    } else {
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    const newDate = currentDate.toISOString().split('T')[0];
+    const today = new Date().toISOString().split('T')[0];
+    const earliestDate = '2025-09-13';
+    
+    // Don't allow future dates or dates before September 13th, 2025
+    if (newDate <= today && newDate >= earliestDate) {
+      // Track navigation event
+      trackCTAClick(`leaderboard_nav_${direction}`, 'leaderboard_date_navigation', isLoggedIn);
+      setSelectedDate(newDate);
+    }
+  };
+
+  const canGoPrev = () => {
+    const prevDate = new Date(selectedDate);
+    prevDate.setDate(prevDate.getDate() - 1);
+    const prevDateStr = prevDate.toISOString().split('T')[0];
+    const earliestDate = '2025-09-13'; // First available puzzle date
+    return prevDateStr >= earliestDate;
+  };
+
+  const canGoNext = () => {
+    const nextDate = new Date(selectedDate);
+    nextDate.setDate(nextDate.getDate() + 1);
+    const nextDateStr = nextDate.toISOString().split('T')[0];
+    const today = new Date().toISOString().split('T')[0];
+    return nextDateStr <= today;
+  };
   return (
     <div className="px-2 md:px-4 py-8">
         {/* Header */}
         <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
           <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <Trophy className="w-6 h-6 text-yellow-500" />
-              <h2 className="text-xl md:text-2xl font-bold text-gray-800">
-                {currentPuzzleDate ? 
-                  `${new Date(currentPuzzleDate).toLocaleDateString('en-US', { 
-                    day: 'numeric', 
-                    month: 'short'
-                  })} Leaderboard` :
-                  `${new Date().toLocaleDateString('en-US', { 
-                    day: 'numeric', 
-                    month: 'short'
-                  })} Leaderboard`
-                }
-              </h2>
+            <div className="flex items-center justify-between mb-3">
+              {/* Previous button */}
+              <button
+                onClick={() => handleDateChange('prev')}
+                disabled={!canGoPrev()}
+                className="flex items-center justify-center w-7 h-7 text-gray-500 hover:text-red-600 hover:bg-red-50 disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-transparent rounded-full transition-all duration-200 hover:scale-110 shadow-sm hover:shadow-md"
+                aria-label="Previous day"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15,18 9,12 15,6"/>
+                </svg>
+              </button>
+              
+              {/* Title */}
+              <div className="flex items-center gap-2">
+                <Trophy className="w-6 h-6 text-yellow-500" />
+                <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+                  {selectedDate ? 
+                    `${new Date(selectedDate).toLocaleDateString('en-US', { 
+                      day: 'numeric', 
+                      month: 'short'
+                    })} Leaderboard` :
+                    `${new Date().toLocaleDateString('en-US', { 
+                      day: 'numeric', 
+                      month: 'short'
+                    })} Leaderboard`
+                  }
+                </h2>
+              </div>
+              
+              {/* Next button */}
+              <button
+                onClick={() => handleDateChange('next')}
+                disabled={!canGoNext()}
+                className="flex items-center justify-center w-7 h-7 text-gray-500 hover:text-red-600 hover:bg-red-50 disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-transparent rounded-full transition-all duration-200 hover:scale-110 shadow-sm hover:shadow-md"
+                aria-label="Next day"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9,18 15,12 9,6"/>
+                </svg>
+              </button>
             </div>
             
             <p className="text-gray-600 text-sm">

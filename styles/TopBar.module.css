@@ -89,10 +89,12 @@
   display: flex;
   justify-content: flex-end;
   flex: 0 0 auto;
+  min-width: 0;
 }
 
 .userDropdown {
   position: relative;
+  display: flex;
 }
 
 .userButton {
