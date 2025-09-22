@@ -24,15 +24,7 @@ export function useLeaderboard() {
       const totalGames = gameResults.length;
       const totalMoves = gameResults.reduce((sum, game) => sum + game.moves, 0);
       const totalHints = gameResults.reduce((sum, game) => sum + game.hintsUsed, 0);
-      
-      // Calculate total time spent (base time without hint penalties)
-      const totalTimeSpent = gameResults.reduce((sum, game) => {
-        const baseTime = game.totalTime - (game.hintsUsed * 15 * 1000);
-        return sum + baseTime;
-      }, 0);
-      
-      // Calculate total time with penalties for average calculation
-      const totalTimeWithPenalties = gameResults.reduce((sum, game) => sum + game.totalTime, 0);
+      const totalTimeSpent = gameResults.reduce((sum, game) => sum + game.totalTime, 0);
 
       // Calculate unassisted games (0 hints)
       const unassistedGames = gameResults.filter(game => game.hintsUsed === 0);
@@ -59,7 +51,7 @@ export function useLeaderboard() {
       // Calculate averages
       const averageMoves = totalMoves / totalGames;
       const averageHints = totalHints / totalGames;
-      const averageTime = totalTimeWithPenalties / totalGames;
+      const averageTime = totalTimeSpent / totalGames;
 
       // Calculate games this week
       const oneWeekAgo = new Date();
