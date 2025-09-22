@@ -143,8 +143,7 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
     );
   }
   return (
-    <div className="w-full px-2 md:px-4 py-8">
-      <div className="max-w-lg mx-auto">
+    <div className="px-2 md:px-4 py-8">
         {/* Header */}
         <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
           <div className="text-center">
@@ -349,6 +348,5 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
           )}
         </div>
       </div>
-    </div>
   );
 };

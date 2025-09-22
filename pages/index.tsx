@@ -791,7 +791,7 @@ export default function Home({ puzzleData, availableDates }: HomeProps) {
       )}
 
       <div className="main-game-wrapper">
-        <div className="main-game-content">
+        <div className={`main-game-content ${activeTab === 'leaderboard' || activeTab === 'dashboard' ? 'main-content-constrained' : ''}`}>
           {renderTabContent()}
           
           {/* Outstream Ad - Bottom Left */}

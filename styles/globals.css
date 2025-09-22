@@ -784,6 +784,11 @@ body.raptive-pfn-outstream {
   min-width: 0;
 }
 
+.main-content-constrained {
+  max-width: 576px;
+  margin: 0 auto;
+}
+
 .sidebar-ad-container {
   width: 300px;
   flex-shrink: 0;
